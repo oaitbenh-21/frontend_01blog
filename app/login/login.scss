@@ -1,0 +1,10 @@
+* {
+    user-select: none;
+}
+
+.login-button {
+    &:hover {
+        background-color: darken(white, 10%);
+        transform: translateY(-4px);
+    }
+}

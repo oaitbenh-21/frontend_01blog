@@ -1,0 +1,26 @@
+.pt-10 {
+    padding-top: 60px;
+}
+
+.scrollable-column {
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.fixed-column {
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 940px) {
+    .laptop-profile {
+        display: none !important;
+        height: 0px;
+        width: 0px;
+    }
+
+    .center-mobile {
+        width: 100%;
+        justify-content: space-around;
+    }
+}
