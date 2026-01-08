@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { Login } from './login/login';
-import { Home } from './home/home';
+import { Login } from './features/login/login';
+import { Home } from './features/home/home';
+import { PostPageComponent } from './features/single-post/single-post';
 
 export const routes: Routes = [
     { path: '', component: Home },
-    { path: 'login', component: Login }
-    // { path: 'profile/:id', component: Home },
+    { path: 'login', component: Login },
+    { path: 'posts/:id', component: PostPageComponent }
     // { path: 'notification', component: Home },
     // { path: 'media/:img', component: Home },
     // { path: 'posts/:id', component: Home },

@@ -1,0 +1,30 @@
+<app-header></app-header>
+
+<div class="container-fluid pt-10 vh-100">
+  <div class="row justify-content-center">
+
+    <div class="center-mobile w-70 col-8 scrollable-column d-flex flex-column align-items-center">
+      <p *ngIf="loading" class="text-muted text-center">
+        Loading posts...
+      </p>
+
+      <ng-container *ngIf="!loading && posts.length > 0">
+        <ng-container *ngFor="let post of posts">
+          <app-post [post]="post" style="width: 100%;"></app-post>
+          <br>
+        </ng-container>
+      </ng-container>
+
+      <p *ngIf="!loading && posts.length === 0" class="text-muted text-center">
+        No posts available.
+      </p>
+
+    </div>
+
+
+    <div class="laptop-profile col-auto fixed-column d-flex justify-content-end mt-5">
+      <app-profile-nav></app-profile-nav>
+    </div>
+
+  </div>
+</div>

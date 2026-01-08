@@ -1,0 +1,10 @@
+<p *ngIf="loading" class="text-muted text-center">
+    Loading posts...
+</p>
+
+<app-post *ngIf="post" [post]="post"></app-post>
+
+
+<p *ngIf="!loading && !post" class="text-muted text-center">
+    No posts available.
+</p>

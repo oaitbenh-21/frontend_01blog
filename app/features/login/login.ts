@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 interface LoginData {
-  username: string
+  email: string
   password: string
 }
 
@@ -19,28 +19,32 @@ interface LoginData {
 
 export class Login {
   loginModel = signal<LoginData>({
-    username: '',
+    email: '',
     password: '',
   })
   error = ''
   response: Observable<any> = new Observable();
-  readonly Login_url: string = "http://localhost:8080/api/v1/auth/authenticate"
+  readonly Login_url: string = "http://localhost:8080/auth/login"
   loginForm = form(this.loginModel)
   constructor(private http: HttpClient, private router: Router) {
   }
 
   login() {
     this.http.post(this.Login_url, {
-      username: this.loginForm.username().value(),
+      email: this.loginForm.email().value(),
       password: this.loginForm.password().value()
     }).subscribe({
       next: (data: any) => {
-        if (data?.token) {
-          localStorage.setItem("token", data.token);
+        if (data?.accessToken) {
+          console.log(data);
+
+          localStorage.setItem("token", data.accessToken);
           this.router.navigate(['/']);
         }
       },
       error: (err) => {
+        console.log(err);
+
         this.error = "Invalid credentials";
         console.error(err);
       }
