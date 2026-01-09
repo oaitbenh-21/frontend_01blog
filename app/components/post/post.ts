@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
-import { PostResponseDto } from '../../dto/post-dto';
 
 @Component({
   selector: 'app-post',

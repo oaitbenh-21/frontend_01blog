@@ -2,7 +2,9 @@
 
 <div class="container-fluid pt-10 vh-100">
   <div class="row justify-content-center">
-
+    <div class="col-2 mt-3">
+      <app-navbar></app-navbar>
+    </div>
     <div class="center-mobile w-70 col-8 scrollable-column d-flex flex-column align-items-center">
       <p *ngIf="loading" class="text-muted text-center">
         Loading posts...
@@ -22,9 +24,9 @@
     </div>
 
 
-    <div class="laptop-profile col-auto fixed-column d-flex justify-content-end mt-5">
+    <!-- <div class="laptop-profile col-auto fixed-column d-flex justify-content-end mt-5">
       <app-profile-nav></app-profile-nav>
-    </div>
+    </div> -->
 
   </div>
 </div>

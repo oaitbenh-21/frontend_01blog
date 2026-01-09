@@ -6,14 +6,14 @@ import { Post } from '../../components/post/post';
 import { Header } from '../../components/header/header';
 import { ProfileNav } from '../../components/profile-nav/profile-nav';
 import { NgFor, NgIf } from '@angular/common';
-import { PostResponseDto } from '../../dto/post-dto';
+import { Navbar } from '../../components/navbar/navbar';
 
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
-  imports: [NgFor, NgIf, Post, Header, ProfileNav],
+  imports: [NgFor, NgIf, Post, Header, Navbar],
   standalone: true
 })
 @Injectable({ providedIn: 'root' })

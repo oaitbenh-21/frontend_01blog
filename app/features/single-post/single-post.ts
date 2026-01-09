@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { PostResponseDto } from '../../dto/post-dto';
-import { PostService } from '../../services/post/post.service';
 import { Post } from '../../components/post/post';
 import { Header } from '../../components/header/header';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-post-page',
@@ -20,7 +19,6 @@ export class PostPageComponent implements OnInit {
     private route: ActivatedRoute,
     private postService: PostService,
     private cdr: ChangeDetectorRef
-
   ) { }
 
   ngOnInit() {
@@ -31,7 +29,6 @@ export class PostPageComponent implements OnInit {
     this.postService.getPostById(postId).subscribe({
       next: post => {
         console.log(post);
-
         this.post = post;
         this.loading = false;
         this.cdr.detectChanges();
