@@ -5,7 +5,7 @@ interface JwtPayload {
     sub: string;
     exp: number;
     iat: number;
-    role: string; // assuming the API includes role in JWT
+    role: string;
 }
 
 @Injectable({
@@ -22,7 +22,7 @@ export class AuthHelperService {
 
         try {
             const decoded: JwtPayload = jwtDecode(token);
-            return decoded.exp * 1000 > Date.now(); // token not expired
+            return decoded.exp * 1000 > Date.now();
         } catch {
             return false;
         }

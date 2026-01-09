@@ -23,7 +23,7 @@ interface UserDto {
     providedIn: 'root'
 })
 export class UserService {
-    private baseUrl = '/api';
+    private baseUrl = 'http://localhost:8080/users';
 
     constructor(private http: HttpClient) { }
 

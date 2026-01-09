@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 interface LikeResponse {
@@ -12,7 +12,7 @@ interface LikeResponse {
   providedIn: 'root'
 })
 export class PostService {
-  private baseUrl = '/api/posts';
+  private baseUrl = 'http://localhost:8080/posts';
 
   constructor(private http: HttpClient) { }
 
@@ -20,8 +20,12 @@ export class PostService {
     return this.http.post<PostResponseDto>(this.baseUrl, post);
   }
 
-  getAllPosts(): Observable<PostResponseDto[]> {
-    return this.http.get<PostResponseDto[]>(this.baseUrl);
+  getAllPosts(page: number, size: number): Observable<PostResponseDto[]> {
+    return this.http.get<PostResponseDto[]>(this.baseUrl, {
+      params: new HttpParams()
+        .set('page', page.toString())
+        .set('size', size.toString())
+    });
   }
 
   likePost(postId: number): Observable<LikeResponse> {
@@ -36,6 +40,6 @@ export class PostService {
     return this.http.post<CommentResponseDto>(`${this.baseUrl}/${postId}/comments`, comment);
   }
   getPostById(id: number): Observable<PostResponseDto> {
-    return this.http.get<PostResponseDto>(`${this.baseUrl}/${id}`);
+    return this.http.get<PostResponseDto>(`${this.baseUrl}/${id}`, {});
   }
 }

@@ -8,7 +8,7 @@ import { LogoutComponent } from './features/logout/logout';
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'login', component: Login },
-    { path: 'posts/create', component: CreatePostComponent },
+    { path: 'posts/add', component: CreatePostComponent },
     { path: 'posts/:id', component: PostPageComponent },
     { path: 'logout', component: LogoutComponent },
     // { path: 'notification', component: Home },

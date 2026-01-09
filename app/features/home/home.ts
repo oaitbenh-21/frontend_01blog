@@ -7,6 +7,7 @@ import { Header } from '../../components/header/header';
 import { ProfileNav } from '../../components/profile-nav/profile-nav';
 import { NgFor, NgIf } from '@angular/common';
 import { Navbar } from '../../components/navbar/navbar';
+import { PostService } from '../../services/post.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class Home implements OnInit {
   posts: PostResponseDto[] = [];
 
   constructor(
-    private http: HttpClient,
+    private service: PostService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
@@ -39,18 +40,7 @@ export class Home implements OnInit {
     const page = 0;
     const size = 10;
 
-    this.http.get<PostResponseDto[]>(this.POSTS_URL, {
-      headers: { Authorization: `Bearer ${token}` },
-      params: new HttpParams()
-        .set('page', page.toString())
-        .set('size', size.toString())
-    }).pipe(
-      catchError(() => {
-        this.loading = false;
-        this.cdr.detectChanges();
-        return of([]);
-      })
-    ).subscribe(posts => {
+    this.service.getAllPosts(page, size).subscribe(posts => {
       posts.map(post => {
         post.content = post.content.substring(0, 200);
         return post

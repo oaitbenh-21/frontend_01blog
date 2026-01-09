@@ -33,7 +33,8 @@ export class PostPageComponent implements OnInit {
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
+        console.log(err);
         this.loading = false;
         this.cdr.detectChanges();
       }

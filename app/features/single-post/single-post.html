@@ -1,9 +1,9 @@
 <app-header></app-header>
 
 <div class="container-fluid mt-5 pt-10">
-    <p *ngIf="loading" class="text-muted text-center">
-        Loading posts...
-    </p>
+    <div *ngIf="loading" class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
 
     <app-post *ngIf="post" [post]="post"></app-post>
 
