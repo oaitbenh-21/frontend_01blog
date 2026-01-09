@@ -4,11 +4,12 @@ import { NgIf } from '@angular/common';
 import { PostResponseDto } from '../../dto/post-dto';
 import { PostService } from '../../services/post/post.service';
 import { Post } from '../../components/post/post';
+import { Header } from '../../components/header/header';
 
 @Component({
   selector: 'app-post-page',
   standalone: true,
-  imports: [Post, NgIf],
+  imports: [Post, NgIf, Header],
   templateUrl: './single-post.html'
 })
 export class PostPageComponent implements OnInit {
