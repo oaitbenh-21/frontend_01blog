@@ -11,14 +11,6 @@ interface UserProfile {
     posts: PostResponseDto[];
 }
 
-interface UserDto {
-    id: number;
-    username: string;
-    avatar: string;
-    email: string;
-    role: string;
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -29,9 +21,5 @@ export class UserService {
 
     getUserProfile(userId: number): Observable<UserProfile> {
         return this.http.get<UserProfile>(`${this.baseUrl}/users/${userId}`);
-    }
-
-    getAllUsers(): Observable<UserDto[]> {
-        return this.http.get<UserDto[]>(`${this.baseUrl}/admin/users`);
     }
 }

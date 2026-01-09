@@ -1,10 +1,7 @@
 import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Post } from '../../components/post/post';
 import { Header } from '../../components/header/header';
-import { ProfileNav } from '../../components/profile-nav/profile-nav';
 import { NgFor, NgIf } from '@angular/common';
 import { Navbar } from '../../components/navbar/navbar';
 import { PostService } from '../../services/post.service';

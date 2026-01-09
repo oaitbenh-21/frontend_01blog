@@ -13,8 +13,4 @@ export class ReportService {
   submitReport(report: ReportDto): Observable<ReportDto> {
     return this.http.post<ReportDto>(this.baseUrl, report);
   }
-
-  getAllReports(): Observable<ReportDto[]> {
-    return this.http.get<ReportDto[]>(`/api/admin/reports`);
-  }
 }
