@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { Post } from '../../components/post/post';
 import { Header } from '../../components/header/header';
 import { PostService } from '../../services/post.service';
+import { Post } from '../../components/post/post';
 
 @Component({
   selector: 'app-post-page',
