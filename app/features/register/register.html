@@ -1,19 +1,23 @@
 <div class="main-container container-fluid d-flex justify-content-center align-items-center min-vh-100">
-
     <div class="login-container">
         <h1>LOGIN</h1>
         <p class="d-flex justify-content-center text-danger">{{error}}</p>
         <div class="input-group">
+            <label for="email">Username</label>
+            <input type="text" id="username" [field]="registerForm.username" placeholder="username">
+        </div>
+
+        <div class="input-group">
             <label for="email">EMAIL</label>
-            <input type="email" id="email" [field]="loginForm.email" placeholder="your@email.com">
+            <input type="email" id="email" [field]="registerForm.email" placeholder="your@email.com">
         </div>
 
         <div class="input-group">
             <label for="password">PASSWORD</label>
-            <input type="password" id="password" [field]="loginForm.password" placeholder="••••••••">
+            <input type="password" id="password" [field]="registerForm.password" placeholder="••••••••">
         </div>
 
-        <button type="submit" (click)="login()">SIGN IN</button>
+        <button (click)="register()">SIGN IN</button>
 
         <div class="divider">OR</div>
 
@@ -24,8 +28,7 @@
         </div>
 
         <div class="footer">
-            Don't have an account? <a href="/register">Sign up</a>
+            Don't have an account? <a href="/login">Sign up</a>
         </div>
     </div>
-
 </div>

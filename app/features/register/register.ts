@@ -2,29 +2,30 @@ import { Component, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { LoginRequest } from '../../dto/auth-dto';
+import { RegisterRequest } from '../../dto/auth-dto';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [Field],
-  templateUrl: './login.html',
-  styleUrl: './login.scss',
+  templateUrl: './register.html',
+  styleUrl: './register.scss',
 })
+export class Register {
 
-export class Login {
   readonly Login_url: string = "http://localhost:8080/auth/login"
   response: Observable<any> = new Observable();
   error: string = '';
-
-  loginForm = form(signal<LoginRequest>({
+  registerForm = form(signal<RegisterRequest>({
+    username: '',
     email: '',
     password: '',
   }))
 
   constructor(private router: Router, private service: AuthService) { }
-  login() {
-    this.service.login(this.loginForm().value()).subscribe({
+
+  register() {
+    this.service.register(this.registerForm().value()).subscribe({
       next: (data: any) => {
         if (data?.accessToken) {
           console.log(data);
@@ -36,9 +37,10 @@ export class Login {
       error: (err) => {
         console.log(err);
 
-        this.error = "Invalid credentials";
+        this.error = err.message;
         console.error(err);
       }
     });
   }
+
 }
