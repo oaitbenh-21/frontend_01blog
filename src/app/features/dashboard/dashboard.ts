@@ -73,6 +73,6 @@ export class Dashboard implements OnInit {
     });
   }
   goToUser(id: number) {
-    this.router.navigate([`/users/${id}`]);
+    this.router.navigate([`/profile/${id}`]);
   }
 }
