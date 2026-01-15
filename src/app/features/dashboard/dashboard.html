@@ -34,8 +34,8 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h6 class="text-muted mb-1">Total Users</h6>
-                                            <h3 class="mb-0">1,245</h3>
+                                            <h6 class="text-muted mb-1">Taotal Users</h6>
+                                            <h3 class="mb-0">{{analytics.totalUsers}}</h3>
                                         </div>
                                         <div class="text-primary fs-1">
                                             <i class="fas fa-users"></i>
@@ -50,7 +50,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-1">Total Posts</h6>
-                                            <h3 class="mb-0">8,432</h3>
+                                            <h3 class="mb-0">{{analytics.totalPosts}}</h3>
                                         </div>
                                         <div class="text-success fs-1">
                                             <i class="fas fa-file-alt"></i>
@@ -65,7 +65,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-1">Pending Reports</h6>
-                                            <h3 class="mb-0">23</h3>
+                                            <h3 class="mb-0">{{analytics.totalPosts}}</h3>
                                         </div>
                                         <div class="text-warning fs-1">
                                             <i class="fas fa-flag"></i>
@@ -74,21 +74,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card border-danger">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="text-muted mb-1">Banned Users</h6>
-                                            <h3 class="mb-0">12</h3>
-                                        </div>
-                                        <div class="text-danger fs-1">
-                                            <i class="fas fa-user-slash"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -102,7 +88,77 @@
                         </div>
                     </div>
 
-                    <app-users-tab></app-users-tab>
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Join Date</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (user of users; track user.id) {
+                                        <tr (click)="goToUser(user.id)">
+                                            <td>{{ user.id }}</td>
+
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    @if (user.avatar) {
+                                                    <img [src]="user.avatar" class="rounded-circle"
+                                                        style="width: 30px; height: 30px; object-fit: cover;"
+                                                        [alt]="user.username + ' avatar'" />
+                                                    } @else {
+                                                    <div class="rounded-circle bg-secondary"
+                                                        style="width: 30px; height: 30px;"></div>
+                                                    }
+                                                    <span class="fw-medium">{{ user.username }}</span>
+                                                </div>
+                                            </td>
+
+                                            <td>{{ user.email }}</td>
+
+                                            <td>{{ user.createdAt || 'today' }}</td>
+
+                                            <td>
+                                                <span class="badge"
+                                                    [ngClass]="user.deleted ? 'bg-danger' : 'bg-success'">
+                                                    {{ user.deleted ? 'Deleted' : 'Active' }}
+                                                </span>
+                                            </td>
+
+                                            <td class="text-end">
+                                                <div class="btn-group btn-group-sm">
+                                                    <button class="btn btn-outline-primary" title="View"
+                                                        aria-label="View user">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+
+                                                    @if (!user.deleted) {
+                                                    <button class="btn btn-outline-warning" title="Ban"
+                                                        aria-label="Ban user">
+                                                        <i class="fas fa-ban"></i>
+                                                    </button>
+                                                    }
+
+                                                    <button class="btn btn-outline-danger" title="Delete"
+                                                        aria-label="Delete user" [disabled]="user.deleted">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Posts Tab -->

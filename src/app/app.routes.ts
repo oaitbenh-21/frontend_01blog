@@ -4,7 +4,7 @@ import { Home } from './features/home/home';
 import { PostPageComponent } from './features/single-post/single-post';
 import { CreatePostComponent } from './features/create-post/create-post';
 import { LogoutComponent } from './features/logout/logout';
-import { Dashbord } from './features/dashbord/dashbord';
+import { Dashboard } from './features/dashboard/dashboard';
 import { Register } from './features/register/register';
 import { Profile } from './features/profile/profile';
 
@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'posts/:id', component: PostPageComponent },
     { path: 'profile/:id', component: Profile },
     { path: 'logout', component: LogoutComponent },
-    { path: 'admin/dashboard', component: Dashbord },
+    { path: 'admin/dashboard', component: Dashboard },
 
     // { path: 'notification', component: Home },
     // { path: 'media/:img', component: Home },

@@ -26,7 +26,8 @@ export class Profile implements OnInit {
     role: '',
     bio: '',
     deleted: false,
-    posts: []
+    posts: [],
+    createdAt: ''
   };
 
   constructor(

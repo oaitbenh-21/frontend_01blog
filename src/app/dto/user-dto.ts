@@ -16,4 +16,5 @@ export interface UserDto {
     bio: string;
     deleted: boolean;
     posts: PostResponseDto[];
+    createdAt: string;
 }

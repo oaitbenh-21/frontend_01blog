@@ -15,4 +15,7 @@ export class UserService {
     getUserProfile(userId: number): Observable<UserDto> {
         return this.http.get<UserDto>(`${this.baseUrl}/${userId}`);
     }
+    getAllUsers() {
+        return this.http.get<UserDto[]>(`${this.baseUrl}`);
+    }
 }

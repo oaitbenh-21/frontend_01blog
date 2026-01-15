@@ -25,7 +25,11 @@ export class Register {
   constructor(private router: Router, private service: AuthService) { }
 
   register() {
-    this.service.register(this.registerForm().value()).subscribe({
+    this.service.register({
+      username: this.registerForm().value().username,
+      email: this.registerForm().value().email,
+      password: this.registerForm().value().password
+    }).subscribe({
       next: (data: any) => {
         if (data?.accessToken) {
           console.log(data);

@@ -15,6 +15,7 @@ export class ReportsTab {
   NgOnInit() {
     this.service.getAllReports().subscribe(reports => {
       this.reports = reports;
+      console.log(reports);
       this.cdr.detectChanges();
     })
   }

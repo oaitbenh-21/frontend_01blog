@@ -1,3 +1,5 @@
+import { AuthorDto } from "./user-dto";
+
 interface CommentRequestDto {
     content: string;
 }
