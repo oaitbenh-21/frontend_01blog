@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgIf } from "../../../../node_modules/@angular/common/types/_common_module-chunk";
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +9,6 @@ import { NgIf } from "../../../../node_modules/@angular/common/types/_common_mod
 })
 export class Header {
   avatar = "https://github.com/mdo.png"
-  username = "oaitbenh"
+  username = jwtDecode.toString()
   role = "admin"
 }

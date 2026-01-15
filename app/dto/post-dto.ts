@@ -1,4 +1,4 @@
-interface PostResponseDto {
+export interface PostResponseDto {
   id: number;
   content: string;
   createdAt: string;
@@ -22,7 +22,7 @@ interface PostResponseDto {
 }
 
 
-interface PostRequestDto {
+export interface PostRequestDto {
   content: string;
 }
 

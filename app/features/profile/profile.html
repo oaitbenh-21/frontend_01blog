@@ -27,19 +27,19 @@
         <div class="profile-info col-md-9">
             <div class="panel">
                 <div class="bio-graph-heading" *ngIf="user; else noUser">
-                    {{user.username}}
+                    {{user.bio || "here where should the bio to be"}}
                 </div>
             </div>
 
             <div class="mt-4">
-                <div *ngIf="!loading && posts.length > 0">
-                    <div *ngFor="let post of posts">
+                <div *ngIf="!loading && user?.posts != null">
+                    <div *ngFor="let post of user?.posts">
                         <app-post [post]="post" style="width: 100%;"></app-post>
                         <br>
                     </div>
                 </div>
 
-                <p *ngIf="!loading && posts.length === 0" class="text-muted text-center">
+                <p *ngIf="!loading && user?.posts?.length === 0" class="text-muted text-center">
                     No posts available.
                 </p>
             </div>

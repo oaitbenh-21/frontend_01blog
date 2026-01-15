@@ -18,32 +18,22 @@ import { Header } from '../../components/header/header';
 export class Profile implements OnInit {
   protected POSTS_URL = 'http://localhost:8080/posts';
   loading: boolean = true;
-  user?: UserDto;
-  posts: PostResponseDto[] = [];
+  user?: UserDto = {
+    id: 0,
+    username: '',
+    avatar: '',
+    email: '',
+    role: '',
+    bio: '',
+    deleted: false,
+    posts: []
+  };
 
   constructor(
     private route: ActivatedRoute,
-    private postService: PostService,
     private userService: UserService,
     private cdr: ChangeDetectorRef
   ) { }
-
-
-  fetchPosts(): void {
-    const page = 0;
-    const size = 10;
-
-    this.postService.getAllPosts(page, size).subscribe(posts => {
-      posts.map(post => {
-        post.content = post.content.substring(0, 200);
-        return post
-      })
-      this.posts = posts;
-      this.loading = false;
-      this.cdr.detectChanges();
-    });
-  }
-
 
   ngOnInit() {
     const userid = Number(this.route.snapshot.paramMap.get('id'));
@@ -51,8 +41,12 @@ export class Profile implements OnInit {
     this.userService.getUserProfile(userid).subscribe({
       next: user => {
         this.user = user;
+        this.user.posts.map(post => {
+          post.content = post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content;
+          return post;
+        }) || []
+        this.loading = false;
         this.cdr.detectChanges();
-        this.fetchPosts();
       },
       error: (err) => {
         this.loading = false;

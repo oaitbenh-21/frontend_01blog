@@ -5,6 +5,7 @@ import { Header } from '../../components/header/header';
 import { NgFor, NgIf } from '@angular/common';
 import { Navbar } from '../../components/navbar/navbar';
 import { PostService } from '../../services/post.service';
+import { PostResponseDto } from '../../dto/post-dto';
 
 
 @Component({

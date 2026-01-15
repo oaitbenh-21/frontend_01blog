@@ -1,15 +1,15 @@
-interface AuthResponse {
+export interface AuthResponse {
   accessToken: string;
   tokenType: string;
 }
 
-interface RegisterRequest {
+export interface RegisterRequest {
   username: string;
   email: string;
   password: string;
 }
 
-interface LoginRequest {
+export interface LoginRequest {
   email: string;
   password: string;
 }

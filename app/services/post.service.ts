@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { PostRequestDto, PostResponseDto } from '../dto/post-dto';
 
 interface LikeResponse {
   message: string;
@@ -30,10 +31,6 @@ export class PostService {
 
   likePost(postId: number): Observable<LikeResponse> {
     return this.http.post<LikeResponse>(`${this.baseUrl}/${postId}/like`, {});
-  }
-
-  unlikePost(postId: number): Observable<LikeResponse> {
-    return this.http.delete<LikeResponse>(`${this.baseUrl}/${postId}/like`);
   }
 
   commentOnPost(postId: number, comment: CommentRequestDto): Observable<CommentResponseDto> {

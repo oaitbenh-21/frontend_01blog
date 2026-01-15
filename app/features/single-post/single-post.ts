@@ -4,6 +4,7 @@ import { NgIf } from '@angular/common';
 import { Header } from '../../components/header/header';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../components/post/post';
+import { PostResponseDto } from '../../dto/post-dto';
 
 @Component({
   selector: 'app-post-page',

@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UserDto } from '../dto/user-dto';
 
-interface UserProfile {
-    id: number;
-    username: string;
-    email: string;
-    bio: string;
-    role: string;
-    posts: PostResponseDto[];
-}
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +12,7 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
-    getUserProfile(userId: number): Observable<UserProfile> {
-        return this.http.get<UserProfile>(`${this.baseUrl}/users/${userId}`);
+    getUserProfile(userId: number): Observable<UserDto> {
+        return this.http.get<UserDto>(`${this.baseUrl}/${userId}`);
     }
 }

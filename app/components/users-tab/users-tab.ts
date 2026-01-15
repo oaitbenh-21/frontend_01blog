@@ -1,10 +1,11 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
+import { UserDto } from '../../dto/user-dto';
 
 @Component({
   selector: 'app-users-tab',
-  imports: [NgClass, NgFor, NgIf],
+  imports: [NgClass],
   templateUrl: './users-tab.html',
   styleUrl: './users-tab.scss',
 })
