@@ -9,11 +9,12 @@ import { PostService } from '../../services/post.service';
 import { AdminService } from '../../services/admin.service';
 import { NgClass } from '@angular/common';
 import { Router } from '@angular/router';
+import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ReportsTab, PostsTab, NgClass],
+  imports: [ReportsTab, PostsTab, NgClass, Header],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
