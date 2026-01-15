@@ -1,20 +1,19 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ReportsTab } from '../../components/reports-tab/reports-tab';
-import { PostsTab } from '../../components/posts-tab/posts-tab';
 
 import { UserDto } from '../../dto/user-dto';
 import { PostResponseDto } from '../../dto/post-dto';
 
 import { PostService } from '../../services/post.service';
 import { AdminService } from '../../services/admin.service';
-import { NgClass } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ReportsTab, PostsTab, NgClass, Header],
+  imports: [ReportsTab, NgClass, Header, NgFor, NgIf],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })

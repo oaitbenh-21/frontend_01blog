@@ -18,10 +18,10 @@ import { PostService } from '../../services/post.service';
 })
 export class Post {
   @Input() post: PostResponseDto = {
-    id: 0,
+    id: 1,
     content: '',
     createdAt: "",
-    author: { id: 0, username: 'Unknown', avatar: '', role: '' },
+    author: { id: 1, username: 'Unknown', avatar: '', role: '' },
     likes: 0,
     likedByCurrentUser: false,
     comments: [],
@@ -31,7 +31,10 @@ export class Post {
   ) { }
 
   goToUser() {
-    this.router.navigate(['/profile', this.post?.author?.avatar || "1"]);
+    this.router.navigate(['/profile', this.post.author.avatar]);
+  }
+  goToPost() {
+    this.router.navigate(['/posts', this.post.id]);
   }
 
   likePost() {
