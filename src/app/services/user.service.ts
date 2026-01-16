@@ -24,6 +24,6 @@ export class UserService {
     }
 
     unsubscribeFromUser(userId: number): Observable<string> {
-        return this.http.post<string>(`${this.baseUrl}/${userId}/unsubscribe`, {});
+        return this.http.delete<string>(`${this.baseUrl}/${userId}/unsubscribe`, {});
     }
 }
