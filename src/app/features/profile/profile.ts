@@ -22,6 +22,8 @@ export class Profile implements OnInit {
     id: 0,
     username: '',
     avatar: '',
+    mine: false,
+    follow: false,
     email: '',
     role: '',
     bio: '',
@@ -56,6 +58,29 @@ export class Profile implements OnInit {
       }
     });
   }
-
+  toggleFollow() {
+    if (!this.user || this.user.mine) return;
+    if (this.user.follow) {
+      this.userService.unsubscribeFromUser(this.user.id).subscribe({
+        next: () => {
+          this.user!.follow = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          // console.log('Error unfollowing user:', err);
+        }
+      });
+      return;
+    }
+    this.userService.subscribeToUser(this.user.id).subscribe({
+      next: () => {
+        this.user!.follow = true;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // console.log('Error following user:', err);
+      }
+    });
+  }
 }
 

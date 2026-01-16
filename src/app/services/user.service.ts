@@ -18,4 +18,12 @@ export class UserService {
     getAllUsers() {
         return this.http.get<UserDto[]>(`${this.baseUrl}`);
     }
+
+    subscribeToUser(userId: number): Observable<string> {
+        return this.http.post<string>(`${this.baseUrl}/${userId}/subscribe`, {});
+    }
+
+    unsubscribeFromUser(userId: number): Observable<string> {
+        return this.http.post<string>(`${this.baseUrl}/${userId}/unsubscribe`, {});
+    }
 }

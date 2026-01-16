@@ -15,6 +15,25 @@
                     <div class="panel text-center">
                         <p>{{ user.role }}</p>
                         <p>{{ user.email }}</p>
+                        <div *ngIf="!user.mine; else editTpl">
+                            <button *ngIf="user.follow; else followTpl" class="btn btn-secondary"
+                                (click)="toggleFollow()">
+                                Unfollow
+                            </button>
+
+                            <ng-template #followTpl>
+                                <button class="btn btn-primary" (click)="toggleFollow()">
+                                    Follow
+                                </button>
+                            </ng-template>
+                        </div>
+
+                        <ng-template #editTpl>
+                            <button class="btn btn-secondary" (click)="toggleFollow()">
+                                Edit
+                            </button>
+                        </ng-template>
+
                     </div>
                 </div>
 

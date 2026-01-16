@@ -9,6 +9,8 @@ export interface AuthorDto {
 
 export interface UserDto {
     id: number;
+    mine: boolean;
+    follow: boolean;
     username: string;
     avatar: string;
     email: string;

@@ -31,10 +31,10 @@ export class Post {
   ) { }
 
   goToUser() {
-    this.router.navigate(['/profile', this.post.author.avatar]);
+    this.router.navigate(['/profile', this.post.author.id]);
   }
   goToPost() {
-    this.router.navigate(['/posts', this.post.id]);
+    this.router.navigate(['/posts', this.post.id || 2]);
   }
 
   likePost() {
