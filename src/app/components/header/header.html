@@ -1,6 +1,6 @@
 <nav class="navbar bg-white fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand me-auto" href="/">
+        <a class="navbar-brand me-auto" (click)="navigateToHome()">
             <img src="https://images.seeklogo.com/logo-png/2/2/blogger-b-logo-png_seeklogo-20342.png" alt="Bootstrap"
                 width="30" height="30">
         </a>
@@ -9,19 +9,20 @@
             <img src="/media/add-icon.png" alt="Bootstrap" width="30" height="30">
         </a>
 
-        <div class="flex-shrink-0 dropstart ms-auto"> <a
-                class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+        <div class="flex-shrink-0 dropstart ms-auto">
+            <a class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                <img src="{{ avatar }}" alt="mdo" width="32" height="32" class="rounded-circle"> </a>
+                <img src="{{ avatar }}" alt="mdo" width="32" height="32" class="rounded-circle">
+            </a>
             <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item text-center" href="#">{{username}}</a></li>
-                @if (role=="admin") {
-                <li><a class="dropdown-item text-center" href="/admin/dashboard">dashbord</a></li>
-                }
+                <li><a class="dropdown-item text-center" (click)="navigateToProfile()">{{ username }}</a></li>
+                <li *ngIf="role === 'admin'">
+                    <a class="dropdown-item text-center" (click)="navigateToAdminDashboard()">dashboard</a>
+                </li>
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item text-center" href="/logout">sign out</a></li>
+                <li><a class="dropdown-item text-center" (click)="logout()">sign out</a></li>
             </ul>
         </div>
     </div>
