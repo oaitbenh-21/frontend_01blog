@@ -1,17 +1,17 @@
 import {
+  withHttpTransferCache
+} from "./chunk-NXOAW575.js";
+import {
   CommonModule,
   PLATFORM_BROWSER_ID
-} from "./chunk-Q27QDVA2.js";
-import {
-  withHttpTransferCache
-} from "./chunk-XXKCS6ED.js";
+} from "./chunk-V42UAKAG.js";
 import {
   DomAdapter,
   XhrFactory,
   getDOM,
   parseCookieValue,
   setRootDomAdapter
-} from "./chunk-SZ5A5AHP.js";
+} from "./chunk-CYVSHBJZ.js";
 import {
   APP_ID,
   ApplicationModule,
@@ -71,12 +71,12 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-OY5MRJZR.js";
+} from "./chunk-BCGYTIL7.js";
 import {
   __spreadValues
 } from "./chunk-H2SRQSE4.js";
 
-// ../node_modules/@angular/platform-browser/fesm2022/_dom_renderer-chunk.mjs
+// node_modules/@angular/platform-browser/fesm2022/_dom_renderer-chunk.mjs
 var EventManagerPlugin = class {
   _doc;
   constructor(_doc) {
@@ -761,7 +761,7 @@ var EmulatedEncapsulationDomRenderer2 = class extends NoneEncapsulationDomRender
   }
 };
 
-// ../node_modules/@angular/platform-browser/fesm2022/_browser-chunk.mjs
+// node_modules/@angular/platform-browser/fesm2022/_browser-chunk.mjs
 var BrowserDomAdapter = class _BrowserDomAdapter extends DomAdapter {
   supportsDOMEvents = true;
   static makeCurrent() {
@@ -1126,7 +1126,7 @@ var BrowserModule = class _BrowserModule {
   }], () => [], null);
 })();
 
-// ../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs
+// node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs
 var Meta = class _Meta {
   _doc;
   _dom;
@@ -1745,4 +1745,4 @@ export {
   provideClientHydration,
   VERSION
 };
-//# sourceMappingURL=chunk-AQKLG5KP.js.map
+//# sourceMappingURL=chunk-VUBRI6YE.js.map

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -22,7 +22,7 @@ export class Register {
     password: '',
   }))
 
-  constructor(private router: Router, private service: AuthService) { }
+  constructor(private router: Router, private service: AuthService, private cdr: ChangeDetectorRef) { }
 
   register() {
     this.service.register({
@@ -32,19 +32,24 @@ export class Register {
     }).subscribe({
       next: (data: any) => {
         if (data?.accessToken) {
-          console.log(data);
-
           localStorage.setItem("token", data.accessToken);
           this.router.navigate(['/']);
         }
+        this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.log(err);
+        this.error = err.error.message;
+        setTimeout(() => {
+          this.error = '';
+          this.cdr.detectChanges();
+        }, 3000);
 
-        this.error = err.message;
-        console.error(err);
+        this.cdr.detectChanges();
       }
     });
   }
 
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
 }

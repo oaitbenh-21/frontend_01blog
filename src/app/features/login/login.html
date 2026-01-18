@@ -13,7 +13,7 @@
             <input type="password" id="password" [field]="loginForm.password" placeholder="••••••••">
         </div>
 
-        <button type="submit" (click)="login()">SIGN IN</button>
+        <button type="submit" (click)="login()" style="cursor: pointer;">SIGN IN</button>
 
         <div class="divider">OR</div>
 
@@ -24,7 +24,7 @@
         </div>
 
         <div class="footer">
-            Don't have an account? <a href="/register">Sign up</a>
+            Don't have an account? <a (click)="goToRegister()" style="cursor: pointer;">Sign up</a>
         </div>
     </div>
 

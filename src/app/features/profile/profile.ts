@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Post } from '../../components/post/post';
 import { NgFor, NgIf } from '@angular/common';
-import { PostService } from '../../services/post.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostResponseDto } from '../../dto/post-dto';
 import { UserDto } from '../../dto/user-dto';
@@ -18,7 +17,7 @@ import { Header } from '../../components/header/header';
 export class Profile implements OnInit {
   protected POSTS_URL = 'http://localhost:8080/posts';
   loading: boolean = true;
-  user?: UserDto = {
+  user: UserDto = {
     id: 0,
     username: '',
     avatar: '',
@@ -31,9 +30,11 @@ export class Profile implements OnInit {
     posts: [],
     createdAt: ''
   };
+  postsError: string = '';
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -47,27 +48,29 @@ export class Profile implements OnInit {
         this.user.posts.map(post => {
           post.content = post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content;
           return post;
-        }) || []
+        });
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
+        console.log('Error getting user:', err);
         this.loading = false;
-        console.log(err);
         this.cdr.detectChanges();
       }
     });
   }
   toggleFollow() {
-    if (!this.user || this.user.mine) return;
+    if (!this.user) return;
     if (this.user.follow) {
       this.userService.unsubscribeFromUser(this.user.id).subscribe({
         next: () => {
           this.user!.follow = false;
           this.cdr.detectChanges();
         },
-        error: () => {
-          // console.log('Error unfollowing user:', err);
+        error: (err) => {
+          console.log('Error following user:', err);
+          this.loading = false;
+          this.cdr.detectChanges();
         }
       });
       return;
@@ -77,10 +80,15 @@ export class Profile implements OnInit {
         this.user!.follow = true;
         this.cdr.detectChanges();
       },
-      error: () => {
-        // console.log('Error following user:', err);
+      error: (err) => {
+        this.loading = false;
+        this.cdr.detectChanges();
+        console.log('Error following user:', err);
       }
     });
+  }
+  navigateToEditProfile() {
+    this.router.navigate(['/profile/edit', this.user.id]);
   }
 }
 

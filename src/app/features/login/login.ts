@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -22,23 +22,28 @@ export class Login {
     password: '',
   }))
 
-  constructor(private router: Router, private service: AuthService) { }
+  constructor(private router: Router, private service: AuthService, private cdr: ChangeDetectorRef) { }
   login() {
     this.service.login(this.loginForm().value()).subscribe({
       next: (data: any) => {
         if (data?.accessToken) {
-          console.log(data);
-
           localStorage.setItem("token", data.accessToken);
           this.router.navigate(['/']);
         }
+        this.router.navigate(['/']);
       },
       error: (err) => {
-        console.log(err);
-
-        this.error = "Invalid credentials";
-        console.error(err);
+        this.error = err.error.message || 'An error occurred during login.';
+        setTimeout(() => {
+          this.error = '';
+          this.cdr.detectChanges();
+        }, 3000);
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 }

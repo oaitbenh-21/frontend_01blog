@@ -1,13 +1,13 @@
 import {
   DomSanitizer
-} from "./chunk-AQKLG5KP.js";
-import {
-  isPlatformBrowser
-} from "./chunk-Q27QDVA2.js";
+} from "./chunk-VUBRI6YE.js";
 import {
   HttpClient
-} from "./chunk-XXKCS6ED.js";
-import "./chunk-SZ5A5AHP.js";
+} from "./chunk-NXOAW575.js";
+import {
+  isPlatformBrowser
+} from "./chunk-V42UAKAG.js";
+import "./chunk-CYVSHBJZ.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -46,7 +46,7 @@ import {
   ɵɵprojectionDef,
   ɵɵtext,
   ɵɵtextInterpolate
-} from "./chunk-OY5MRJZR.js";
+} from "./chunk-BCGYTIL7.js";
 import {
   Subject,
   distinctUntilChanged,
@@ -59,13 +59,13 @@ import {
   switchMap,
   takeUntil,
   timer
-} from "./chunk-NUVBHD63.js";
+} from "./chunk-RSS3ODKE.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-H2SRQSE4.js";
 
-// ../node_modules/@angular/core/fesm2022/rxjs-interop.mjs
+// node_modules/@angular/core/fesm2022/rxjs-interop.mjs
 function toSignal(source, options) {
   typeof ngDevMode !== "undefined" && ngDevMode && assertNotInReactiveContext(toSignal, "Invoking `toSignal` causes new subscriptions every time. Consider moving `toSignal` outside of the reactive context and read the signal value where needed.");
   const requiresCleanup = !options?.manualCleanup;
@@ -133,7 +133,7 @@ function createDebugNameObject(toSignalDebugName, internalSignalDebugName) {
   };
 }
 
-// ../node_modules/marked/lib/marked.esm.js
+// node_modules/marked/lib/marked.esm.js
 function L() {
   return { async: false, breaks: false, extensions: null, gfm: true, hooks: null, pedantic: false, renderer: null, silent: false, tokenizer: null, walkTokens: null };
 }
@@ -1310,7 +1310,7 @@ var Nt = d.parseInline;
 var Ft = b.parse;
 var jt = x.lex;
 
-// ../node_modules/ngx-markdown/fesm2022/ngx-markdown.mjs
+// node_modules/ngx-markdown/fesm2022/ngx-markdown.mjs
 var _c0 = ["*"];
 var BUTTON_TEXT_COPY = "Copy";
 var BUTTON_TEXT_COPIED = "Copied";

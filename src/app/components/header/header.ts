@@ -24,7 +24,7 @@ export class Header {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error fetching user data:', error);
+        this.router.navigate(['/login']);
       }
     });
 

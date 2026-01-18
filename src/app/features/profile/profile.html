@@ -29,7 +29,7 @@
                         </div>
 
                         <ng-template #editTpl>
-                            <button class="btn btn-secondary" (click)="toggleFollow()">
+                            <button class="btn btn-secondary" (click)="navigateToEditProfile()">
                                 Edit
                             </button>
                         </ng-template>
@@ -51,14 +51,14 @@
             </div>
 
             <div class="mt-4">
-                <div *ngIf="!loading && user?.posts != null">
-                    <div *ngFor="let post of user?.posts">
+                <div *ngIf="!loading && user.posts != null">
+                    <div *ngFor="let post of user.posts">
                         <app-post [post]="post" style="width: 100%;"></app-post>
                         <br>
                     </div>
                 </div>
 
-                <p *ngIf="!loading && user?.posts?.length === 0" class="text-muted text-center">
+                <p *ngIf="!loading && user.posts.length === 0" class="text-muted text-center">
                     No posts available.
                 </p>
             </div>

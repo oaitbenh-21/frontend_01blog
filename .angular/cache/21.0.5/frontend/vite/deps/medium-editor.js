@@ -2,9 +2,9 @@ import {
   __commonJS
 } from "./chunk-H2SRQSE4.js";
 
-// ../node_modules/medium-editor/dist/js/medium-editor.js
+// node_modules/medium-editor/dist/js/medium-editor.js
 var require_medium_editor = __commonJS({
-  "../node_modules/medium-editor/dist/js/medium-editor.js"(exports, module) {
+  "node_modules/medium-editor/dist/js/medium-editor.js"(exports, module) {
     if (!("classList" in document.createElement("_"))) {
       (function(view) {
         "use strict";

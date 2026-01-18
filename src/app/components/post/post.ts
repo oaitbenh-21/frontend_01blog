@@ -45,6 +45,7 @@ export class Post {
     } else {
       this.post.likes--;
     }
+    this.post.likedByCurrentUser = !this.post.likedByCurrentUser;
     this.cdr.detectChanges();
   }
 

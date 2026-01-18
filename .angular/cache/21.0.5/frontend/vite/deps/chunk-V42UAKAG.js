@@ -1,6 +1,6 @@
 import {
   PlatformLocation
-} from "./chunk-SZ5A5AHP.js";
+} from "./chunk-CYVSHBJZ.js";
 import {
   ApplicationRef,
   Attribute,
@@ -60,16 +60,16 @@ import {
   ɵɵinject,
   ɵɵinjectAttribute,
   ɵɵstyleProp
-} from "./chunk-OY5MRJZR.js";
+} from "./chunk-BCGYTIL7.js";
 import {
   Subject
-} from "./chunk-NUVBHD63.js";
+} from "./chunk-RSS3ODKE.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-H2SRQSE4.js";
 
-// ../node_modules/@angular/common/fesm2022/_location-chunk.mjs
+// node_modules/@angular/common/fesm2022/_location-chunk.mjs
 function joinWithSlash(start, end) {
   if (!start) return end;
   if (!end) return start;
@@ -313,7 +313,7 @@ function _stripOrigin(baseHref) {
   return baseHref;
 }
 
-// ../node_modules/@angular/common/fesm2022/_common_module-chunk.mjs
+// node_modules/@angular/common/fesm2022/_common_module-chunk.mjs
 var HashLocationStrategy = class _HashLocationStrategy extends LocationStrategy {
   _platformLocation;
   _baseHref = "";
@@ -3125,7 +3125,7 @@ var CommonModule = class _CommonModule {
   }], null, null);
 })();
 
-// ../node_modules/@angular/common/fesm2022/_platform_navigation-chunk.mjs
+// node_modules/@angular/common/fesm2022/_platform_navigation-chunk.mjs
 var PlatformNavigation = class _PlatformNavigation {
   static ɵfac = function PlatformNavigation_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _PlatformNavigation)();
@@ -3146,7 +3146,7 @@ var PlatformNavigation = class _PlatformNavigation {
   }], null, null);
 })();
 
-// ../node_modules/@angular/common/fesm2022/common.mjs
+// node_modules/@angular/common/fesm2022/common.mjs
 var NavigationAdapterForLocation = class _NavigationAdapterForLocation extends Location {
   navigation = inject(PlatformNavigation);
   destroyRef = inject(DestroyRef);
@@ -4496,4 +4496,4 @@ export {
   PRECONNECT_CHECK_BLOCKLIST,
   NgOptimizedImage
 };
-//# sourceMappingURL=chunk-Q27QDVA2.js.map
+//# sourceMappingURL=chunk-V42UAKAG.js.map
