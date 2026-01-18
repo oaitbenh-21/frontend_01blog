@@ -10,6 +10,9 @@
     <div #editor class="editable form-control" contenteditable="true" style="min-height: 300px;"
       (input)="onContentChange(editor)"></div>
   </div>
+  <div class="mb-3">
+    <input type="file" name="file" (change)="onFileSelected($event)" [disabled]="saving" />
+  </div>
 
   <button class="btn btn-primary" [disabled]="saving || !content.trim()" (click)="createPost()">
     {{ saving ? 'Creating...' : 'Create Post' }}

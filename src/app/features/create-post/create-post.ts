@@ -33,7 +33,8 @@ interface PostResponseDto {
 })
 export class CreatePostComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
-
+  file: File | null = null;
+  FileBase64: string = '';
   content = '';
   description = '';
   saving = false;
@@ -60,6 +61,14 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
       this.content = this.editorRef.nativeElement.innerHTML;
     });
   }
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      this.FileBase64 = reader.result as string;
+    }
+  }
 
   ngOnDestroy(): void {
     if (this.editor) {
@@ -81,7 +90,7 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
-      .post<PostResponseDto>(this.POSTS_URL, { content: this.content, description: this.description }, { headers })
+      .post<PostResponseDto>(this.POSTS_URL, { content: this.content, description: this.description, file: this.FileBase64 }, { headers })
       .subscribe({
         next: (newPost: any) => {
           console.log(newPost);
