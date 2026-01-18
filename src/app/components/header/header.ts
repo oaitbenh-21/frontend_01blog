@@ -1,9 +1,9 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router'; // Import Router for navigation
-import { jwtDecode } from 'jwt-decode';
 import { AuthorDto } from '../../dto/user-dto';
 import { UserService } from '../../services/user.service';
+import { DeferBlockBehavior } from '@angular/core/testing';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +23,8 @@ export class Header {
         this.user = data;
         this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: () => {
+        localStorage.removeItem('token');
         this.router.navigate(['/login']);
       }
     });

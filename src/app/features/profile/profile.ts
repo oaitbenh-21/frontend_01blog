@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgModule, OnInit } from '@angular/core';
 import { Post } from '../../components/post/post';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UserDto } from '../../dto/user-dto';
 import { UserService } from '../../services/user.service';
 import { Header } from '../../components/header/header';
@@ -41,9 +41,57 @@ export class Profile implements OnInit {
   ) { }
 
   ngOnInit() {
-    const userid = Number(this.route.snapshot.paramMap.get('id'));
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadUser(id);
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.loadUser(id);
+      }
+    });
+  }
+  toggleFollow() {
+    if (this.user.follow) {
+      this.userService.unsubscribeFromUser(this.user.id).subscribe({
+        next: () => {
+          this.user!.follow = false;
+          this.user.followersCount--;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.loading = false;
+          if (err.status === 200) {
+            this.user!.follow = false;
+            this.user.followersCount--;
+          } else {
+            console.log('Error following user:', err);
+          }
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.userService.subscribeToUser(this.user.id).subscribe({
+        next: () => {
+          this.user!.follow = true;
+          this.user.followersCount++;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.loading = false;
+          if (err.status === 200) {
+            this.user!.follow = true;
+            this.user.followersCount++;
+          } else {
+            console.log('Error following user:', err);
+          }
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
 
-    this.userService.getUserProfile(userid).subscribe({
+  loadUser(id: number) {
+    this.userService.getUserProfile(id).subscribe({
       next: user => {
         this.user = user;
         this.user.posts.map(post => {
@@ -59,41 +107,6 @@ export class Profile implements OnInit {
         this.cdr.detectChanges();
       }
     });
-  }
-  toggleFollow() {
-    if (this.user.follow) {
-      this.userService.unsubscribeFromUser(this.user.id).subscribe({
-        next: () => {
-          this.user!.follow = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.loading = false;
-          if (err.status === 200) {
-            this.user!.follow = false;
-          } else {
-            console.log('Error following user:', err);
-          }
-          this.cdr.detectChanges();
-        }
-      });
-    } else {
-      this.userService.subscribeToUser(this.user.id).subscribe({
-        next: () => {
-          this.user!.follow = true;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.loading = false;
-          if (err.status === 200) {
-            this.user!.follow = true;
-          } else {
-            console.log('Error following user:', err);
-          }
-          this.cdr.detectChanges();
-        }
-      });
-    }
   }
   navigateToEditProfile() {
     this.router.navigate(['/profile/edit', this.user.id]);
