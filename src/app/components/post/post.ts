@@ -41,13 +41,30 @@ export class Post {
 
   likePost() {
     this.post.likedByCurrentUser = !this.post.likedByCurrentUser;
-    this.service.likePost(this.post.id).subscribe();
-    if (this.post.likedByCurrentUser) {
-      this.post.likes++;
-    } else {
-      this.post.likes--;
-    }
-    this.post.likedByCurrentUser = !this.post.likedByCurrentUser;
+    this.service.likePost(this.post.id).subscribe({
+      next: () => {
+        if (this.post.likedByCurrentUser) {
+          this.post.likes++;
+          this.post.likedByCurrentUser = true;
+        } else {
+          this.post.likes--;
+          this.post.likedByCurrentUser = false;
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        if (error.status == 200) {
+          if (this.post.likedByCurrentUser) {
+            this.post.likes++;
+            this.post.likedByCurrentUser = true;
+          } else {
+            this.post.likes--;
+            this.post.likedByCurrentUser = false;
+          }
+        }
+        this.cdr.detectChanges();
+      }
+    });
     this.cdr.detectChanges();
   }
 
