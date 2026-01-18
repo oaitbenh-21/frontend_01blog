@@ -4,7 +4,7 @@
         <div>
             <h6 class="mb-0">{{ username }}</h6>
 
-            <small class="text-muted">{{ date }}</small>
+            <small class="text-muted">{{ date | timeAgo }}</small>
         </div>
         <!-- <button *ngIf="!followed" class="btn btn-outline-primary btn-sm ms-auto">
             follow

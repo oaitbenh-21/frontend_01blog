@@ -3,7 +3,7 @@ import { CommentResponseDto } from "./comment-dto";
 export interface PostResponseDto {
   id: number;
   content: string;
-  createdAt: string;
+  CDate: string;
   description: string;
   author: {
     id: number;
@@ -11,6 +11,7 @@ export interface PostResponseDto {
     avatar: string;
     role: string;
   };
+  fileUrl: string[];
   likes: number;
   likedByCurrentUser: boolean;
   comments: CommentResponseDto[];

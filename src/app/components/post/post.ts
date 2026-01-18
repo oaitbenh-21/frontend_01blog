@@ -4,13 +4,14 @@ import { MarkdownModule } from 'ngx-markdown';
 import { PostResponseDto } from '../../dto/post-dto';
 import { Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
+import { TimeAgoPipe } from '../../../pipes/timeAgo';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.html',
   styleUrls: ['./post.scss'],
   standalone: true,
-  imports: [CommonModule, MarkdownModule],
+  imports: [CommonModule, MarkdownModule, TimeAgoPipe],
   providers: [
     MarkdownModule.forRoot().providers!
   ]
@@ -20,12 +21,13 @@ export class Post {
   @Input() post: PostResponseDto = {
     id: 1,
     content: '',
-    createdAt: "",
+    CDate: "",
     author: { id: 1, username: 'Unknown', avatar: '', role: '' },
     likes: 0,
     description: '',
     likedByCurrentUser: false,
     comments: [],
+    fileUrl: [],
   };
   @Input() desc: boolean = false;
 
@@ -73,6 +75,6 @@ export class Post {
   get liked() { return this.post.likedByCurrentUser; }
   get likesCount() { return this.post.likes; }
   get comments() { return this.post.comments; }
-  get date() { return this.post.createdAt; }
+  get date() { return this.post.CDate; }
 
 }

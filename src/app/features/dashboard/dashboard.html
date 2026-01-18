@@ -123,7 +123,7 @@
 
                                             <td>{{ user.email }}</td>
 
-                                            <td>{{ user.CDate | date:'longDate' }}</td>
+                                            <td>{{ user.CDate | timeAgo }}</td>
 
                                             <td>
                                                 <span class="badge"
@@ -202,7 +202,7 @@
                                             <td>{{ post.author.username }}</td>
 
                                             <!-- Created Date -->
-                                            <td>{{ post.createdAt || 'today' }}</td>
+                                            <td>{{ post.CDate | timeAgo }}</td>
 
                                             <!-- Status (example logic) -->
                                             <td>
