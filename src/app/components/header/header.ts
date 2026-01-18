@@ -35,7 +35,7 @@ export class Header {
   }
 
   navigateToProfile() {
-    this.router.navigate(['/profile', 1]);
+    this.router.navigate(['/profile', this.user.id]);
 
   }
 
