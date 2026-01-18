@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserDto } from '../dto/user-dto';
+import { AuthorDto, UserDto } from '../dto/user-dto';
 
 
 @Injectable({
@@ -17,6 +17,9 @@ export class UserService {
     }
     getAllUsers() {
         return this.http.get<UserDto[]>(`${this.baseUrl}`);
+    }
+    getCurrentUser() {
+        return this.http.get<AuthorDto>(`${this.baseUrl}/me`);
     }
 
     subscribeToUser(userId: number): Observable<string> {

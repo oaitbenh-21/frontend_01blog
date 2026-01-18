@@ -12,11 +12,12 @@
         <div class="flex-shrink-0 dropstart ms-auto">
             <a class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                <img src="{{ avatar }}" alt="mdo" width="32" height="32" class="rounded-circle">
+                <img src="{{ user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'}}" alt="mdo"
+                    width="32" height="32" class="rounded-circle">
             </a>
             <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item text-center" (click)="navigateToProfile()">{{ username }}</a></li>
-                <li *ngIf="role === 'admin'">
+                <li><a class="dropdown-item text-center" (click)="navigateToProfile()">{{ user.username }}</a></li>
+                <li *ngIf="user.role === 'ADMIN'">
                     <a class="dropdown-item text-center" (click)="navigateToAdminDashboard()">dashboard</a>
                 </li>
                 <li>
