@@ -1,15 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Post } from '../../components/post/post';
-import { NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PostResponseDto } from '../../dto/post-dto';
 import { UserDto } from '../../dto/user-dto';
 import { UserService } from '../../services/user.service';
 import { Header } from '../../components/header/header';
 
 @Component({
   selector: 'app-profile',
-  imports: [Post, NgIf, NgFor, Header],
+  imports: [Post, NgIf, NgFor, Header, DatePipe],
   templateUrl: './profile.html',
   standalone: true,
   styleUrl: './profile.scss',
@@ -27,8 +26,10 @@ export class Profile implements OnInit {
     role: '',
     bio: '',
     deleted: false,
+    followersCount: 0,
+    followingCount: 0,
     posts: [],
-    createdAt: ''
+    CDate: ''
   };
   postsError: string = '';
 

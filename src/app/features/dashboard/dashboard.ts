@@ -6,14 +6,14 @@ import { PostResponseDto } from '../../dto/post-dto';
 
 import { PostService } from '../../services/post.service';
 import { AdminService } from '../../services/admin.service';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { Header } from "../../components/header/header";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ReportsTab, NgClass, Header, NgFor, NgIf],
+  imports: [ReportsTab, NgClass, Header, NgFor, NgIf, DatePipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
