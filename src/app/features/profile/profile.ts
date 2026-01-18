@@ -60,7 +60,6 @@ export class Profile implements OnInit {
     });
   }
   toggleFollow() {
-    if (!this.user) return;
     if (this.user.follow) {
       this.userService.unsubscribeFromUser(this.user.id).subscribe({
         next: () => {
@@ -68,24 +67,32 @@ export class Profile implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.log('Error following user:', err);
           this.loading = false;
+          if (err.status === 200) {
+            this.user!.follow = false;
+          } else {
+            console.log('Error following user:', err);
+          }
           this.cdr.detectChanges();
         }
       });
-      return;
+    } else {
+      this.userService.subscribeToUser(this.user.id).subscribe({
+        next: () => {
+          this.user!.follow = true;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.loading = false;
+          if (err.status === 200) {
+            this.user!.follow = true;
+          } else {
+            console.log('Error following user:', err);
+          }
+          this.cdr.detectChanges();
+        }
+      });
     }
-    this.userService.subscribeToUser(this.user.id).subscribe({
-      next: () => {
-        this.user!.follow = true;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loading = false;
-        this.cdr.detectChanges();
-        console.log('Error following user:', err);
-      }
-    });
   }
   navigateToEditProfile() {
     this.router.navigate(['/profile/edit', this.user.id]);
