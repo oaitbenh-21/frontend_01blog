@@ -39,10 +39,6 @@ export class Home implements OnInit {
     const size = 10;
 
     this.service.getAllPosts(page, size).subscribe(posts => {
-      posts.map(post => {
-        post.content = post.content.substring(0, 200);
-        return post
-      })
       this.posts = posts;
       this.loading = false;
       this.cdr.detectChanges();

@@ -13,7 +13,7 @@
 
     @if(post.content){
     <div class="card-body" (click)="goToPost()" style="cursor: pointer;">
-        <markdown [data]="post.content"></markdown>
+        <markdown [data]="desc?post.description:post.content"></markdown>
     </div>
     }
     <div class="card-body d-flex align-items-center">

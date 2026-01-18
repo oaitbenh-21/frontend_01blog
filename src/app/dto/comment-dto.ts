@@ -1,10 +1,10 @@
 import { AuthorDto } from "./user-dto";
 
-interface CommentRequestDto {
+export interface CommentRequestDto {
     content: string;
 }
 
-interface CommentResponseDto {
+export interface CommentResponseDto {
     content: string;
     author: AuthorDto;
 }

@@ -14,7 +14,7 @@
 
       <ng-container *ngIf="!loading && posts.length > 0">
         <ng-container *ngFor="let post of posts">
-          <app-post [post]="post" style="width: 100%;"></app-post>
+          <app-post [post]="post" [desc]="true" style="width: 100%;"></app-post>
           <br>
         </ng-container>
       </ng-container>

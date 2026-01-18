@@ -55,7 +55,7 @@
             <div class="mt-4">
                 <div *ngIf="!loading && user.posts != null">
                     <div *ngFor="let post of user.posts">
-                        <app-post [post]="post" style="width: 100%;"></app-post>
+                        <app-post [post]="post" [desc]="true" style="width: 100%;"></app-post>
                         <br>
                     </div>
                 </div>

@@ -23,9 +23,11 @@ export class Post {
     createdAt: "",
     author: { id: 1, username: 'Unknown', avatar: '', role: '' },
     likes: 0,
+    description: '',
     likedByCurrentUser: false,
     comments: [],
   };
+  @Input() desc: boolean = false;
 
   constructor(private router: Router, private service: PostService, private cdr: ChangeDetectorRef
   ) { }

@@ -2,9 +2,9 @@ import { Component, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@ang
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, of, finalize } from 'rxjs';
 import MediumEditor from 'medium-editor';
 import { Header } from '../../components/header/header';
+import { FormsModule, NgModel } from '@angular/forms';
 
 interface PostResponseDto {
   id: number;
@@ -27,13 +27,15 @@ interface PostResponseDto {
   styleUrls: ['./create-post.scss'],
   imports: [
     CommonModule,
-    Header
+    Header,
+    FormsModule
   ],
 })
 export class CreatePostComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
   content = '';
+  description = '';
   saving = false;
   private editor!: any;
 
@@ -79,13 +81,15 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
-      .post<PostResponseDto>(this.POSTS_URL, { content: this.content }, { headers })
+      .post<PostResponseDto>(this.POSTS_URL, { content: this.content, description: this.description }, { headers })
       .subscribe({
         next: (newPost: any) => {
           console.log(newPost);
+          this.router.navigate(['/posts', newPost.id]);
         },
         error: (err) => {
           console.log(err);
+          this.saving = false;
         }
       });
   }
