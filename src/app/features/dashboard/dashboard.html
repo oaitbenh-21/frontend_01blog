@@ -29,7 +29,7 @@
 
                     <!-- Stats Cards -->
                     <div class="row g-3 mb-4">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card border-primary">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card border-success">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -59,13 +59,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card border-warning">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-1">Pending Reports</h6>
-                                            <h3 class="mb-0">{{analytics.totalPosts}}</h3>
+                                            <h3 class="mb-0">{{analytics.totalReports}}</h3>
                                         </div>
                                         <div class="text-warning fs-1">
                                             <i class="fas fa-flag"></i>
@@ -207,8 +207,8 @@
                                             <!-- Status (example logic) -->
                                             <td>
                                                 <span class="badge"
-                                                    [ngClass]="post.likedByCurrentUser ? 'bg-success' : 'bg-warning text-dark'">
-                                                    {{ post.likedByCurrentUser ? 'Published' : 'Hidden' }}
+                                                    [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'">
+                                                    {{ post.isDeleted ? 'Published' : 'Hidden' }}
                                                 </span>
                                             </td>
 

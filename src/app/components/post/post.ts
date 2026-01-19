@@ -28,6 +28,7 @@ export class Post {
     likedByCurrentUser: false,
     comments: [],
     fileUrl: [],
+    isDeleted: false,
   };
   @Input() desc: boolean = false;
 

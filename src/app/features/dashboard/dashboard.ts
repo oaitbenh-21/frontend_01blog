@@ -41,10 +41,14 @@ export class Dashboard implements OnInit {
     this.loadPosts();
     this.admin.getAnalytics().subscribe({
       next: (data) => {
+        console.log(data);
         this.analytics = data
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Failed to load analytics', err),
+      error: (err) => {
+        console.error('Failed to load analytics', err)
+        console.log(err);
+      },
     });
     this.cdr.markForCheck();
   }
