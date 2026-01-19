@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -39,10 +39,11 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
   description = '';
   saving = false;
   private editor!: any;
+  error: string = '';
 
   private readonly POSTS_URL = 'http://localhost:8080/posts';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
   onContentChange(editor: HTMLElement) {
     this.content = editor.innerText || '';
@@ -97,8 +98,13 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
           this.router.navigate(['/posts', newPost.id]);
         },
         error: (err) => {
-          console.log(err);
+          this.error = err.error.errors.description || "an error durring creating account";
+          setTimeout(() => {
+            this.error = '';
+            this.cdr.detectChanges();
+          }, 30000);
           this.saving = false;
+          this.cdr.detectChanges();
         }
       });
   }

@@ -2,6 +2,9 @@
 
 <div class="container-fluid mt-5 pt-4">
   <h3 class="text-center">Create New Post</h3>
+  <div class="mb-3 container-fluid text-center">
+    <p>{{error}}</p>
+  </div>
   <div class="mb-3">
     <input type="text" class="form-control" placeholder="Post Description" [(ngModel)]="description" [disabled]="saving"
       maxlength="200" minlength="20" />
@@ -10,11 +13,12 @@
     <div #editor class="editable form-control" contenteditable="true" style="min-height: 300px;"
       (input)="onContentChange(editor)"></div>
   </div>
-  <div class="mb-3">
+  <div class="mb-3 container-fluid text-center">
     <input type="file" name="file" (change)="onFileSelected($event)" [disabled]="saving" />
   </div>
 
-  <button class="btn btn-primary" [disabled]="saving || !content.trim()" (click)="createPost()">
+  <button class="btn btn-primary container-fluid text-center" [disabled]="saving || !content.trim()"
+    (click)="createPost()">
     {{ saving ? 'Creating...' : 'Create Post' }}
   </button>
 </div>
