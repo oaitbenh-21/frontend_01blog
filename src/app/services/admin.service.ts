@@ -20,4 +20,23 @@ export class AdminService {
     getAllReports(): Observable<ReportDto[]> {
         return this.http.get<ReportDto[]>(`${this.baseUrl}/reports`);
     }
+    deleteUser(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/users/${id}`);
+    }
+
+    banUser(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/users/${id}/ban`);
+    }
+
+    deletePost(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/posts/${id}`);
+    }
+
+    deleteComment(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/comment/${id}`);
+    }
+
+    resolveReport(id: number): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/reports/${id}/resolve`, {});
+    }
 }

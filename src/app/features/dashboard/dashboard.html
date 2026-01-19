@@ -1,6 +1,6 @@
 <!-- Top Navbar -->
 <app-header></app-header>
-<div class="container-fluid mt-5 pt-5">
+<div class="container-fluid mt-5 pt-3">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 bg-white border-end min-vh-100 p-0">
@@ -104,10 +104,10 @@
                                     </thead>
                                     <tbody>
                                         @for (user of users; track user.id) {
-                                        <tr (click)="goToUser(user.id)">
+                                        <tr>
                                             <td>{{ user.id }}</td>
 
-                                            <td>
+                                            <td (click)="goToUser(user.id)">
                                                 <div class="d-flex align-items-center gap-2">
                                                     @if (user.avatar) {
                                                     <img [src]="user.avatar" class="rounded-circle"
@@ -127,29 +127,26 @@
 
                                             <td>
                                                 <span class="badge"
-                                                    [ngClass]="user.deleted ? 'bg-danger' : 'bg-success'">
-                                                    {{ user.deleted ? 'Deleted' : 'Active' }}
+                                                    [ngClass]="user.deleted? 'bg-danger' : user.banned? 'bg-warning': 'bg-success'">
+                                                    {{ user.deleted ? 'Deleted' : user.banned? " Banned": 'Active' }}
                                                 </span>
                                             </td>
 
                                             <td class="text-end">
                                                 <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-outline-primary" title="View"
-                                                        aria-label="View user">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-
-                                                    @if (!user.deleted) {
-                                                    <button class="btn btn-outline-warning" title="Ban"
-                                                        aria-label="Ban user">
+                                                    @if (!user.banned) {
+                                                    <button (click)="banUser(user.id)" class="btn btn-outline-warning"
+                                                        title="Ban" aria-label="Ban user">
                                                         <i class="fas fa-ban"></i>
                                                     </button>
                                                     }
-
+                                                    @if (!user.deleted) {
                                                     <button class="btn btn-outline-danger" title="Delete"
-                                                        aria-label="Delete user" [disabled]="user.deleted">
+                                                        aria-label="Delete user" [disabled]="user.deleted"
+                                                        (click)="deleteUser(user.id)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>
@@ -194,7 +191,7 @@
                                             <!-- Title / Content -->
                                             <td>
                                                 <div class="text-truncate" style="max-width: 300px;">
-                                                    {{ post.content }}
+                                                    {{ desc(post) }}
                                                 </div>
                                             </td>
 
@@ -208,25 +205,15 @@
                                             <td>
                                                 <span class="badge"
                                                     [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'">
-                                                    {{ post.isDeleted ? 'Published' : 'Hidden' }}
+                                                    {{ !post.isDeleted ? 'Published' : 'Hidden' }}
                                                 </span>
                                             </td>
 
                                             <!-- Actions -->
                                             <td>
                                                 <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-outline-primary" title="View">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-
-                                                    <button class="btn"
-                                                        [ngClass]="post.likedByCurrentUser ? 'btn-outline-warning' : 'btn-outline-success'"
-                                                        title="Toggle Visibility">
-                                                        <i class="fas"
-                                                            [ngClass]="post.likedByCurrentUser ? 'fa-eye-slash' : 'fa-check'"></i>
-                                                    </button>
-
-                                                    <button class="btn btn-outline-danger" title="Delete">
+                                                    <button class="btn btn-outline-danger" title="Delete"
+                                                        (click)="deletePost(post.id)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
@@ -255,8 +242,65 @@
                             <button class="btn btn-sm btn-outline-success">Resolved</button>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-body">
 
-                    <app-reports-tab></app-reports-tab>
+                            <!-- Reports List -->
+                            <div class="row g-3">
+                                <div class="col-12" *ngFor="let report of reports">
+                                    <div class="card border-warning">
+                                        <div class="card-body">
+
+                                            <!-- Header -->
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <div>
+                                                    <span class="badge bg-warning text-dark mb-2">
+                                                        {{ report.status || 'PENDING' }}
+                                                    </span>
+
+                                                    <h5 class="mb-1">User Report</h5>
+
+                                                    <p class="text-muted small mb-0">
+                                                        Report ID: #{{ report.id }} |
+                                                        Submitted: {{ report.createdAt }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="btn-group btn-group-sm">
+                                                    <button class="btn btn-outline-success" title="Resolve">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                    <button class="btn btn-outline-danger" title="Dismiss">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Body -->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p class="mb-1">
+                                                        <strong>Reported by:</strong> User #{{ report.reporterId }}
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>Reported user:</strong> User #{{ report.reportedUserId
+                                                        }}
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <strong>Reason:</strong> {{ report.reason }}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (reports.length == 0) {
+                            No reports right now
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

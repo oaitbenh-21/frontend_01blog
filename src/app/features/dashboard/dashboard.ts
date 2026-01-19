@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ReportsTab } from '../../components/reports-tab/reports-tab';
 
 import { UserDto } from '../../dto/user-dto';
 import { PostResponseDto } from '../../dto/post-dto';
@@ -14,7 +13,7 @@ import { TimeAgoPipe } from '../../../pipes/timeAgo';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ReportsTab, NgClass, Header, NgFor, NgIf, TimeAgoPipe],
+  imports: [NgClass, Header, NgFor, NgIf, TimeAgoPipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
@@ -79,5 +78,50 @@ export class Dashboard implements OnInit {
   }
   goToUser(id: number) {
     this.router.navigate([`/profile/${id}`]);
+  }
+  desc(post: PostResponseDto) {
+    if (post.description.length > 15) {
+      post.description = post.description.substring(0, 15);
+    }
+    return post.description + "...";
+  }
+
+  banUser(id: number) {
+    this.admin.banUser(id).subscribe({
+      next(value) {
+      },
+      error(err) {
+      },
+    })
+
+  }
+  deleteUser(id: number) {
+    this.admin.deleteUser(id).subscribe({
+      next(value) {
+      },
+      error(err) {
+      },
+    })
+
+  }
+  deletePost(id: number) {
+    this.admin.deletePost(id).subscribe({
+      next(value) {
+
+      },
+      error(err) {
+
+      },
+    })
+  }
+  resolveReport(id: number) {
+    this.admin.resolveReport(id).subscribe({
+      next(value) {
+
+      },
+      error(err) {
+
+      },
+    })
   }
 }

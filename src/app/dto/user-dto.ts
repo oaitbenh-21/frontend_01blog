@@ -21,4 +21,5 @@ export interface UserDto {
     followersCount: number;
     followingCount: number;
     CDate: string;
+    banned: boolean;
 }

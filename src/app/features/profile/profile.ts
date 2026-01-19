@@ -29,7 +29,8 @@ export class Profile implements OnInit {
     followersCount: 0,
     followingCount: 0,
     posts: [],
-    CDate: ''
+    CDate: '',
+    banned: false,
   };
   postsError: string = '';
 
