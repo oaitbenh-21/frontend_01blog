@@ -34,8 +34,8 @@ export class PostService {
     return this.http.post<LikeResponse>(`${this.baseUrl}/${postId}/like`, {});
   }
 
-  commentOnPost(postId: number, comment: CommentRequestDto): Observable<CommentResponseDto> {
-    return this.http.post<CommentResponseDto>(`${this.baseUrl}/${postId}/comments`, comment);
+  commentOnPost(postId: number, comment: string): Observable<CommentResponseDto> {
+    return this.http.post<CommentResponseDto>(`${this.baseUrl}/${postId}/comment`, { content: comment });
   }
   getPostById(id: number): Observable<PostResponseDto> {
     return this.http.get<PostResponseDto>(`${this.baseUrl}/${id}`, {});

@@ -10,4 +10,53 @@
     <p *ngIf="!loading && !post" class="text-muted text-center">
         No post available.
     </p>
+
+    <div class="container py-5" ng-controller="CommentsController">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-comments me-2"></i>
+                            Comments ({{post?.comments?.length}})
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="comment-section mt-3">
+                            <textarea class="form-control" [(ngModel)]="content" #contentRef="ngModel" rows="3"
+                                placeholder="Write your comment..." required>
+                            </textarea>
+
+                            <button (click)="addComment()" class="btn btn-primary mt-2"
+                                [disabled]="!contentRef.valid || !content" style="height: fit-content;">
+                                <i class="fas fa-paper-plane"></i> Post Comment
+                            </button>
+                        </div>
+
+                        <div *ngIf="post?.comments?.length == 0 || false" class="text-center text-muted py-4">
+                            <i class="fas fa-comment-slash fa-3x mb-3"></i>
+                            <p>No comments yet. Be the first to comment!</p>
+                        </div>
+
+                        <div *ngFor="let comment of post?.comments" class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <img src="{{comment.author.avatar || 'https://www.bootdey.com/img/Content/avatar/avatar5.png'}}"
+                                        class="rounded-circle" width="48" height="48" alt="{{comment.author.username}}">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex align-items-center mb-1"
+                                        (click)="goToProfile(comment.author.id)">
+                                        <h6 class="mb-0 me-2">{{comment.author.username}}</h6>
+                                    </div>
+                                    <p class="mb-0 text-muted">{{comment.content}}</p>
+                                </div>
+                            </div>
+                            <hr ng-if="!$last" class="my-3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
