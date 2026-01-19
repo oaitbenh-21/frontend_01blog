@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgForOf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { PostResponseDto } from '../../dto/post-dto';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { TimeAgoPipe } from '../../../pipes/timeAgo';
   templateUrl: './post.html',
   styleUrls: ['./post.scss'],
   standalone: true,
-  imports: [CommonModule, MarkdownModule, TimeAgoPipe],
+  imports: [CommonModule, MarkdownModule, TimeAgoPipe, NgForOf],
   providers: [
     MarkdownModule.forRoot().providers!
   ]

@@ -10,7 +10,13 @@
             follow
         </button> -->
     </div>
-
+    @if (!desc) {
+    <div class="container">
+        <div *ngFor="let url of post.fileUrl">
+            <img src="http://localhost:8080/{{url}}" class="card-img-top" alt="Post Image">
+        </div>
+    </div>
+    }
     @if(post.content){
     <div class="card-body" (click)="goToPost()" style="cursor: pointer;">
         <markdown [data]="desc?post.description:post.content"></markdown>

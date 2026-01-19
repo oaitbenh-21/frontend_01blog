@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { NgIf, NgForOf, NgFor } from '@angular/common';
 import { Header } from '../../components/header/header';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../components/post/post';
