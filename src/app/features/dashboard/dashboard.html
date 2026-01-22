@@ -344,3 +344,10 @@
   (confirmed)="onConfirm()"
   (closed)="onClosed()"
 ></app-confirm>
+
+<app-dialog
+  [visible]="showDialog"
+  [message]="dialogMessage"
+  [title]="dialogTitle"
+  (closed)="onClosedDialog()"
+></app-dialog>

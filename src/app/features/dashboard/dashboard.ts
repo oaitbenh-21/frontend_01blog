@@ -9,11 +9,12 @@ import { Router } from '@angular/router';
 import { Header } from '../../components/header/header';
 import { TimeAgoPipe } from '../../../pipes/timeAgo';
 import { FloatingComfirm } from '../../components/confirm/confirm';
+import { FloatingDialog } from '../../components/dialog/dialog';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgClass, Header, NgFor, NgIf, TimeAgoPipe, FloatingComfirm],
+  imports: [NgClass, Header, NgFor, NgIf, TimeAgoPipe, FloatingComfirm, FloatingDialog],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
@@ -27,9 +28,15 @@ export class Dashboard implements OnInit {
     totalReports: 0,
   };
 
+  // floating confirm
   showConfirm: boolean = false;
   confirmMessage: string = '';
   pendingAction: () => void = () => undefined;
+
+  // floating dialog
+  showDialog: boolean = false;
+  dialogMessage: string = '';
+  dialogTitle: string = '';
 
   constructor(
     private admin: AdminService,
@@ -47,8 +54,15 @@ export class Dashboard implements OnInit {
         this.analytics = data;
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Failed to load analytics', err),
+      error: (err) => this.showErrorDialog('Failed to load analytics', err),
     });
+  }
+
+  private showErrorDialog(title: string, err: any) {
+    this.dialogTitle = title;
+    this.dialogMessage = err?.error?.message || 'An unexpected error occurred';
+    this.showDialog = true;
+    this.cdr.markForCheck();
   }
 
   private loadReports(): void {
@@ -57,7 +71,7 @@ export class Dashboard implements OnInit {
         this.reports = data;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Failed to load reports', err),
+      error: (err) => this.showErrorDialog('Failed to load reports', err),
     });
   }
 
@@ -67,7 +81,7 @@ export class Dashboard implements OnInit {
         this.users = data;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Failed to load users', err),
+      error: (err) => this.showErrorDialog('Failed to load users', err),
     });
   }
 
@@ -77,7 +91,7 @@ export class Dashboard implements OnInit {
         this.posts = data;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Failed to load posts', err),
+      error: (err) => this.showErrorDialog('Failed to load posts', err),
     });
   }
 
@@ -99,16 +113,21 @@ export class Dashboard implements OnInit {
     this.showConfirm = false;
   }
 
+  onClosed() {
+    this.showConfirm = false;
+  }
+
+  onClosedDialog() {
+    this.showDialog = false;
+  }
+
   banUser(id: number) {
     this.confirmMessage = 'Do you confirm to ban user ' + id + ' ?';
     this.showConfirm = true;
     this.pendingAction = () => {
       this.admin.banUser(id).subscribe({
-        next: () => {
-          console.log('User banned');
-          this.loadUsers();
-        },
-        error: (err) => console.error(err),
+        next: () => this.loadUsers(),
+        error: (err) => this.showErrorDialog(`Failed to ban user ${id}`, err),
       });
     };
     this.cdr.detectChanges();
@@ -119,11 +138,8 @@ export class Dashboard implements OnInit {
     this.showConfirm = true;
     this.pendingAction = () => {
       this.admin.deleteUser(id).subscribe({
-        next: () => {
-          console.log('User deleted');
-          this.loadUsers();
-        },
-        error: (err) => console.error(err),
+        next: () => this.loadUsers(),
+        error: (err) => this.showErrorDialog(`Failed to delete user ${id}`, err),
       });
     };
     this.cdr.detectChanges();
@@ -134,11 +150,8 @@ export class Dashboard implements OnInit {
     this.showConfirm = true;
     this.pendingAction = () => {
       this.admin.deletePost(id).subscribe({
-        next: () => {
-          console.log('Post deleted');
-          this.loadPosts();
-        },
-        error: (err) => console.error(err),
+        next: () => this.loadPosts(),
+        error: (err) => this.showErrorDialog(`Failed to delete post ${id}`, err),
       });
     };
     this.cdr.detectChanges();
@@ -149,11 +162,8 @@ export class Dashboard implements OnInit {
     this.showConfirm = true;
     this.pendingAction = () => {
       this.admin.resolveReport(id).subscribe({
-        next: () => {
-          console.log('Report resolved');
-          this.loadReports();
-        },
-        error: (err) => console.error(err),
+        next: () => this.loadReports(),
+        error: (err) => this.showErrorDialog(`Failed to resolve report ${id}`, err),
       });
     };
     this.cdr.detectChanges();
@@ -164,17 +174,10 @@ export class Dashboard implements OnInit {
     this.showConfirm = true;
     this.pendingAction = () => {
       this.admin.deleteReport(id).subscribe({
-        next: () => {
-          console.log('Report deleted');
-          this.loadReports();
-        },
-        error: (err) => console.error(err),
+        next: () => this.loadReports(),
+        error: (err) => this.showErrorDialog(`Failed to delete report ${id}`, err),
       });
     };
     this.cdr.detectChanges();
-  }
-
-  onClosed() {
-    this.showConfirm = false;
   }
 }
