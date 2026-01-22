@@ -1,0 +1,39 @@
+<div class="floating-container" [ngStyle]="{ display: visible ? 'block' : 'none' }">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+  </div>
+
+  <!-- Report Reason -->
+  <div class="form-group" style="padding: 0 3px;">
+    <textarea
+      class="form-control"
+      rows="3"
+      maxlength="250"
+      placeholder="Reason for reporting..."
+      [(ngModel)]="message"
+      required
+    ></textarea>
+    <small class="text-muted">{{ message.length }}/250 characters</small>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      (click)="close()"
+    >
+      Cancel
+    </button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="onConfirm()"
+      [disabled]="!message.trim()"
+    >
+      Submit
+    </button>
+  </div>
+</div>

@@ -11,7 +11,10 @@ export class ReportService {
 
   constructor(private http: HttpClient) {}
 
-  submitReport(report: ReportRequestDto): Observable<string> {
-    return this.http.post<string>(this.baseUrl, report);
+  reportUser(report: ReportRequestDto): Observable<string> {
+    return this.http.post<string>(this.baseUrl+'/user', report);
+  }
+  reportPost(report: ReportRequestDto): Observable<string> {
+    return this.http.post<string>(this.baseUrl+'/post', report);
   }
 }

@@ -1,36 +1,62 @@
-<div class="card w-100" style="width: 100%;">
-    <div class="card-header d-flex align-items-center" (click)="goToUser()" style="cursor: pointer;">
-        <img [src]="avatar" alt="User Avatar" class="rounded-circle me-2" width="40" height="40">
-        <div>
-            <h6 class="mb-0">{{ username }}</h6>
+<div class="card w-100" style="width: 100%">
+  <div class="card-header d-flex align-items-center" (click)="goToUser()" style="cursor: pointer">
+    <img [src]="avatar" alt="User Avatar" class="rounded-circle me-2" width="40" height="40" />
+    <div>
+      <h6 class="mb-0">{{ username }}</h6>
 
-            <small class="text-muted">{{ date | timeAgo }}</small>
-        </div>
-        <!-- <button *ngIf="!followed" class="btn btn-outline-primary btn-sm ms-auto">
+      <small class="text-muted">{{ date | timeAgo }}</small>
+    </div>
+    <!-- <button *ngIf="!followed" class="btn btn-outline-primary btn-sm ms-auto">
             follow
         </button> -->
+  </div>
+  @if (!desc) {
+  <div class="container">
+    <div *ngFor="let url of post.fileUrl">
+      <img src="http://localhost:8080/{{ url }}" class="card-img-top" alt="Post Image" />
     </div>
-    @if (!desc) {
-    <div class="container">
-        <div *ngFor="let url of post.fileUrl">
-            <img src="http://localhost:8080/{{url}}" class="card-img-top" alt="Post Image">
-        </div>
+  </div>
+  } @if(post.content){
+  <div class="card-body" (click)="goToPost()" style="cursor: pointer">
+    <markdown [data]="desc ? post.description : post.content"></markdown>
+  </div>
+  }
+  <div class="card-body d-flex align-items-center">
+    <img
+      width="30"
+      height="30"
+      (click)="likePost()"
+      [src]="post.likedByCurrentUser ? '/media/liked-icon.png' : '/media/like-icon.png'"
+      style="cursor: pointer"
+    />
+    <span class="ms-2">{{ likesCount }}</span>
+    <div class="mx-auto">
+      <img
+        width="30"
+        height="30"
+        src="/media/comment-icon.png"
+        (click)="goToPost()"
+        style="cursor: pointer"
+      />
+      <span class="mx-1">{{ comments.length }}</span>
     </div>
-    }
-    @if(post.content){
-    <div class="card-body" (click)="goToPost()" style="cursor: pointer;">
-        <markdown [data]="desc?post.description:post.content"></markdown>
-    </div>
-    }
-    <div class="card-body d-flex align-items-center">
-        <img width="30" height="30" (click)="likePost()"
-            [src]="post.likedByCurrentUser ? '/media/liked-icon.png' : '/media/like-icon.png'" style="cursor: pointer;">
-        <span class="ms-2">{{ likesCount }}</span>
-        <div class="mx-auto">
-            <img width="30" height="30" src="/media/comment-icon.png" (click)="goToPost()" style="cursor: pointer;">
-            <span class="mx-1">{{ comments.length }}</span>
-        </div>
-        <img width="30" height="30" src="/media/share-icon.png">
-        <span class="mx-1">0</span>
-    </div>
+    <img width="30" height="30" src="/media/alert-icon.png" (click)="openReportModal()" />
+    <span class="mx-1">0</span>
+  </div>
 </div>
+
+<app-report
+  [visible]="showReportModal"
+  [id]="post.id"
+  [user]="false"
+  (closed)="showReportModal = false"
+  (reported)="handleReport($event)"
+>
+</app-report>
+
+<app-dialog
+  [visible]="showDialogMessage"
+  [message]="dialogMessage"
+  [title]="dialogTitle"
+  (closed)="onClosedDialog()"
+></app-dialog>

@@ -8,10 +8,10 @@ import { Dashboard } from './features/dashboard/dashboard';
 import { Register } from './features/register/register';
 import { Profile } from './features/profile/profile';
 import { Header } from './components/header/header';
-import { FloatingComfirm } from './components/confirm/confirm';
+import { FloatingReport } from './components/report/report';
 
 export const routes: Routes = [
-  { path: 'report', component: FloatingComfirm },
+  { path: 'report', component: FloatingReport },
   { path: '', component: Home },
   { path: 'login', component: Login },
   { path: 'register', component: Register },

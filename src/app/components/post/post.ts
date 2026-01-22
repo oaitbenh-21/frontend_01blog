@@ -1,20 +1,21 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { CommonModule, NgFor, NgForOf } from '@angular/common';
+import { CommonModule, NgForOf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { PostResponseDto } from '../../dto/post-dto';
 import { Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { TimeAgoPipe } from '../../../pipes/timeAgo';
-import { AdminService } from '../../services/admin.service';
 import { ReportService } from '../../services/report.service';
 import { ReportRequestDto } from '../../dto/report-dto';
+import { FloatingReport } from '../report/report';
+import { FloatingDialog } from '../dialog/dialog';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.html',
   styleUrls: ['./post.scss'],
   standalone: true,
-  imports: [CommonModule, MarkdownModule, TimeAgoPipe, NgForOf],
+  imports: [CommonModule, MarkdownModule, TimeAgoPipe, NgForOf, FloatingReport, FloatingDialog],
   providers: [MarkdownModule.forRoot().providers!],
 })
 export class Post {
@@ -22,7 +23,7 @@ export class Post {
     id: 1,
     content: '',
     CDate: '',
-    author: { id: 1, username: 'Unknown', avatar: '', role: '' },
+    author: { id: 0, username: 'Unknown', avatar: '', role: '' },
     likes: 0,
     description: '',
     likedByCurrentUser: false,
@@ -32,56 +33,76 @@ export class Post {
   };
   @Input() desc: boolean = false;
 
+  showReportModal: boolean = false;
+  dialogMessage: string = '';
+  dialogTitle: string = '';
+  showDialogMessage: boolean = false;
+
   constructor(
     private router: Router,
     private service: PostService,
     private cdr: ChangeDetectorRef,
-    private report: ReportService
+    private reportService: ReportService
   ) {}
 
   goToUser() {
     this.router.navigate(['/profile', this.post.author.id]);
   }
+
   goToPost() {
-    this.router.navigate(['/posts', this.post.id || 2]);
+    this.router.navigate(['/posts', this.post.id]);
   }
 
   likePost() {
     this.post.likedByCurrentUser = !this.post.likedByCurrentUser;
+
     this.service.likePost(this.post.id).subscribe({
-      next: () => {
-        if (this.post.likedByCurrentUser) {
-          this.post.likes++;
-          this.post.likedByCurrentUser = true;
-        } else {
-          this.post.likes--;
-          this.post.likedByCurrentUser = false;
-        }
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        if (error.status == 200) {
-          if (this.post.likedByCurrentUser) {
-            this.post.likes++;
-            this.post.likedByCurrentUser = true;
-          } else {
-            this.post.likes--;
-            this.post.likedByCurrentUser = false;
-          }
-        }
-        this.cdr.detectChanges();
-      },
+      next: () => this.updateLikes(true),
+      error: () => this.updateLikes(false),
     });
+
     this.cdr.detectChanges();
   }
 
-  submitReport(reason: string) {
-    let report: ReportRequestDto = {
-      postid: this.post.id,
-      userid: 0,
-      reason: reason,
-    };
-    this.report.submitReport(report);
+  private updateLikes(success: boolean) {
+    if (success) {
+      this.post.likes += this.post.likedByCurrentUser ? 1 : -1;
+    } else {
+      this.post.likedByCurrentUser = !this.post.likedByCurrentUser;
+    }
+    this.cdr.detectChanges();
+  }
+
+  openReportModal() {
+    this.showReportModal = true;
+    this.dialogMessage = '';
+    this.showDialogMessage = false;
+  }
+
+  onClosedDialog() {
+    this.showReportModal = false;
+    this.dialogMessage = '';
+    this.dialogTitle = '';
+    this.showDialogMessage = false;
+  }
+
+  handleReport(report: ReportRequestDto) {
+    this.reportService.reportPost(report).subscribe({
+      next: () => {
+        this.showReportModal = false;
+        this.dialogTitle = 'Report Submited';
+        this.dialogMessage = 'Report submitted successfully.';
+        this.showDialogMessage = true;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.dialogTitle = 'Failed To Submit Report';
+        this.dialogMessage = err.error?.message || 'Failed to submit report. Please try again.';
+        this.showDialogMessage = true;
+        this.showReportModal = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   get avatar() {
