@@ -1,308 +1,339 @@
 <!-- Top Navbar -->
 <app-header></app-header>
 <div class="container-fluid mt-5 pt-3">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 bg-white border-end min-vh-100 p-0">
-            <div class="list-group list-group-flush">
-                <a href="#dashboard" class="list-group-item list-group-item-action active" data-bs-toggle="list">
-                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                </a>
-                <a href="#users" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                    <i class="fas fa-users me-2"></i>Users
-                </a>
-                <a href="#posts" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                    <i class="fas fa-file-alt me-2"></i>Posts
-                </a>
-                <a href="#reports" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                    <i class="fas fa-flag me-2"></i>Reports
-                </a>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 p-4">
-            <div class="tab-content">
-                <!-- Dashboard Tab -->
-                <div class="tab-pane fade show active" id="dashboard">
-                    <h2 class="mb-4">Dashboard Overview</h2>
-
-                    <!-- Stats Cards -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="card border-primary">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="text-muted mb-1">Taotal Users</h6>
-                                            <h3 class="mb-0">{{analytics.totalUsers}}</h3>
-                                        </div>
-                                        <div class="text-primary fs-1">
-                                            <i class="fas fa-users"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card border-success">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="text-muted mb-1">Total Posts</h6>
-                                            <h3 class="mb-0">{{analytics.totalPosts}}</h3>
-                                        </div>
-                                        <div class="text-success fs-1">
-                                            <i class="fas fa-file-alt"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card border-warning">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="text-muted mb-1">Pending Reports</h6>
-                                            <h3 class="mb-0">{{analytics.totalReports}}</h3>
-                                        </div>
-                                        <div class="text-warning fs-1">
-                                            <i class="fas fa-flag"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Users Tab -->
-                <div class="tab-pane fade" id="users">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0">Users Management</h2>
-                        <div class="input-group" style="max-width: 300px;">
-                            <input type="text" class="form-control" placeholder="Search users...">
-                            <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0 align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Join Date</th>
-                                            <th>Status</th>
-                                            <th class="text-end">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @for (user of users; track user.id) {
-                                        <tr>
-                                            <td>{{ user.id }}</td>
-
-                                            <td (click)="goToUser(user.id)">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    @if (user.avatar) {
-                                                    <img [src]="user.avatar" class="rounded-circle"
-                                                        style="width: 30px; height: 30px; object-fit: cover;"
-                                                        [alt]="user.username + ' avatar'" />
-                                                    } @else {
-                                                    <div class="rounded-circle bg-secondary"
-                                                        style="width: 30px; height: 30px;"></div>
-                                                    }
-                                                    <span class="fw-medium">{{ user.username }}</span>
-                                                </div>
-                                            </td>
-
-                                            <td>{{ user.email }}</td>
-
-                                            <td>{{ user.CDate | timeAgo }}</td>
-
-                                            <td>
-                                                <span class="badge"
-                                                    [ngClass]="user.deleted? 'bg-danger' : user.banned? 'bg-warning': 'bg-success'">
-                                                    {{ user.deleted ? 'Deleted' : user.banned? " Banned": 'Active' }}
-                                                </span>
-                                            </td>
-
-                                            <td class="text-end">
-                                                <div class="btn-group btn-group-sm">
-                                                    @if (!user.banned) {
-                                                    <button (click)="banUser(user.id)" class="btn btn-outline-warning"
-                                                        title="Ban" aria-label="Ban user">
-                                                        <i class="fas fa-ban"></i>
-                                                    </button>
-                                                    }
-                                                    @if (!user.deleted) {
-                                                    <button class="btn btn-outline-danger" title="Delete"
-                                                        aria-label="Delete user" [disabled]="user.deleted"
-                                                        (click)="deleteUser(user.id)">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                    }
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Posts Tab -->
-                <div class="tab-pane fade" id="posts">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0">Posts Management</h2>
-                        <div class="input-group" style="max-width: 300px;">
-                            <input type="text" class="form-control" placeholder="Search posts...">
-                            <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-                    <!-- posts -->
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Title</th>
-                                            <th>Author</th>
-                                            <th>Published</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr *ngFor="let post of posts">
-                                            <!-- ID -->
-                                            <td>{{ post.id }}</td>
-
-                                            <!-- Title / Content -->
-                                            <td>
-                                                <div class="text-truncate" style="max-width: 300px;">
-                                                    {{ desc(post) }}
-                                                </div>
-                                            </td>
-
-                                            <!-- Author -->
-                                            <td>{{ post.author.username }}</td>
-
-                                            <!-- Created Date -->
-                                            <td>{{ post.CDate | timeAgo }}</td>
-
-                                            <!-- Status (example logic) -->
-                                            <td>
-                                                <span class="badge"
-                                                    [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'">
-                                                    {{ !post.isDeleted ? 'Published' : 'Hidden' }}
-                                                </span>
-                                            </td>
-
-                                            <!-- Actions -->
-                                            <td>
-                                                <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-outline-danger" title="Delete"
-                                                        (click)="deletePost(post.id)">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <!-- Empty state -->
-                                        <tr *ngIf="posts.length === 0">
-                                            <td colspan="6" class="text-center py-4">
-                                                No posts found
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Reports Tab -->
-                <div class="tab-pane fade" id="reports">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0">Submitted Reports</h2>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-outline-secondary active">All</button>
-                            <button class="btn btn-sm btn-outline-warning">Pending</button>
-                            <button class="btn btn-sm btn-outline-success">Resolved</button>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-
-                            <!-- Reports List -->
-                            <div class="row g-3">
-                                <div class="col-12" *ngFor="let report of reports">
-                                    <div class="card border-warning">
-                                        <div class="card-body">
-
-                                            <!-- Header -->
-                                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                                <div>
-                                                    <span class="badge bg-warning text-dark mb-2">
-                                                        {{ report.status || 'PENDING' }}
-                                                    </span>
-
-                                                    <h5 class="mb-1">User Report</h5>
-
-                                                    <p class="text-muted small mb-0">
-                                                        Report ID: #{{ report.id }} |
-                                                        Submitted: {{ report.createdAt }}
-                                                    </p>
-                                                </div>
-
-                                                <div class="btn-group btn-group-sm">
-                                                    <button class="btn btn-outline-success" title="Resolve">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                    <button class="btn btn-outline-danger" title="Dismiss">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Body -->
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p class="mb-1">
-                                                        <strong>Reported by:</strong> User #{{ report.reporterId }}
-                                                    </p>
-                                                    <p class="mb-1">
-                                                        <strong>Reported user:</strong> User #{{ report.reportedUserId
-                                                        }}
-                                                    </p>
-                                                    <p class="mb-0">
-                                                        <strong>Reason:</strong> {{ report.reason }}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if (reports.length == 0) {
-                            No reports right now
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 bg-white border-end min-vh-100 p-0">
+      <div class="list-group list-group-flush">
+        <a
+          href="#dashboard"
+          class="list-group-item list-group-item-action active"
+          data-bs-toggle="list"
+        >
+          <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+        </a>
+        <a href="#users" class="list-group-item list-group-item-action" data-bs-toggle="list">
+          <i class="fas fa-users me-2"></i>Users
+        </a>
+        <a href="#posts" class="list-group-item list-group-item-action" data-bs-toggle="list">
+          <i class="fas fa-file-alt me-2"></i>Posts
+        </a>
+        <a href="#reports" class="list-group-item list-group-item-action" data-bs-toggle="list">
+          <i class="fas fa-flag me-2"></i>Reports
+        </a>
+      </div>
     </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 col-lg-10 p-4">
+      <div class="tab-content">
+        <!-- Dashboard Tab -->
+        <div class="tab-pane fade show active" id="dashboard">
+          <h2 class="mb-4">Dashboard Overview</h2>
+
+          <!-- Stats Cards -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="card border-primary">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="text-muted mb-1">Taotal Users</h6>
+                      <h3 class="mb-0">{{ analytics.totalUsers }}</h3>
+                    </div>
+                    <div class="text-primary fs-1">
+                      <i class="fas fa-users"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-success">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="text-muted mb-1">Total Posts</h6>
+                      <h3 class="mb-0">{{ analytics.totalPosts }}</h3>
+                    </div>
+                    <div class="text-success fs-1">
+                      <i class="fas fa-file-alt"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-warning">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="text-muted mb-1">Pending Reports</h6>
+                      <h3 class="mb-0">{{ analytics.totalReports }}</h3>
+                    </div>
+                    <div class="text-warning fs-1">
+                      <i class="fas fa-flag"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-pane fade" id="users">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Users Management</h2>
+            <div class="input-group" style="max-width: 300px">
+              <input type="text" class="form-control" placeholder="Search users..." />
+              <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>ID</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Join Date</th>
+                      <th>Status</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (user of users; track user.id) {
+                    <tr>
+                      <td>{{ user.id }}</td>
+
+                      <td (click)="goToUser(user.id)">
+                        <div class="d-flex align-items-center gap-2">
+                          @if (user.avatar) {
+                          <img
+                            [src]="user.avatar"
+                            class="rounded-circle"
+                            style="width: 30px; height: 30px; object-fit: cover"
+                            [alt]="user.username + ' avatar'"
+                          />
+                          } @else {
+                          <div
+                            class="rounded-circle bg-secondary"
+                            style="width: 30px; height: 30px"
+                          ></div>
+                          }
+                          <span class="fw-medium">{{ user.username }}</span>
+                        </div>
+                      </td>
+
+                      <td>{{ user.email }}</td>
+
+                      <td>{{ user.CDate | timeAgo }}</td>
+
+                      <td>
+                        <span
+                          class="badge"
+                          [ngClass]="
+                            user.deleted ? 'bg-danger' : user.banned ? 'bg-warning' : 'bg-success'
+                          "
+                        >
+                          {{ user.deleted ? 'Deleted' : user.banned ? ' Banned' : 'Active' }}
+                        </span>
+                      </td>
+
+                      <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                          @if (!user.banned) {
+                          <button
+                            (click)="banUser(user.id)"
+                            class="btn btn-outline-warning"
+                            title="Ban"
+                            aria-label="Ban user"
+                          >
+                            <i class="fas fa-ban"></i>
+                          </button>
+                          } @if (!user.deleted) {
+                          <button
+                            class="btn btn-outline-danger"
+                            title="Delete"
+                            aria-label="Delete user"
+                            [disabled]="user.deleted"
+                            (click)="deleteUser(user.id)"
+                          >
+                            <i class="fas fa-trash"></i>
+                          </button>
+                          }
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posts Tab -->
+        <div class="tab-pane fade" id="posts">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Posts Management</h2>
+            <div class="input-group" style="max-width: 300px">
+              <input type="text" class="form-control" placeholder="Search posts..." />
+              <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+            </div>
+          </div>
+          <!-- posts -->
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Author</th>
+                      <th>Published</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let post of posts">
+                      <!-- ID -->
+                      <td>{{ post.id }}</td>
+
+                      <!-- Title / Content -->
+                      <td>
+                        <div class="text-truncate" style="max-width: 300px">
+                          {{ desc(post) }}
+                        </div>
+                      </td>
+
+                      <!-- Author -->
+                      <td>{{ post.author.username }}</td>
+
+                      <!-- Created Date -->
+                      <td>{{ post.CDate | timeAgo }}</td>
+
+                      <!-- Status (example logic) -->
+                      <td>
+                        <span
+                          class="badge"
+                          [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'"
+                        >
+                          {{ !post.isDeleted ? 'Published' : 'Hidden' }}
+                        </span>
+                      </td>
+
+                      <!-- Actions -->
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <button
+                            class="btn btn-outline-danger"
+                            title="Delete"
+                            (click)="deletePost(post.id)"
+                          >
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Empty state -->
+                    <tr *ngIf="posts.length === 0">
+                      <td colspan="6" class="text-center py-4">No posts found</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Reports Tab -->
+        <div class="tab-pane fade" id="reports">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Submitted Reports</h2>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-secondary active">All</button>
+              <button class="btn btn-sm btn-outline-warning">Pending</button>
+              <button class="btn btn-sm btn-outline-success">Resolved</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <!-- Reports List -->
+              <div class="row g-3">
+                <div class="col-12" *ngFor="let report of reports">
+                  <div class="card border-warning">
+                    <div class="card-body">
+                      <!-- Header -->
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                          <span
+                            class="badge text-dark mb-2"
+                            [ngClass]="{
+                              'bg-warning': report.status === 'PENDING',
+                              'bg-success': report.status === 'RESOLVED',
+                              'bg-secondary': !report.status
+                            }"
+                          >
+                            {{ report.status || 'UNKNOWN' }}
+                          </span>
+
+                          <h5 class="mb-1">User Report</h5>
+
+                          <p class="text-muted small mb-0">
+                            Report ID: {{ report.id }} | Submitted:
+                            {{ report.createdAt | timeAgo }}
+                          </p>
+                        </div>
+
+                        <div class="btn-group btn-group-sm">
+                          @if (report.status != "RESOLVED"){
+                          <button
+                            class="btn btn-outline-success"
+                            title="Resolve"
+                            (click)="resolveReport(report.id)"
+                          >
+                            <i class="fas fa-check"></i>
+                          </button>
+                          }
+                          <button
+                            class="btn btn-outline-danger"
+                            title="Dismiss"
+                            (click)="deleteReport(report.id)"
+                          >
+                            <i class="fas fa-times"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Body -->
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-1">
+                            <strong>Reported by:</strong> User {{ report.reporterId }}
+                          </p>
+                          <p class="mb-1">
+                            <strong>Reported user:</strong> User {{ report.reportedUserId }}
+                          </p>
+                          <p class="mb-0"><strong>Reason:</strong> {{ report.reason }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              @if (reports.length == 0) { No reports right now }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

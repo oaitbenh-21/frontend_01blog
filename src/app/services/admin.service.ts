@@ -4,39 +4,42 @@ import { Observable } from 'rxjs';
 import { UserDto } from '../dto/user-dto';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService {
-    private baseUrl = 'http://localhost:8080/admin';
+  private baseUrl = 'http://localhost:8080/admin';
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getAnalytics(): Observable<AnalyticsDto> {
-        return this.http.get<AnalyticsDto>(`${this.baseUrl}/analytics`);
-    }
-    getAllUsers(): Observable<UserDto[]> {
-        return this.http.get<UserDto[]>(`${this.baseUrl}/users`);
-    }
-    getAllReports(): Observable<ReportDto[]> {
-        return this.http.get<ReportDto[]>(`${this.baseUrl}/reports`);
-    }
-    deleteUser(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/users/${id}`);
-    }
+  getAnalytics(): Observable<AnalyticsDto> {
+    return this.http.get<AnalyticsDto>(`${this.baseUrl}/analytics`);
+  }
+  getAllUsers(): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.baseUrl}/users`);
+  }
+  getAllReports(): Observable<ReportDto[]> {
+    return this.http.get<ReportDto[]>(`${this.baseUrl}/reports`);
+  }
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/users/${id}`);
+  }
 
-    banUser(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/users/${id}/ban`);
-    }
+  banUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/users/${id}/ban`);
+  }
 
-    deletePost(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/posts/${id}`);
-    }
+  deletePost(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/posts/${id}`);
+  }
 
-    deleteComment(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/comment/${id}`);
-    }
+  deleteComment(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/comment/${id}`);
+  }
 
-    resolveReport(id: number): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/reports/${id}/resolve`, {});
-    }
+  resolveReport(id: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/reports/${id}`, {});
+  }
+  deleteReport(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/reports/${id}`, {});
+  }
 }

@@ -124,4 +124,14 @@ export class Dashboard implements OnInit {
       },
     })
   }
+  deleteReport(id: number) {
+    this.admin.deleteReport(id).subscribe({
+      next(value) {
+
+      },
+      error(err) {
+
+      },
+    })
+  }
 }
