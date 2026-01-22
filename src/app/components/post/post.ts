@@ -5,6 +5,9 @@ import { PostResponseDto } from '../../dto/post-dto';
 import { Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { TimeAgoPipe } from '../../../pipes/timeAgo';
+import { AdminService } from '../../services/admin.service';
+import { ReportService } from '../../services/report.service';
+import { ReportRequestDto } from '../../dto/report-dto';
 
 @Component({
   selector: 'app-post',
@@ -12,16 +15,13 @@ import { TimeAgoPipe } from '../../../pipes/timeAgo';
   styleUrls: ['./post.scss'],
   standalone: true,
   imports: [CommonModule, MarkdownModule, TimeAgoPipe, NgForOf],
-  providers: [
-    MarkdownModule.forRoot().providers!
-  ]
-
+  providers: [MarkdownModule.forRoot().providers!],
 })
 export class Post {
   @Input() post: PostResponseDto = {
     id: 1,
     content: '',
-    CDate: "",
+    CDate: '',
     author: { id: 1, username: 'Unknown', avatar: '', role: '' },
     likes: 0,
     description: '',
@@ -32,8 +32,12 @@ export class Post {
   };
   @Input() desc: boolean = false;
 
-  constructor(private router: Router, private service: PostService, private cdr: ChangeDetectorRef
-  ) { }
+  constructor(
+    private router: Router,
+    private service: PostService,
+    private cdr: ChangeDetectorRef,
+    private report: ReportService
+  ) {}
 
   goToUser() {
     this.router.navigate(['/profile', this.post.author.id]);
@@ -66,16 +70,36 @@ export class Post {
           }
         }
         this.cdr.detectChanges();
-      }
+      },
     });
     this.cdr.detectChanges();
   }
 
-  get avatar() { return this.post.author.avatar || 'https://github.com/mdo.png'; }
-  get username() { return this.post.author.username; }
-  get liked() { return this.post.likedByCurrentUser; }
-  get likesCount() { return this.post.likes; }
-  get comments() { return this.post.comments; }
-  get date() { return this.post.CDate; }
+  submitReport(reason: string) {
+    let report: ReportRequestDto = {
+      postid: this.post.id,
+      userid: 0,
+      reason: reason,
+    };
+    this.report.submitReport(report);
+  }
 
+  get avatar() {
+    return this.post.author.avatar || 'https://github.com/mdo.png';
+  }
+  get username() {
+    return this.post.author.username;
+  }
+  get liked() {
+    return this.post.likedByCurrentUser;
+  }
+  get likesCount() {
+    return this.post.likes;
+  }
+  get comments() {
+    return this.post.comments;
+  }
+  get date() {
+    return this.post.CDate;
+  }
 }

@@ -1,0 +1,15 @@
+<div class="floating-container" [ngStyle]="{ display: visible ? 'block' : 'none' }">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+  </div>
+
+  <div class="modal-body">
+    {{ message }}
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="close()">Cancel</button>
+    <button class="btn btn-primary" (click)="confirm()">Confirm</button>
+  </div>
+</div>
