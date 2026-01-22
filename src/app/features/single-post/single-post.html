@@ -1,58 +1,85 @@
 <app-header></app-header>
 
-<div class="container-fluid mt-5 pt-10">
-    <div *ngIf="loading" class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+<div class="container-fluid mt-5 pt-5 bg-light min-vh-100">
+    <div *ngIf="loading" class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
-    <app-post *ngIf="post" [post]="post"></app-post>
 
+    <div class="container mb-4">
+        <app-post *ngIf="post" [post]="post"></app-post>
 
-    <p *ngIf="!loading && !post" class="text-muted text-center">
-        No post available.
-    </p>
+        <p *ngIf="!loading && !post" class="text-muted text-center py-5">
+            No post available.
+        </p>
+    </div>
 
-    <div class="container py-5" ng-controller="CommentsController">
+    <div class="container pb-5" ng-controller="CommentsController">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-comments me-2"></i>
-                            Comments ({{post?.comments?.length}})
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white border-bottom rounded-top-4">
+                        <h5 class="mb-0 d-flex align-items-center">
+                            <i class="fas fa-comments text-primary me-2"></i>
+                            Comments
+                            <span class="badge bg-primary ms-2">
+                                {{post?.comments?.length}}
+                            </span>
                         </h5>
                     </div>
+
                     <div class="card-body">
-                        <div class="comment-section mt-3">
-                            <textarea class="form-control" [(ngModel)]="content" #contentRef="ngModel" rows="3"
-                                placeholder="Write your comment..." required>
+                        <div class="mb-4">
+                            <textarea
+                                class="form-control rounded-3"
+                                [(ngModel)]="content"
+                                #contentRef="ngModel"
+                                rows="3"
+                                placeholder="Write something thoughtful..."
+                                required>
                             </textarea>
 
-                            <button (click)="addComment()" class="btn btn-primary mt-2"
-                                [disabled]="!contentRef.valid || !content" style="height: fit-content;">
-                                <i class="fas fa-paper-plane"></i> Post Comment
-                            </button>
+                            <div class="text-end mt-2">
+                                <button
+                                    (click)="addComment()"
+                                    class="btn btn-primary px-4"
+                                    [disabled]="!contentRef.valid || !content">
+                                    <i class="fas fa-paper-plane me-1"></i>
+                                    Post
+                                </button>
+                            </div>
                         </div>
 
-                        <div *ngIf="post?.comments?.length == 0 || false" class="text-center text-muted py-4">
-                            <i class="fas fa-comment-slash fa-3x mb-3"></i>
-                            <p>No comments yet. Be the first to comment!</p>
+                        <div *ngIf="post?.comments?.length === 0" class="text-center text-muted py-5">
+                            <i class="fas fa-comment-slash fa-3x mb-3 opacity-50"></i>
+                            <p class="mb-0">No comments yet</p>
+                            <small>Be the first to start the conversation 👀</small>
                         </div>
 
-                        <div *ngFor="let comment of post?.comments" class="mb-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <img src="{{comment.author.avatar || 'https://www.bootdey.com/img/Content/avatar/avatar5.png'}}"
-                                        class="rounded-circle" width="48" height="48" alt="{{comment.author.username}}">
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <div class="d-flex align-items-center mb-1"
+                        <!-- Comment List -->
+                        <div *ngFor="let comment of post?.comments; let last = last">
+                            <div class="d-flex align-items-start mb-3">
+                                <img
+                                    src="{{comment.author.avatar || 'https://www.bootdey.com/img/Content/avatar/avatar5.png'}}"
+                                    class="rounded-circle border"
+                                    width="44"
+                                    height="44"
+                                    alt="{{comment.author.username}}">
+
+                                <div class="ms-3 bg-light rounded-4 p-3 flex-grow-1">
+                                    <div
+                                        class="fw-semibold mb-1 cursor-pointer"
                                         (click)="goToProfile(comment.author.id)">
-                                        <h6 class="mb-0 me-2">{{comment.author.username}}</h6>
+                                        {{comment.author.username}}
                                     </div>
-                                    <p class="mb-0 text-muted">{{comment.content}}</p>
+                                    <div class="text-muted small">
+                                        {{comment.content}}
+                                    </div>
                                 </div>
                             </div>
-                            <hr ng-if="!$last" class="my-3">
+
+                            <hr *ngIf="!last" class="my-3 opacity-25">
                         </div>
                     </div>
                 </div>
