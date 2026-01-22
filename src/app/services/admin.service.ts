@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserDto } from '../dto/user-dto';
+import { ReportDto } from '../dto/report-dto';
 
 @Injectable({
   providedIn: 'root',

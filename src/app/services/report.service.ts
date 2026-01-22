@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ReportDto, ReportRequestDto } from '../dto/report-dto';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportService {
   private baseUrl = 'http://localhost:8080/reports';
 
   constructor(private http: HttpClient) {}
 
-  submitReport(report: ReportDto): Observable<ReportDto> {
-    return this.http.post<ReportDto>(this.baseUrl, report);
+  submitReport(report: ReportRequestDto): Observable<string> {
+    return this.http.post<string>(this.baseUrl, report);
   }
 }

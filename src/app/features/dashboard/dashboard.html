@@ -337,3 +337,10 @@
     </div>
   </div>
 </div>
+
+<app-confirm
+  [visible]="showConfirm"
+  [message]="confirmMessage"
+  (confirmed)="onConfirm()"
+  (closed)="onClosed()"
+></app-confirm>

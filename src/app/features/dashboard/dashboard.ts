@@ -1,19 +1,19 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-
 import { UserDto } from '../../dto/user-dto';
 import { PostResponseDto } from '../../dto/post-dto';
-
+import { ReportDto } from '../../dto/report-dto';
 import { PostService } from '../../services/post.service';
 import { AdminService } from '../../services/admin.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
-import { Header } from "../../components/header/header";
+import { Header } from '../../components/header/header';
 import { TimeAgoPipe } from '../../../pipes/timeAgo';
+import { FloatingComfirm } from '../../components/confirm/confirm';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgClass, Header, NgFor, NgIf, TimeAgoPipe],
+  imports: [NgClass, Header, NgFor, NgIf, TimeAgoPipe, FloatingComfirm],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
@@ -27,12 +27,16 @@ export class Dashboard implements OnInit {
     totalReports: 0,
   };
 
+  showConfirm: boolean = false;
+  confirmMessage: string = '';
+  pendingAction: () => void = () => undefined;
+
   constructor(
     private admin: AdminService,
     private post: PostService,
     private cdr: ChangeDetectorRef,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadReports();
@@ -40,22 +44,18 @@ export class Dashboard implements OnInit {
     this.loadPosts();
     this.admin.getAnalytics().subscribe({
       next: (data) => {
-        console.log(data);
-        this.analytics = data
+        this.analytics = data;
         this.cdr.markForCheck();
       },
-      error: (err) => {
-        console.error('Failed to load analytics', err)
-        console.log(err);
-      },
+      error: (err) => console.error('Failed to load analytics', err),
     });
-    this.cdr.markForCheck();
   }
 
   private loadReports(): void {
     this.admin.getAllReports().subscribe({
       next: (data) => {
-        this.reports = data
+        this.reports = data;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Failed to load reports', err),
     });
@@ -64,7 +64,8 @@ export class Dashboard implements OnInit {
   private loadUsers(): void {
     this.admin.getAllUsers().subscribe({
       next: (data) => {
-        this.users = data
+        this.users = data;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Failed to load users', err),
     });
@@ -72,66 +73,108 @@ export class Dashboard implements OnInit {
 
   private loadPosts(): void {
     this.post.getAllPosts(0, 100).subscribe({
-      next: (data) => (this.posts = data),
+      next: (data) => {
+        this.posts = data;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Failed to load posts', err),
     });
   }
+
   goToUser(id: number) {
     this.router.navigate([`/profile/${id}`]);
   }
+
   desc(post: PostResponseDto) {
-    if (post.description.length > 15) {
-      post.description = post.description.substring(0, 15);
+    return post.description.length > 15
+      ? post.description.substring(0, 15) + '...'
+      : post.description;
+  }
+
+  onConfirm() {
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = () => undefined;
     }
-    return post.description + "...";
+    this.showConfirm = false;
   }
 
   banUser(id: number) {
-    this.admin.banUser(id).subscribe({
-      next(value) {
-      },
-      error(err) {
-      },
-    })
-
+    this.confirmMessage = 'Do you confirm to ban user ' + id + ' ?';
+    this.showConfirm = true;
+    this.pendingAction = () => {
+      this.admin.banUser(id).subscribe({
+        next: () => {
+          console.log('User banned');
+          this.loadUsers();
+        },
+        error: (err) => console.error(err),
+      });
+    };
+    this.cdr.detectChanges();
   }
+
   deleteUser(id: number) {
-    this.admin.deleteUser(id).subscribe({
-      next(value) {
-      },
-      error(err) {
-      },
-    })
-
+    this.confirmMessage = 'Do you confirm to delete user ' + id + ' ?';
+    this.showConfirm = true;
+    this.pendingAction = () => {
+      this.admin.deleteUser(id).subscribe({
+        next: () => {
+          console.log('User deleted');
+          this.loadUsers();
+        },
+        error: (err) => console.error(err),
+      });
+    };
+    this.cdr.detectChanges();
   }
+
   deletePost(id: number) {
-    this.admin.deletePost(id).subscribe({
-      next(value) {
-
-      },
-      error(err) {
-
-      },
-    })
+    this.confirmMessage = 'Do you confirm to delete post ' + id + ' ?';
+    this.showConfirm = true;
+    this.pendingAction = () => {
+      this.admin.deletePost(id).subscribe({
+        next: () => {
+          console.log('Post deleted');
+          this.loadPosts();
+        },
+        error: (err) => console.error(err),
+      });
+    };
+    this.cdr.detectChanges();
   }
+
   resolveReport(id: number) {
-    this.admin.resolveReport(id).subscribe({
-      next(value) {
-
-      },
-      error(err) {
-
-      },
-    })
+    this.confirmMessage = 'Do you confirm to resolve report ' + id + ' ?';
+    this.showConfirm = true;
+    this.pendingAction = () => {
+      this.admin.resolveReport(id).subscribe({
+        next: () => {
+          console.log('Report resolved');
+          this.loadReports();
+        },
+        error: (err) => console.error(err),
+      });
+    };
+    this.cdr.detectChanges();
   }
+
   deleteReport(id: number) {
-    this.admin.deleteReport(id).subscribe({
-      next(value) {
+    this.confirmMessage = 'Do you confirm to delete report ' + id + ' ?';
+    this.showConfirm = true;
+    this.pendingAction = () => {
+      this.admin.deleteReport(id).subscribe({
+        next: () => {
+          console.log('Report deleted');
+          this.loadReports();
+        },
+        error: (err) => console.error(err),
+      });
+    };
+    this.cdr.detectChanges();
+  }
 
-      },
-      error(err) {
-
-      },
-    })
+  onClosed() {
+    this.showConfirm = false;
   }
 }
