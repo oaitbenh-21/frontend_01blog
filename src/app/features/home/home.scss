@@ -1,26 +1,71 @@
-.pt-10 {
-    padding-top: 60px;
+.home-feed-wrapper {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
 }
 
-.scrollable-column {
-    height: calc(100vh - 60px);
-    overflow-y: scroll;
-    scrollbar-width: none;
+.home-layout {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  padding-top: 5rem;
+  gap: 2rem;
 }
 
-.fixed-column {
-    background-color: #f8f9fa;
+.feed-container {
+  flex: 1;
+  max-width: 720px;
+  padding: 0 1rem;
 }
 
-@media (max-width: 940px) {
-    .laptop-profile {
-        display: none !important;
-        height: 0px;
-        width: 0px;
-    }
+.post-wrapper {
+  margin-bottom: 2rem;
+}
 
-    .center-mobile {
-        width: 100%;
-        justify-content: space-around;
-    }
+.profile-side {
+  width: 280px;
+}
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 6rem;
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 3px solid #e9ecef;
+}
+
+.feed-filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.feed-filters .btn {
+  min-width: 160px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.feed-filters .btn.active {
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+}
+
+/* Loading */
+.feed-loading {
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

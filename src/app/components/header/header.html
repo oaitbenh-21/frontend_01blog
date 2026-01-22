@@ -1,30 +1,62 @@
-<nav class="navbar bg-white fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand me-auto" (click)="navigateToHome()">
-            <img src="https://images.seeklogo.com/logo-png/2/2/blogger-b-logo-png_seeklogo-20342.png" alt="Bootstrap"
-                width="30" height="30">
-        </a>
+<nav class="navbar navbar-expand bg-white fixed-top main-navbar">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" (click)="navigateToHome()">
+      <img
+        src="https://images.seeklogo.com/logo-png/2/2/blogger-b-logo-png_seeklogo-20342.png"
+        alt="logo"
+        width="28"
+        height="28"
+      />
+      <span class="brand-text d-none d-md-inline">Bloggy</span>
+    </a>
 
-        <a class="navbar-brand" href="/posts/add">
-            <img src="/media/add-icon.png" alt="Bootstrap" width="30" height="30">
-        </a>
+    <a
+      class="btn btn-primary btn-sm rounded-pill d-flex align-items-center gap-1 add-post-btn"
+      href="/posts/add"
+    >
+      <img src="/media/add-icon.png" alt="add" width="16" height="16" />
+      <span class="d-none d-md-inline">Create</span>
+    </a>
 
-        <div class="flex-shrink-0 dropstart ms-auto">
-            <a class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <img src="{{ user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'}}" alt="mdo"
-                    width="32" height="32" class="rounded-circle">
-            </a>
-            <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item text-center" (click)="navigateToProfile()">{{ user.username }}</a></li>
-                <li *ngIf="user.role === 'ADMIN'">
-                    <a class="dropdown-item text-center" (click)="navigateToAdminDashboard()">dashboard</a>
-                </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item text-center" (click)="logout()">sign out</a></li>
-            </ul>
-        </div>
+    <div class="dropdown ms-auto">
+      <a
+        class="d-flex align-items-center gap-2 dropdown-toggle user-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <img
+          src="{{ user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png' }}"
+          alt="avatar"
+          width="36"
+          height="36"
+          class="rounded-circle user-avatar"
+        />
+      </a>
+
+      <ul class="dropdown-menu dropdown-menu-end shadow-sm user-dropdown">
+        <li class="px-3 py-2 text-center">
+          <strong>{{ user.username }}</strong>
+          <div class="text-muted small">{{ user.role }}</div>
+        </li>
+
+        <li><hr class="dropdown-divider" /></li>
+
+        <li>
+          <a class="dropdown-item text-center" (click)="navigateToProfile()"> My Profile </a>
+        </li>
+
+        <li *ngIf="user.role === 'ADMIN'">
+          <a class="dropdown-item text-center" (click)="navigateToAdminDashboard()">
+            Admin Dashboard
+          </a>
+        </li>
+
+        <li><hr class="dropdown-divider" /></li>
+
+        <li>
+          <a class="dropdown-item text-center text-danger" (click)="logout()"> Sign out </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>

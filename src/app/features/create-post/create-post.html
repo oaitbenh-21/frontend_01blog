@@ -1,24 +1,55 @@
 <app-header></app-header>
 
-<div class="container-fluid mt-5 pt-4">
-  <h3 class="text-center">Create New Post</h3>
-  <div class="mb-3 container-fluid text-center">
-    <p>{{error}}</p>
-  </div>
-  <div class="mb-3">
-    <input type="text" class="form-control" placeholder="Post Description" [(ngModel)]="description" [disabled]="saving"
-      maxlength="200" minlength="20" />
-  </div>
-  <div class="mb-3">
-    <div #editor class="editable form-control" contenteditable="true" style="min-height: 300px;"
-      (input)="onContentChange(editor)"></div>
-  </div>
-  <div class="mb-3 container-fluid text-center">
-    <input type="file" name="file" (change)="onFileSelected($event)" [disabled]="saving" />
-  </div>
+<div class="container create-post-wrapper mt-5 pt-5">
+  <div class="card shadow-sm p-4 mx-auto create-post-card">
 
-  <button class="btn btn-primary container-fluid text-center" [disabled]="saving || !content.trim()"
-    (click)="createPost()">
-    {{ saving ? 'Creating...' : 'Create Post' }}
-  </button>
+    <h3 class="text-center mb-4 fw-bold">Create New Post</h3>
+
+    <div *ngIf="error" class="mb-3 text-center text-danger fw-semibold">
+      {{ error }}
+    </div>
+
+    <div class="mb-3">
+      <input
+        type="text"
+        class="form-control form-control-lg rounded-pill"
+        placeholder="Post Description"
+        [(ngModel)]="description"
+        [disabled]="saving"
+        maxlength="200"
+        minlength="20"
+      />
+    </div>
+
+    <div class="mb-3">
+      <div
+        #editor
+        class="editable form-control"
+        contenteditable="true"
+        style="min-height: 300px; border-radius: 12px;"
+        (input)="onContentChange(editor)"
+      ></div>
+    </div>
+
+    <div class="mb-3 text-center">
+      <label class="btn btn-outline-secondary rounded-pill px-4 py-2">
+        Upload Image
+        <input
+          type="file"
+          name="file"
+          (change)="onFileSelected($event)"
+          [disabled]="saving"
+          hidden
+        />
+      </label>
+    </div>
+
+    <button
+      class="btn btn-primary btn-lg w-100 rounded-pill"
+      [disabled]="saving || !content.trim()"
+      (click)="createPost()"
+    >
+      {{ saving ? 'Creating...' : 'Create Post' }}
+    </button>
+  </div>
 </div>

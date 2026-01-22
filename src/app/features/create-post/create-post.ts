@@ -1,10 +1,17 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  AfterViewInit,
+  ViewChild,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import MediumEditor from 'medium-editor';
 import { Header } from '../../components/header/header';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 interface PostResponseDto {
   id: number;
@@ -25,56 +32,52 @@ interface PostResponseDto {
   standalone: true,
   templateUrl: './create-post.html',
   styleUrls: ['./create-post.scss'],
-  imports: [
-    CommonModule,
-    Header,
-    FormsModule
-  ],
+  imports: [CommonModule, Header, FormsModule],
 })
 export class CreatePostComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
+
   file: File | null = null;
   FileBase64: string = '';
   content = '';
   description = '';
   saving = false;
-  private editor!: any;
   error: string = '';
 
+  private editor!: any;
   private readonly POSTS_URL = 'http://localhost:8080/posts';
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
-
-  onContentChange(editor: HTMLElement) {
-    this.content = editor.innerText || '';
-  }
+  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     this.editor = new MediumEditor(this.editorRef.nativeElement, {
       placeholder: { text: 'Write your post here...' },
       toolbar: {
-        buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote']
+        buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote'],
       },
-      autoLink: true
+      autoLink: true,
     });
 
     this.editor.subscribe('editableInput', () => {
       this.content = this.editorRef.nativeElement.innerHTML;
     });
   }
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.FileBase64 = reader.result as string;
-    }
+
+  onContentChange(editor: HTMLElement) {
+    this.content = editor.innerText || '';
   }
 
-  ngOnDestroy(): void {
-    if (this.editor) {
-      this.editor.destroy();
-    }
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    this.file = file;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.FileBase64 = reader.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
   createPost(): void {
@@ -87,25 +90,39 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     }
 
     this.saving = true;
-
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
-      .post<PostResponseDto>(this.POSTS_URL, { content: this.content, description: this.description, file: this.FileBase64 }, { headers })
+      .post<PostResponseDto>(
+        this.POSTS_URL,
+        {
+          content: this.content,
+          description: this.description,
+          file: this.FileBase64,
+        },
+        { headers }
+      )
       .subscribe({
-        next: (newPost: any) => {
+        next: (newPost) => {
           console.log(newPost);
           this.router.navigate(['/posts', newPost.id]);
         },
         error: (err) => {
-          this.error = err.error.errors.description || "an error durring creating account";
+          this.error =
+            err.error?.errors?.file ||
+            err.error?.errors?.message ||
+            'An error occurred while creating post';
           setTimeout(() => {
             this.error = '';
             this.cdr.detectChanges();
           }, 30000);
           this.saving = false;
           this.cdr.detectChanges();
-        }
+        },
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.editor) this.editor.destroy();
   }
 }

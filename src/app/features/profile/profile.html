@@ -1,76 +1,85 @@
 <app-header></app-header>
 
-<div class="container bootstrap snippets bootdey mt-5 pt-5">
-  <div class="row">
-    <div class="profile-nav col-md-3">
-      <div class="panel">
-        <div *ngIf="user; else noUser">
-          <div class="user-heading round">
-            <a href="#">
-              <img
-                [src]="user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'"
-                alt=""
-              />
-            </a>
-            <h1>{{ user.username }}</h1>
+<div class="container mt-5 pt-4">
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 profile-card">
+        <div *ngIf="user; else noUser" class="card-body text-center">
+          <div class="avatar-wrapper mb-3">
+            <img
+              class="avatar-img"
+              [src]="user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'"
+              alt="avatar"
+            />
           </div>
 
-          <div class="panel text-center">
-            <p>{{ user.role }}</p>
-            <p>{{ user.email }}</p>
-            <p>Joined on: {{ user.CDate | timeAgo }}</p>
-            <p>Followers: {{ user.followersCount }} | Following: {{ user.followingCount }}</p>
-            <div *ngIf="!user.mine; else editTpl">
-              <button
-                *ngIf="user.follow; else followTpl"
-                class="btn btn-secondary"
-                (click)="toggleFollow()"
-              >
-                Unfollow
-              </button>
+          <h5 class="fw-bold mb-0">{{ user.username }}</h5>
+          <span class="badge bg-secondary mb-2">{{ user.role }}</span>
 
-              <ng-template #followTpl>
-                <button class="btn btn-primary" (click)="toggleFollow()">Follow</button>
-                <img
-                  src="/media/alert-icon.png"
-                  width="30px"
-                  height="30px"
-                  (click)="showReportSection()"
-                />
-              </ng-template>
+          <p class="text-muted small mb-1">{{ user.email }}</p>
+          <p class="text-muted small">Joined {{ user.CDate | timeAgo }}</p>
+
+          <div class="d-flex justify-content-around my-3 stats">
+            <div>
+              <strong>{{ user.followersCount }}</strong>
+              <div class="text-muted small">Followers</div>
             </div>
+            <div>
+              <strong>{{ user.followingCount }}</strong>
+              <div class="text-muted small">Following</div>
+            </div>
+          </div>
 
-            <ng-template #editTpl>
-              <button class="btn btn-secondary" (click)="navigateToEditProfile()">Edit</button>
+          <div *ngIf="!user.mine; else editTpl" class="d-grid gap-2">
+            <button
+              *ngIf="user.follow; else followTpl"
+              class="btn btn-outline-secondary btn-sm"
+              (click)="toggleFollow()"
+            >
+              Unfollow
+            </button>
+
+            <ng-template #followTpl>
+              <button class="btn btn-primary btn-sm" (click)="toggleFollow()">Follow</button>
+
+              <button class="btn btn-light btn-sm text-danger" (click)="showReportSection()">
+                Report
+              </button>
             </ng-template>
           </div>
+
+          <ng-template #editTpl>
+            <button class="btn btn-outline-primary btn-sm w-100" (click)="navigateToEditProfile()">
+              Edit Profile
+            </button>
+          </ng-template>
         </div>
 
         <ng-template #noUser>
-          <p>No user yet</p>
+          <div class="card-body text-center text-muted">No user yet</div>
         </ng-template>
       </div>
     </div>
 
-    <div class="profile-info col-md-9">
-      <div class="panel">
-        <div class="bio-graph-heading" *ngIf="user; else noUser">
-          {{ user.bio || 'here where should the bio to be' }}
+    <div class="col-md-9">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h6 class="text-uppercase text-muted mb-2">Bio</h6>
+          <p class="mb-0">
+            {{ user.bio || 'Here is where the bio should be.' }}
+          </p>
         </div>
       </div>
 
-      <div class="mt-4">
-        <div *ngIf="!loading && user.posts != null">
-          <div *ngFor="let post of user.posts">
-            <app-post [post]="post" [desc]="true" style="width: 100%"></app-post>
-            <br />
-          </div>
+      <div *ngIf="!loading && user.posts != null">
+        <div *ngFor="let post of user.posts" class="mb-4">
+          <app-post [post]="post" [desc]="true" style="width: 100%"></app-post>
         </div>
-
-        <p *ngIf="!loading && user.posts.length === 0" class="text-muted text-center">
-          No posts available.
-        </p>
       </div>
+
+      <p *ngIf="!loading && user.posts.length === 0" class="text-muted text-center mt-5">
+        No posts available.
+      </p>
     </div>
   </div>
 </div>
@@ -81,8 +90,7 @@
   [user]="true"
   (closed)="showReport = false"
   (reported)="handleReport($event)"
->
-</app-report>
+></app-report>
 
 <app-dialog
   [visible]="showDialog"

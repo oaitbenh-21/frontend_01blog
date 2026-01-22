@@ -1,34 +1,45 @@
 <app-header></app-header>
 
-<div class="container-fluid pt-10 vh-100">
-  <div class="row justify-content-center">
-    <div class="col-2 mt-3">
-      <app-navbar></app-navbar>
-    </div>
-    <div class="center-mobile w-70 col-8 scrollable-column d-flex flex-column align-items-center">
-      <div *ngIf="loading" class="h-100 justify-content-center align-items-center">
-        <div class="spinner-border" role="status">
+<div class="home-feed-wrapper mt-5 mp-3">
+  <div class="home-layout">
+    <div class="feed-container">
+      <div class="feed-filters mb-4">
+        <button class="btn btn-primary active">All Posts</button>
+        <button class="btn btn-outline-primary">My Subscriptions</button>
+      </div>
+
+      <div *ngIf="loading" class="feed-loading">
+        <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
 
       <ng-container *ngIf="!loading && posts.length > 0">
         <ng-container *ngFor="let post of posts">
-          <app-post [post]="post" [desc]="true" style="width: 100%;"></app-post>
-          <br>
+          <div class="post-wrapper">
+            <app-post [post]="post" [desc]="true" style="width: 100%"></app-post>
+          </div>
         </ng-container>
       </ng-container>
 
-      <p *ngIf="!loading && posts.length === 0" class="text-muted text-center">
+      <p *ngIf="!loading && posts.length === 0" class="text-muted text-center mt-5">
         No posts available.
       </p>
-
     </div>
 
+    <aside class="profile-side d-none d-lg-block">
+      <div class="profile-card">
+        <img
+          src="https://bootdey.com/img/Content/avatar/avatar5.png"
+          class="profile-avatar"
+          alt="profile"
+        />
 
-    <!-- <div class="laptop-profile col-auto fixed-column d-flex justify-content-end mt-5">
-      <app-profile-nav></app-profile-nav>
-    </div> -->
+        <h5 class="fw-bold mb-1">oaitbenh</h5>
+        <p class="text-muted small text-center mb-3">the bio should to be Here</p>
 
+        <a class="btn btn-outline-primary btn-sm w-100"> My Profile </a>
+      </div>
+    </aside>
   </div>
 </div>
