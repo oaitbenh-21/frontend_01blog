@@ -320,7 +320,8 @@
                             <strong>Reported by:</strong> User {{ report.reporterId }}
                           </p>
                           <p class="mb-1">
-                            <strong>Reported user:</strong> User {{ report.reportedUserId }}
+                            <strong>Reported {{ report.userId != 0 ? 'User' : 'Post' }}:</strong>
+                            {{ report.userId != 0 ? report.userId : report.postId }}
                           </p>
                           <p class="mb-0"><strong>Reason:</strong> {{ report.reason }}</p>
                         </div>

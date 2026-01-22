@@ -12,22 +12,20 @@ import { FormsModule } from '@angular/forms';
 })
 export class FloatingReport {
   @Input() visible: boolean = true;
-  @Input() id: number = 0; // can be user ID or post ID
-  @Input() user: boolean = true; // true = user, false = post
+  @Input() id: number = 0;
+  @Input() user: boolean = true;
   @Input() message: string = '';
   @Output() closed = new EventEmitter<void>();
   @Output() reported = new EventEmitter<ReportRequestDto>();
 
-  statusMessage: string = ''; // inline status messages
+  statusMessage: string = '';
 
   constructor(private reportService: ReportService) {}
 
-  // Dynamic title based on type (user or post)
   get title(): string {
     return `Are you sure you want to report this ${this.user ? 'user' : 'post'} ${this.id}?`;
   }
 
-  // Close the modal and reset messages
   close() {
     this.visible = false;
     this.closed.emit();
@@ -35,17 +33,15 @@ export class FloatingReport {
     this.message = '';
   }
 
-  // Confirm report submission
   onConfirm() {
     this.statusMessage = '';
-
     if (!this.message.trim()) {
       this.statusMessage = 'Please provide a reason for reporting.';
       return;
     }
 
     const report: ReportRequestDto = {
-      userid: 0,
+      userid: this.id,
       postid: this.id,
       reason: this.message.trim(),
     };

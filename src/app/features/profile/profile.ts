@@ -1,14 +1,19 @@
-import { ChangeDetectorRef, Component, NgModule, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Post } from '../../components/post/post';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UserDto } from '../../dto/user-dto';
 import { UserService } from '../../services/user.service';
 import { Header } from '../../components/header/header';
+import { FloatingDialog } from '../../components/dialog/dialog';
+import { FloatingReport } from '../../components/report/report';
+import { TimeAgoPipe } from '../../../pipes/timeAgo';
+import { ReportRequestDto } from '../../dto/report-dto';
+import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-profile',
-  imports: [Post, NgIf, NgFor, Header, DatePipe],
+  imports: [Post, NgIf, NgFor, Header, FloatingDialog, FloatingReport, TimeAgoPipe],
   templateUrl: './profile.html',
   standalone: true,
   styleUrl: './profile.scss',
@@ -32,19 +37,29 @@ export class Profile implements OnInit {
     CDate: '',
     banned: false,
   };
-  postsError: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private reportService: ReportService
+  ) {}
+
+  // floating report
+  showReport: boolean = false;
+  reportMessage: string = '';
+  pendingAction: () => void = () => undefined;
+
+  // floating dialog
+  showDialog: boolean = false;
+  dialogMessage: string = '';
+  dialogTitle: string = '';
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadUser(id);
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const id = Number(this.route.snapshot.paramMap.get('id'));
         this.loadUser(id);
@@ -68,7 +83,7 @@ export class Profile implements OnInit {
             console.log('Error following user:', err);
           }
           this.cdr.detectChanges();
-        }
+        },
       });
     } else {
       this.userService.subscribeToUser(this.user.id).subscribe({
@@ -86,17 +101,41 @@ export class Profile implements OnInit {
             console.log('Error following user:', err);
           }
           this.cdr.detectChanges();
-        }
+        },
       });
     }
   }
 
+  showReportSection() {
+    this.showReport = true;
+  }
+
+  handleReport(report: ReportRequestDto) {
+    this.reportService.reportUser(report).subscribe({
+      next: () => {
+        this.showReport = false;
+        this.dialogTitle = 'Report Submited';
+        this.dialogMessage = 'Report submitted successfully.';
+        this.showDialog = true;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.dialogTitle = 'Failed To Submit Report';
+        this.dialogMessage = err.error?.message || 'Failed to submit report. Please try again.';
+        this.showDialog = true;
+        this.showReport = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
   loadUser(id: number) {
     this.userService.getUserProfile(id).subscribe({
-      next: user => {
+      next: (user) => {
         this.user = user;
-        this.user.posts.map(post => {
-          post.content = post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content;
+        this.user.posts.map((post) => {
+          post.content =
+            post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content;
           return post;
         });
         this.loading = false;
@@ -106,11 +145,10 @@ export class Profile implements OnInit {
         console.log('Error getting user:', err);
         this.loading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
   navigateToEditProfile() {
     this.router.navigate(['/profile/edit', this.user.id]);
   }
 }
-

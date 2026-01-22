@@ -1,7 +1,8 @@
 export interface ReportDto {
   id: number;
   reporterId: number;
-  reportedUserId: number;
+  userId: number;
+  postId: number;
   reason: string;
   createdAt: string;
   status: string;
