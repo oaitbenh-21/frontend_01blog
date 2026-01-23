@@ -60,16 +60,19 @@ export class Dashboard implements OnInit {
 
 
   togleVisible(getted_post: PostResponseDto) {
-    console.log("got");
-    this.admin.toggleVisiblePost(getted_post.id).subscribe({
-      next: () => {
-        this.loadPosts();
-        getted_post.visible = !getted_post.visible;
-      },
-      error: (err) => {
-        this.showErrorDialog('Failed to invisible post', err)
-      },
-    })
+    this.confirmMessage = `Do you confirm to ${getted_post.visible ? 'Unvisible' : 'Visible'} post ` + getted_post.id + ' ?';
+    this.showConfirm = true;
+    this.pendingAction = () => {
+      this.admin.toggleVisiblePost(getted_post.id).subscribe({
+        next: () => {
+          this.loadPosts();
+          getted_post.visible = !getted_post.visible;
+        },
+        error: (err) => {
+          this.showErrorDialog('Failed to invisible post', err)
+        },
+      })
+    };
   }
 
   private showErrorDialog(title: string, err: any) {
