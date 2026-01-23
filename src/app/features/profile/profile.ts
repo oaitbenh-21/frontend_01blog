@@ -10,14 +10,16 @@ import { FloatingReport } from '../../components/report/report';
 import { TimeAgoPipe } from '../../../pipes/timeAgo';
 import { ReportRequestDto } from '../../dto/report-dto';
 import { ReportService } from '../../services/report.service';
+import { EditProfileComponent } from '../../components/edit-profile/edit-profile';
 
 @Component({
   selector: 'app-profile',
-  imports: [Post, NgIf, NgFor, Header, FloatingDialog, FloatingReport, TimeAgoPipe],
+  imports: [Post, NgIf, NgFor, Header, FloatingDialog, FloatingReport, TimeAgoPipe, EditProfileComponent],
   templateUrl: './profile.html',
   standalone: true,
   styleUrl: './profile.scss',
 })
+
 export class Profile implements OnInit {
   protected POSTS_URL = 'http://localhost:8080/posts';
   loading: boolean = true;
@@ -38,20 +40,26 @@ export class Profile implements OnInit {
     banned: false,
   };
 
+  showEditProfile: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
     private cdr: ChangeDetectorRef,
     private reportService: ReportService
-  ) {}
+  ) { }
 
-  // floating report
+  onUserUpdated() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.showEditProfile = false;
+    this.loadUser(id);
+  }
+
   showReport: boolean = false;
   reportMessage: string = '';
   pendingAction: () => void = () => undefined;
 
-  // floating dialog
   showDialog: boolean = false;
   dialogMessage: string = '';
   dialogTitle: string = '';
@@ -148,7 +156,9 @@ export class Profile implements OnInit {
       },
     });
   }
-  navigateToEditProfile() {
-    this.router.navigate(['/profile/edit', this.user.id]);
+  showEditProfileComponent() {
+    console.log("Modal opening...");
+    this.showEditProfile = true;
+    this.cdr.markForCheck();
   }
 }

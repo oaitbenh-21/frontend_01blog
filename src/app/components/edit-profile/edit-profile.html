@@ -1,0 +1,50 @@
+<div class="overlay" [ngStyle]="{ display: visible ? 'block' : 'none' }">
+  <div class="modal">
+    <h5 class="text-center mb-4">Edit Profile</h5>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+      <!-- Avatar Upload -->
+      <div class="mb-3 text-center">
+        <img [src]="avatarPreview || 'https://bootdey.com/img/Content/avatar/avatar5.png'" alt="avatar"
+          class="rounded-circle mb-2" width="100" height="100" />
+        <input type="file" accept="image/*" (change)="onAvatarChange($event)" class="form-control mt-2">
+      </div>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-control" formControlName="username" placeholder="Enter username">
+        <div *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched"
+          class="text-danger small">
+          Username is required.
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="email" placeholder="Enter email">
+        <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger small">
+          Enter a valid email.
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="mb-3">
+        <label class="form-label">Bio</label>
+        <textarea class="form-control" formControlName="bio" rows="3"
+          placeholder="Write something about yourself"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="profileForm.invalid || submitting">
+        {{ submitting ? 'Saving...' : 'Save Changes' }}
+      </button>
+
+      <button type="button" class="btn btn-secondary w-100 mt-2" (click)="onCancel()">Cancel</button>
+    </form>
+
+    <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+  </div>
+</div>

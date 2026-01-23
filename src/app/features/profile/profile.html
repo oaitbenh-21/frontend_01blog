@@ -43,7 +43,7 @@
           </div>
 
           <ng-template #editTpl>
-            <button class="btn btn-outline-primary btn-sm w-100" (click)="navigateToEditProfile()">
+            <button class="btn btn-outline-primary btn-sm w-100" (click)="showEditProfileComponent()">
               Edit Profile
             </button>
           </ng-template>
@@ -83,3 +83,6 @@
 
 <app-dialog [visible]="showDialog" [message]="dialogMessage" [title]="dialogTitle"
   (closed)="showDialog = false"></app-dialog>
+
+<app-edit-profile [user]="user" [visible]="showEditProfile" (close)="showEditProfile = false" (saved)="onUserUpdated()">
+</app-edit-profile>
