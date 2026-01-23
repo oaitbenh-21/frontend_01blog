@@ -1,5 +1,9 @@
+.pt-10 {
+  margin-top: 60px;
+}
+
 .home-feed-wrapper {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   background-color: #f8f9fa;
   display: flex;
   justify-content: center;

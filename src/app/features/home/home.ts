@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Post } from '../../components/post/post';
 import { Header } from '../../components/header/header';
 import { NgFor, NgIf } from '@angular/common';
-import { Navbar } from '../../components/navbar/navbar';
 import { PostService } from '../../services/post.service';
 import { PostResponseDto } from '../../dto/post-dto';
 
@@ -12,15 +11,15 @@ import { PostResponseDto } from '../../dto/post-dto';
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
-  imports: [NgFor, NgIf, Post, Header, Navbar],
+  imports: [NgFor, NgIf, Post, Header],
   standalone: true
 })
-@Injectable({ providedIn: 'root' })
 export class Home implements OnInit {
   protected POSTS_URL = 'http://localhost:8080/posts';
   loading: boolean = true;
 
   posts: PostResponseDto[] = [];
+
 
   constructor(
     private service: PostService,

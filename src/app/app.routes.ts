@@ -2,13 +2,13 @@ import { Routes } from '@angular/router';
 import { Login } from './features/login/login';
 import { Home } from './features/home/home';
 import { PostPageComponent } from './features/single-post/single-post';
-import { CreatePostComponent } from './features/create-post/create-post';
 import { LogoutComponent } from './features/logout/logout';
 import { Dashboard } from './features/dashboard/dashboard';
 import { Register } from './features/register/register';
 import { Profile } from './features/profile/profile';
 import { Header } from './components/header/header';
 import { FloatingReport } from './components/report/report';
+import { CreatePostComponent } from './components/create-post/create-post';
 
 export const routes: Routes = [
   { path: 'report', component: FloatingReport },

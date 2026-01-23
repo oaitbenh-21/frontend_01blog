@@ -1,36 +1,22 @@
 <nav class="navbar navbar-expand bg-white fixed-top main-navbar">
   <div class="container-fluid px-4">
     <a class="navbar-brand d-flex align-items-center gap-2" (click)="navigateToHome()">
-      <img
-        src="https://images.seeklogo.com/logo-png/2/2/blogger-b-logo-png_seeklogo-20342.png"
-        alt="logo"
-        width="28"
-        height="28"
-      />
-      <span class="brand-text d-none d-md-inline">Bloggy</span>
+      <img src="https://images.seeklogo.com/logo-png/2/2/blogger-b-logo-png_seeklogo-20342.png" alt="logo" width="28"
+        height="28" />
+      <span class="brand-text d-none d-md-inline">Blogium</span>
     </a>
 
-    <a
-      class="btn btn-primary btn-sm rounded-pill d-flex align-items-center gap-1 add-post-btn"
-      href="/posts/add"
-    >
+    <button class="btn btn-primary btn-sm rounded-pill d-flex align-items-center gap-1 add-post-btn"
+      (click)="openCreatePost()">
       <img src="/media/add-icon.png" alt="add" width="16" height="16" />
       <span class="d-none d-md-inline">Create</span>
-    </a>
+    </button>
 
     <div class="dropdown ms-auto">
-      <a
-        class="d-flex align-items-center gap-2 dropdown-toggle user-toggle"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        <img
-          src="{{ user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png' }}"
-          alt="avatar"
-          width="36"
-          height="36"
-          class="rounded-circle user-avatar"
-        />
+      <a class="d-flex align-items-center gap-2 dropdown-toggle user-toggle" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <img src="{{ user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png' }}" alt="avatar" width="36"
+          height="36" class="rounded-circle user-avatar" />
       </a>
 
       <ul class="dropdown-menu dropdown-menu-end shadow-sm user-dropdown">
@@ -39,7 +25,9 @@
           <div class="text-muted small">{{ user.role }}</div>
         </li>
 
-        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <hr class="dropdown-divider" />
+        </li>
 
         <li>
           <a class="dropdown-item text-center" (click)="navigateToProfile()"> My Profile </a>
@@ -51,7 +39,9 @@
           </a>
         </li>
 
-        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <hr class="dropdown-divider" />
+        </li>
 
         <li>
           <a class="dropdown-item text-center text-danger" (click)="logout()"> Sign out </a>
@@ -60,3 +50,8 @@
     </div>
   </div>
 </nav>
+
+
+<app-create-post [visible]="showCreatePost" [edit]="false" [content]="postContent" [description]="postDescription"
+  [files]="postFiles" [post_id]="postId" (closed)="onCreatePostClosed()" (show_error)="onCreatePostError()">
+</app-create-post>

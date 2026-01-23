@@ -5,13 +5,16 @@ import {
   ViewChild,
   OnDestroy,
   ChangeDetectorRef,
+  Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import MediumEditor from 'medium-editor';
-import { Header } from '../../components/header/header';
 import { FormsModule } from '@angular/forms';
+import { FloatingDialog } from '../dialog/dialog';
 
 interface PostResponseDto {
   id: number;
@@ -32,22 +35,34 @@ interface PostResponseDto {
   standalone: true,
   templateUrl: './create-post.html',
   styleUrls: ['./create-post.scss'],
-  imports: [CommonModule, Header, FormsModule],
+  imports: [CommonModule, FormsModule, NgStyle, FloatingDialog],
 })
 export class CreatePostComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
   file: File | null = null;
   FileBase64: string = '';
-  content = '';
-  description = '';
   saving = false;
   error: string = '';
+
+  @Input() edit: boolean = false;
+  @Input() content: string = '';
+  @Input() description: string = '';
+  @Input() files: string[] = [];
+  @Input() post_id: number = 0;
+  @Input() visible: boolean = false;
+
+  @Output() closed = new EventEmitter<void>();
+  @Output() show_error = new EventEmitter<void>();
+
+  dialogMessage: string = '';
+  dialogTitle: string = '';
+  showDialogMessage: boolean = false;
 
   private editor!: any;
   private readonly POSTS_URL = 'http://localhost:8080/posts';
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit(): void {
     this.editor = new MediumEditor(this.editorRef.nativeElement, {
@@ -59,7 +74,7 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     });
 
     this.editor.subscribe('editableInput', () => {
-      this.content = this.editorRef.nativeElement.innerHTML;
+      this.content = this.editorRef.nativeElement.innerHTML || '';
     });
   }
 
@@ -81,48 +96,53 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
   }
 
   createPost(): void {
-    if (this.saving || !this.content.trim()) return;
+    if (this.saving || !this.content?.trim()) return;
 
     const token = localStorage.getItem('token');
     if (!token) {
       console.warn('No token found.');
+      this.error = 'You must be logged in to create a post.';
       return;
     }
 
     this.saving = true;
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    this.http
-      .post<PostResponseDto>(
-        this.POSTS_URL,
-        {
-          content: this.content,
-          description: this.description,
-          file: this.FileBase64,
-        },
-        { headers }
-      )
-      .subscribe({
-        next: (newPost) => {
-          console.log(newPost);
-          this.router.navigate(['/posts', newPost.id]);
-        },
-        error: (err) => {
-          this.error =
-            err.error?.errors?.file ||
-            err.error?.errors?.message ||
-            'An error occurred while creating post';
-          setTimeout(() => {
-            this.error = '';
-            this.cdr.detectChanges();
-          }, 30000);
-          this.saving = false;
-          this.cdr.detectChanges();
-        },
-      });
+    this.http.post<PostResponseDto>(
+      this.POSTS_URL,
+      {
+        content: this.content,
+        description: this.description,
+        file: this.FileBase64,
+      },
+      { headers }
+    ).subscribe({
+      next: (newPost) => {
+        this.router.navigate(['/posts', newPost.id]);
+      },
+      error: (err) => {
+        this.dialogTitle = err.error?.error || 'failed to create post';
+        this.dialogMessage = err.error?.errors?.description || 'Failed to create post. Please try again.';
+        this.showDialogMessage = true;
+        this.saving = false;
+        this.visible = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  close() {
+    this.visible = false;
+    this.closed.emit();
   }
 
   ngOnDestroy(): void {
     if (this.editor) this.editor.destroy();
+  }
+
+  onClosedDialog() {
+    this.dialogMessage = '';
+    this.dialogTitle = '';
+    this.showDialogMessage = false;
   }
 }

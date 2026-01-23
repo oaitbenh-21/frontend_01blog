@@ -1,23 +1,33 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router } from '@angular/router'; // Import Router for navigation
+import { Router } from '@angular/router';
 import { AuthorDto } from '../../dto/user-dto';
 import { UserService } from '../../services/user.service';
-import { DeferBlockBehavior } from '@angular/core/testing';
+import { CreatePostComponent } from '../create-post/create-post';
 
 @Component({
   selector: 'app-header',
-  imports: [NgIf],
+  imports: [NgIf, CreatePostComponent],
   templateUrl: './header.html',
-  styleUrl: './header.scss',
+  styleUrls: ['./header.scss'],
+  standalone: true,
 })
 export class Header {
   user: AuthorDto = { id: 0, username: '', avatar: '', role: '' };
 
-  constructor(private router: Router, private userService: UserService, private cdr: ChangeDetectorRef) { }
+  postContent = '';
+  postDescription = '';
+  postFiles: string[] = [];
+  postId = 0;
+  showCreatePost = false;
+
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
-
     this.userService.getCurrentUser().subscribe({
       next: (data: AuthorDto) => {
         this.user = data;
@@ -28,7 +38,24 @@ export class Header {
         this.router.navigate(['/login']);
       }
     });
+  }
 
+  openCreatePost() {
+    console.log("Opening create post modal");
+    this.showCreatePost = true;
+    this.cdr.detectChanges();
+  }
+
+  closeCreatePost() {
+    this.showCreatePost = false;
+  }
+
+  onCreatePostClosed() {
+    this.showCreatePost = false;
+  }
+
+  onCreatePostError() {
+    console.error('Create post error');
   }
 
   navigateToHome() {
@@ -37,7 +64,6 @@ export class Header {
 
   navigateToProfile() {
     this.router.navigate(['/profile', this.user.id]);
-
   }
 
   navigateToAdminDashboard() {
