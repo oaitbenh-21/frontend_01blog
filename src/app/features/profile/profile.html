@@ -1,16 +1,13 @@
 <app-header></app-header>
 
-<div class="container mt-5 pt-4">
+<div class="headerplace container mt-10">
   <div class="row g-4">
     <div class="col-md-3">
       <div class="card shadow-sm border-0 profile-card">
         <div *ngIf="user; else noUser" class="card-body text-center">
           <div class="avatar-wrapper mb-3">
-            <img
-              class="avatar-img"
-              [src]="user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'"
-              alt="avatar"
-            />
+            <img class="avatar-img" [src]="user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'"
+              alt="avatar" />
           </div>
 
           <h5 class="fw-bold mb-0">{{ user.username }}</h5>
@@ -31,11 +28,8 @@
           </div>
 
           <div *ngIf="!user.mine; else editTpl" class="d-grid gap-2">
-            <button
-              *ngIf="user.follow; else followTpl"
-              class="btn btn-outline-secondary btn-sm"
-              (click)="toggleFollow()"
-            >
+            <button *ngIf="user.follow; else followTpl" class="btn btn-outline-secondary btn-sm"
+              (click)="toggleFollow()">
               Unfollow
             </button>
 
@@ -84,17 +78,8 @@
   </div>
 </div>
 
-<app-report
-  [visible]="showReport"
-  [id]="user.id"
-  [user]="true"
-  (closed)="showReport = false"
-  (reported)="handleReport($event)"
-></app-report>
+<app-report [visible]="showReport" [id]="user.id" [user]="true" (closed)="showReport = false"
+  (reported)="handleReport($event)"></app-report>
 
-<app-dialog
-  [visible]="showDialog"
-  [message]="dialogMessage"
-  [title]="dialogTitle"
-  (closed)="showDialog = false"
-></app-dialog>
+<app-dialog [visible]="showDialog" [message]="dialogMessage" [title]="dialogTitle"
+  (closed)="showDialog = false"></app-dialog>

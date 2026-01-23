@@ -1,15 +1,11 @@
 <!-- Top Navbar -->
 <app-header></app-header>
-<div class="container-fluid mt-5 pt-3">
+<div class="headerplace container-fluid mt-10">
   <div class="row">
     <!-- Sidebar -->
-    <div class="col-md-3 col-lg-2 bg-white border-end min-vh-100 p-0">
+    <div class="col-md-3 col-lg-2 bg-white border-end p-0">
       <div class="list-group list-group-flush">
-        <a
-          href="#dashboard"
-          class="list-group-item list-group-item-action active"
-          data-bs-toggle="list"
-        >
+        <a href="#dashboard" class="list-group-item list-group-item-action active" data-bs-toggle="list">
           <i class="fas fa-tachometer-alt me-2"></i>Dashboard
         </a>
         <a href="#users" class="list-group-item list-group-item-action" data-bs-toggle="list">
@@ -113,17 +109,10 @@
                       <td (click)="goToUser(user.id)">
                         <div class="d-flex align-items-center gap-2">
                           @if (user.avatar) {
-                          <img
-                            [src]="user.avatar"
-                            class="rounded-circle"
-                            style="width: 30px; height: 30px; object-fit: cover"
-                            [alt]="user.username + ' avatar'"
-                          />
+                          <img [src]="user.avatar" class="rounded-circle"
+                            style="width: 30px; height: 30px; object-fit: cover" [alt]="user.username + ' avatar'" />
                           } @else {
-                          <div
-                            class="rounded-circle bg-secondary"
-                            style="width: 30px; height: 30px"
-                          ></div>
+                          <div class="rounded-circle bg-secondary" style="width: 30px; height: 30px"></div>
                           }
                           <span class="fw-medium">{{ user.username }}</span>
                         </div>
@@ -134,12 +123,9 @@
                       <td>{{ user.CDate | timeAgo }}</td>
 
                       <td>
-                        <span
-                          class="badge"
-                          [ngClass]="
+                        <span class="badge" [ngClass]="
                             user.deleted ? 'bg-danger' : user.banned ? 'bg-warning' : 'bg-success'
-                          "
-                        >
+                          ">
                           {{ user.deleted ? 'Deleted' : user.banned ? ' Banned' : 'Active' }}
                         </span>
                       </td>
@@ -147,22 +133,13 @@
                       <td class="text-end">
                         <div class="btn-group btn-group-sm">
                           @if (!user.banned) {
-                          <button
-                            (click)="banUser(user.id)"
-                            class="btn btn-outline-warning"
-                            title="Ban"
-                            aria-label="Ban user"
-                          >
+                          <button (click)="banUser(user.id)" class="btn btn-outline-warning" title="Ban"
+                            aria-label="Ban user">
                             <i class="fas fa-ban"></i>
                           </button>
                           } @if (!user.deleted) {
-                          <button
-                            class="btn btn-outline-danger"
-                            title="Delete"
-                            aria-label="Delete user"
-                            [disabled]="user.deleted"
-                            (click)="deleteUser(user.id)"
-                          >
+                          <button class="btn btn-outline-danger" title="Delete" aria-label="Delete user"
+                            [disabled]="user.deleted" (click)="deleteUser(user.id)">
                             <i class="fas fa-trash"></i>
                           </button>
                           }
@@ -222,10 +199,7 @@
 
                       <!-- Status (example logic) -->
                       <td>
-                        <span
-                          class="badge"
-                          [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'"
-                        >
+                        <span class="badge" [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'">
                           {{ !post.isDeleted ? 'Published' : 'Hidden' }}
                         </span>
                       </td>
@@ -233,11 +207,7 @@
                       <!-- Actions -->
                       <td>
                         <div class="btn-group btn-group-sm">
-                          <button
-                            class="btn btn-outline-danger"
-                            title="Delete"
-                            (click)="deletePost(post.id)"
-                          >
+                          <button class="btn btn-outline-danger" title="Delete" (click)="deletePost(post.id)">
                             <i class="fas fa-trash"></i>
                           </button>
                         </div>
@@ -274,14 +244,11 @@
                       <!-- Header -->
                       <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                          <span
-                            class="badge text-dark mb-2"
-                            [ngClass]="{
+                          <span class="badge text-dark mb-2" [ngClass]="{
                               'bg-warning': report.status === 'PENDING',
                               'bg-success': report.status === 'RESOLVED',
                               'bg-secondary': !report.status
-                            }"
-                          >
+                            }">
                             {{ report.status || 'UNKNOWN' }}
                           </span>
 
@@ -295,19 +262,11 @@
 
                         <div class="btn-group btn-group-sm">
                           @if (report.status != "RESOLVED"){
-                          <button
-                            class="btn btn-outline-success"
-                            title="Resolve"
-                            (click)="resolveReport(report.id)"
-                          >
+                          <button class="btn btn-outline-success" title="Resolve" (click)="resolveReport(report.id)">
                             <i class="fas fa-check"></i>
                           </button>
                           }
-                          <button
-                            class="btn btn-outline-danger"
-                            title="Dismiss"
-                            (click)="deleteReport(report.id)"
-                          >
+                          <button class="btn btn-outline-danger" title="Dismiss" (click)="deleteReport(report.id)">
                             <i class="fas fa-times"></i>
                           </button>
                         </div>
@@ -339,16 +298,8 @@
   </div>
 </div>
 
-<app-confirm
-  [visible]="showConfirm"
-  [message]="confirmMessage"
-  (confirmed)="onConfirm()"
-  (closed)="onClosed()"
-></app-confirm>
+<app-confirm [visible]="showConfirm" [message]="confirmMessage" (confirmed)="onConfirm()"
+  (closed)="onClosed()"></app-confirm>
 
-<app-dialog
-  [visible]="showDialog"
-  [message]="dialogMessage"
-  [title]="dialogTitle"
-  (closed)="onClosedDialog()"
-></app-dialog>
+<app-dialog [visible]="showDialog" [message]="dialogMessage" [title]="dialogTitle"
+  (closed)="onClosedDialog()"></app-dialog>
