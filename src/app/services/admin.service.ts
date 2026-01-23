@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserDto } from '../dto/user-dto';
 import { ReportDto } from '../dto/report-dto';
+import { PostResponseDto } from '../dto/post-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ import { ReportDto } from '../dto/report-dto';
 export class AdminService {
   private baseUrl = 'http://localhost:8080/admin';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAnalytics(): Observable<AnalyticsDto> {
     return this.http.get<AnalyticsDto>(`${this.baseUrl}/analytics`);
@@ -18,6 +19,10 @@ export class AdminService {
   getAllUsers(): Observable<UserDto[]> {
     return this.http.get<UserDto[]>(`${this.baseUrl}/users`);
   }
+  getAllPosts(): Observable<PostResponseDto[]> {
+    return this.http.get<PostResponseDto[]>(`${this.baseUrl}/posts`);
+  }
+
   getAllReports(): Observable<ReportDto[]> {
     return this.http.get<ReportDto[]>(`${this.baseUrl}/reports`);
   }
@@ -31,6 +36,9 @@ export class AdminService {
 
   deletePost(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/posts/${id}`);
+  }
+  toggleVisiblePost(id: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/posts/${id}/visible`, {});
   }
 
   deleteComment(id: number): Observable<void> {

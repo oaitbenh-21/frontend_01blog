@@ -15,7 +15,6 @@ export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
-  { path: 'posts/add', component: CreatePostComponent },
   { path: 'posts/:id', component: PostPageComponent },
   { path: 'profile/:id', component: Profile },
   { path: 'logout', component: LogoutComponent },

@@ -15,7 +15,7 @@ export interface PostResponseDto {
   likes: number;
   likedByCurrentUser: boolean;
   comments: CommentResponseDto[];
-  isDeleted: boolean;
+  visible: boolean;
 }
 
 

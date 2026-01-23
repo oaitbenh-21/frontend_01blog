@@ -199,8 +199,8 @@
 
                       <!-- Status (example logic) -->
                       <td>
-                        <span class="badge" [ngClass]="post.isDeleted ? 'bg-success' : 'bg-warning text-dark'">
-                          {{ !post.isDeleted ? 'Published' : 'Hidden' }}
+                        <span class="badge" [ngClass]="post.visible ? 'bg-success' : 'bg-warning text-dark'">
+                          {{ !post.visible ? 'Published' : 'Hidden' }}
                         </span>
                       </td>
 
@@ -210,7 +210,18 @@
                           <button class="btn btn-outline-danger" title="Delete" (click)="deletePost(post.id)">
                             <i class="fas fa-trash"></i>
                           </button>
+
+                          <button *ngIf="post.visible" class="btn btn-outline-primary" title="Make Visible"
+                            (click)="togleVisible(post)">
+                            <i class="fas fa-eye"></i>
+                          </button>
+
+                          <button *ngIf="!post.visible" class="btn btn-outline-secondary" title="Make Invisible"
+                            (click)="togleVisible(post)">
+                            <i class="fas fa-eye-slash"></i>
+                          </button>
                         </div>
+
                       </td>
                     </tr>
 

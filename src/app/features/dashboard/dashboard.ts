@@ -43,7 +43,7 @@ export class Dashboard implements OnInit {
     private post: PostService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadReports();
@@ -58,7 +58,23 @@ export class Dashboard implements OnInit {
     });
   }
 
+
+  togleVisible(getted_post: PostResponseDto) {
+    console.log("got");
+    this.admin.toggleVisiblePost(getted_post.id).subscribe({
+      next: () => {
+        this.loadPosts();
+        getted_post.visible = !getted_post.visible;
+      },
+      error: (err) => {
+        this.showErrorDialog('Failed to invisible post', err)
+      },
+    })
+  }
+
   private showErrorDialog(title: string, err: any) {
+    console.log(err);
+
     this.dialogTitle = title;
     this.dialogMessage = err?.error?.message || 'An unexpected error occurred';
     this.showDialog = true;
@@ -86,7 +102,7 @@ export class Dashboard implements OnInit {
   }
 
   private loadPosts(): void {
-    this.post.getAllPosts(0, 100).subscribe({
+    this.admin.getAllPosts().subscribe({
       next: (data) => {
         this.posts = data;
         this.cdr.detectChanges();

@@ -22,12 +22,8 @@ export class PostService {
     return this.http.post<PostResponseDto>(this.baseUrl, post);
   }
 
-  getAllPosts(page: number, size: number): Observable<PostResponseDto[]> {
-    return this.http.get<PostResponseDto[]>(this.baseUrl, {
-      params: new HttpParams()
-        .set('page', page.toString())
-        .set('size', size.toString())
-    });
+  getAllPosts(): Observable<PostResponseDto[]> {
+    return this.http.get<PostResponseDto[]>(this.baseUrl);
   }
 
   likePost(postId: number): Observable<LikeResponse> {
