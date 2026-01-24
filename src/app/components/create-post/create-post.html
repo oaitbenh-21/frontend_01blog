@@ -1,39 +1,64 @@
-<div class="create-post-wrapper pt-5" [ngStyle]="{ display: visible ? 'flex' : 'none' }">
-
-  <div class="card shadow-sm mx-auto mt-5 create-post-card">
-
-    <!-- Close X button -->
+<div
+  class="create-post-wrapper"
+  [ngStyle]="{ display: visible ? 'flex' : 'none' }"
+>
+  <div class="create-post-card">
     <button class="close-btn" (click)="close()">&times;</button>
 
     <h3 class="text-center mb-4 fw-bold">Create New Post</h3>
 
-    <div *ngIf="error" class="mb-3 text-center text-danger fw-semibold">
-      {{ error }}
-    </div>
+    <input
+      type="text"
+      class="form-control mb-3"
+      placeholder="Post Description"
+      [(ngModel)]="description"
+      [disabled]="saving"
+    />
 
     <div class="mb-3">
-      <input type="text" class="form-control form-control-lg rounded-pill" placeholder="Post Description"
-        [(ngModel)]="description" [disabled]="saving" maxlength="200" minlength="20" />
+      <div
+        #editor
+        class="editable"
+        contenteditable="true"
+        (input)="onContentChange(editorRef.nativeElement)"
+      ></div>
     </div>
 
-    <div class="mb-3">
-      <div #editor class="editable form-control" contenteditable="true"
-        (input)="onContentChange(editorRef.nativeElement)"></div>
-    </div>
-
+    <!-- Upload -->
     <div class="mb-3 text-center">
       <label class="btn btn-outline-secondary rounded-pill px-4 py-2">
-        Upload Image
-        <input type="file" name="file" (change)="onFileSelected($event)" [disabled]="saving" hidden />
+        Upload Images
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          hidden
+          (change)="onFileSelected($event)"
+        />
       </label>
     </div>
 
-    <button class="btn btn-primary btn-lg w-100 rounded-pill" [disabled]="saving || !content.trim()"
-      (click)="createPost()">
+    <!-- PREVIEW -->
+    <div class="preview-grid" *ngIf="filesBase64.length">
+      <div class="preview-item" *ngFor="let img of filesBase64; let i = index">
+        <img [src]="img" />
+        <button class="remove-btn" (click)="removeFile(i)">×</button>
+      </div>
+    </div>
+
+    <button
+      class="btn btn-primary w-100 mt-4"
+      [disabled]="saving || !content.trim()"
+      (click)="createPost()"
+    >
       {{ saving ? 'Creating...' : 'Create Post' }}
     </button>
   </div>
 </div>
 
-<app-dialog [visible]="showDialogMessage" [message]="dialogMessage" [title]="dialogTitle" (closed)="onClosedDialog()">
-</app-dialog>
+<app-dialog
+  [visible]="showDialogMessage"
+  [title]="dialogTitle"
+  [message]="dialogMessage"
+  (closed)="onClosedDialog()"
+></app-dialog>

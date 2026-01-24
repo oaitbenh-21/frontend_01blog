@@ -19,15 +19,6 @@ import { FloatingDialog } from '../dialog/dialog';
 interface PostResponseDto {
   id: number;
   content: string;
-  author: {
-    id: number;
-    username: string;
-    avatar: string;
-    role: string;
-  };
-  likes: number;
-  likedByCurrentUser: boolean;
-  comments: any[];
 }
 
 @Component({
@@ -40,29 +31,29 @@ interface PostResponseDto {
 export class CreatePostComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
-  file: File | null = null;
-  FileBase64: string = '';
-  saving = false;
-  error: string = '';
+  filesBase64: string[] = [];
 
-  @Input() edit: boolean = false;
-  @Input() content: string = '';
-  @Input() description: string = '';
-  @Input() files: string[] = [];
-  @Input() post_id: number = 0;
-  @Input() visible: boolean = false;
+  saving = false;
+  error = '';
+
+  @Input() visible = false;
+  @Input() content = '';
+  @Input() description = '';
 
   @Output() closed = new EventEmitter<void>();
-  @Output() show_error = new EventEmitter<void>();
 
-  dialogMessage: string = '';
-  dialogTitle: string = '';
-  showDialogMessage: boolean = false;
+  dialogMessage = '';
+  dialogTitle = '';
+  showDialogMessage = false;
 
   private editor!: any;
   private readonly POSTS_URL = 'http://localhost:8080/posts';
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngAfterViewInit(): void {
     this.editor = new MediumEditor(this.editorRef.nativeElement, {
@@ -70,7 +61,6 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
       toolbar: {
         buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote'],
       },
-      autoLink: true,
     });
 
     this.editor.subscribe('editableInput', () => {
@@ -79,56 +69,63 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
   }
 
   onContentChange(editor: HTMLElement) {
-    this.content = editor.innerText || '';
+    this.content = editor.innerHTML || '';
   }
 
   onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (!file) return;
+    const files: FileList = event.target.files;
+    if (!files?.length) return;
 
-    this.file = file;
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.FileBase64 = reader.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+    Array.from(files).forEach((file: File) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.filesBase64.push(reader.result as string);
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  removeFile(index: number): void {
+    this.filesBase64.splice(index, 1);
   }
 
   createPost(): void {
-    if (this.saving || !this.content?.trim()) return;
+    if (this.saving || !this.content.trim()) return;
 
     const token = localStorage.getItem('token');
     if (!token) {
-      console.warn('No token found.');
       this.error = 'You must be logged in to create a post.';
       return;
     }
 
     this.saving = true;
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    this.http.post<PostResponseDto>(
-      this.POSTS_URL,
-      {
-        content: this.content,
-        description: this.description,
-        file: this.FileBase64,
-      },
-      { headers }
-    ).subscribe({
-      next: (newPost) => {
-        this.router.navigate(['/posts', newPost.id]);
-      },
-      error: (err) => {
-        this.dialogTitle = err.error?.error || 'failed to create post';
-        this.dialogMessage = err.error?.errors?.description || 'Failed to create post. Please try again.';
-        this.showDialogMessage = true;
-        this.saving = false;
-        this.visible = false;
-        this.cdr.detectChanges();
-      },
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
     });
+
+    this.http
+      .post<PostResponseDto>(
+        this.POSTS_URL,
+        {
+          content: this.content,
+          description: this.description,
+          files: this.filesBase64,
+        },
+        { headers }
+      )
+      .subscribe({
+        next: (post) => {
+          this.router.navigate(['/posts', post.id]);
+        },
+        error: () => {
+          this.dialogTitle = 'Failed';
+          this.dialogMessage = 'Failed to create post.';
+          this.showDialogMessage = true;
+          this.saving = false;
+        },
+      });
   }
 
   close() {
@@ -137,12 +134,10 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.editor) this.editor.destroy();
+    this.editor?.destroy();
   }
 
   onClosedDialog() {
-    this.dialogMessage = '';
-    this.dialogTitle = '';
     this.showDialogMessage = false;
   }
 }
