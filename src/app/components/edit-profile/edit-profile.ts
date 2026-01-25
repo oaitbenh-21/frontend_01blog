@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, NgModule, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserDto } from '../../dto/user-dto';
+import { UpdateUserDto, UserDto } from '../../dto/user-dto';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 
@@ -63,14 +63,29 @@ export class EditProfileComponent implements OnChanges {
     this.successMessage = '';
     this.errorMessage = '';
 
-    const updatedUser: UserDto = {
-      ...this.user,
+    const updatedUser: UpdateUserDto = {
       ...this.profileForm.value,
       avatar: this.avatarPreview as string,
     };
-    
+
+    this.userService.updateProfile(updatedUser).subscribe({
+      next: () => {
+        this.onCancel();
+      },
+      error: (err) => {
+        console.log(JSON.stringify(err));
+      }
+    });
+
+
+    console.log(updatedUser);
+
     setTimeout(() => {
-      this.saved.emit(updatedUser);
+      this.saved.emit({
+        ...this.user,
+        ...this.profileForm.value,
+        avatar: this.avatarPreview as string,
+      });
       this.submitting = false;
       this.close.emit();
       this.cdr.detectChanges();
