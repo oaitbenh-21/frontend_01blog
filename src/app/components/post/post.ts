@@ -105,6 +105,15 @@ export class Post {
     });
   }
 
+  isVideo(url: string): boolean {
+    return /\.(mp4|webm|ogg)$/i.test(url);
+  }
+
+  isImage(url: string): boolean {
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+  }
+
+
   get avatar() {
     console.log(this.post.author.avatar);
     return this.post.author.avatar ? 'http://localhost:8080/' + this.post.author.avatar : 'https://bootdey.com/img/Content/avatar/avatar5.png';

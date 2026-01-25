@@ -1,7 +1,4 @@
-<div
-  class="create-post-wrapper"
-  [ngStyle]="{ display: visible ? 'flex' : 'none' }"
->
+<div class="create-post-wrapper" [ngStyle]="{ display: visible ? 'flex' : 'none' }">
   <div class="create-post-card">
     <button class="close-btn" (click)="close()">&times;</button>
 
@@ -9,60 +6,34 @@
       {{ edit ? 'Edit Post' : 'Create New Post' }}
     </h3>
 
-    <input
-      type="text"
-      class="form-control mb-3"
-      placeholder="Post Description"
-      [(ngModel)]="description"
-      [disabled]="saving"
-    />
+    <input type="text" class="form-control mb-3" placeholder="Post Description" [(ngModel)]="description"
+      [disabled]="saving" />
 
     <div class="mb-3">
-      <div
-        #editor
-        class="editable"
-        contenteditable="true"
-      ></div>
+      <div #editor class="editable" contenteditable="true"></div>
     </div>
 
     <!-- Upload -->
     <div class="mb-3 text-center">
       <label class="btn btn-outline-secondary rounded-pill px-4 py-2">
         {{ edit ? 'Add More Images' : 'Upload Images' }}
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          hidden
-          (change)="onFileSelected($event)"
-        />
+        <input type="file" multiple accept="image/*,video/*" hidden (change)="onFileSelected($event)" />
       </label>
     </div>
 
     <!-- PREVIEW -->
     <div class="preview-grid" *ngIf="filesBase64.length">
-      <div
-        class="preview-item"
-        *ngFor="let img of filesBase64; let i = index"
-      >
+      <div class="preview-item" *ngFor="let img of filesBase64; let i = index">
         <img [src]="img" />
         <button class="remove-btn" (click)="removeFile(i)">×</button>
       </div>
     </div>
 
-    <button
-      class="btn btn-primary w-100 mt-4"
-      [disabled]="saving || !content.trim()"
-      (click)="submit()"
-    >
+    <button class="btn btn-primary w-100 mt-4" [disabled]="saving || !content.trim()" (click)="submit()">
       {{ saving ? 'Saving...' : edit ? 'Save Changes' : 'Create Post' }}
     </button>
   </div>
 </div>
 
-<app-dialog
-  [visible]="showDialogMessage"
-  [title]="dialogTitle"
-  [message]="dialogMessage"
-  (closed)="onClosedDialog()"
-></app-dialog>
+<app-dialog [visible]="showDialogMessage" [title]="dialogTitle" [message]="dialogMessage"
+  (closed)="onClosedDialog()"></app-dialog>

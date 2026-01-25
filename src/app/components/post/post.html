@@ -1,7 +1,6 @@
 <div class="card w-100" style="width: 100%">
   <div class="card-header d-flex align-items-center" (click)="goToUser()" style="cursor: pointer">
-    <img [src]="avatar"
-      alt="User Avatar" class="rounded-circle me-2" width="40" height="40" />
+    <img [src]="avatar" alt="User Avatar" class="rounded-circle me-2" width="40" height="40" />
     <div>
       <h6 class="mb-0">{{ username }}</h6>
 
@@ -12,10 +11,30 @@
         </button> -->
   </div>
   @if (!desc) {
-  <div class="container">
-    <div *ngFor="let url of post.fileUrl">
-      <img src="http://localhost:8080/{{ url }}" class="card-img-top" alt="Post Image" />
+  <div id="carouselExample" class="carousel slide p-5">
+    <div class="carousel-inner">
+      <div class="carousel-item" *ngFor="let url of post.fileUrl; let i = index" [class.active]="i === 0">
+        <!-- video -->
+        <video *ngIf="isVideo(url)" class="d-block w-100" controls>
+          <source [src]="'http://localhost:8080/' + url" />
+          Your browser does not support video.
+        </video>
+
+        <!-- image -->
+        <img *ngIf="isImage(url)" [src]="'http://localhost:8080/' + url" class="d-block w-100" alt="Post image" />
+      </div>
     </div>
+
+    <button class="carousel-control-prev small-carousel-btn center-carousel-btn" type="button"
+      data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next small-carousel-btn center-carousel-btn" type="button"
+      data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
   } @if(post.content){
   <div class="card-body" (click)="goToPost()" style="cursor: pointer">

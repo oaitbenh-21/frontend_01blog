@@ -122,6 +122,10 @@ export class CreatePostComponent
       Authorization: `Bearer ${token}`,
     });
 
+    this.filesBase64 = this.filesBase64.map(file => {
+      return file.slice(5);
+    })
+
     const payload = {
       content: this.content,
       description: this.description,

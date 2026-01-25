@@ -1,0 +1,25 @@
+/* Small buttons */
+.small-carousel-btn {
+    width: 40px;
+    /* button size */
+    height: 40px;
+}
+
+/* Small icons inside buttons */
+.small-carousel-btn .carousel-control-prev-icon,
+.small-carousel-btn .carousel-control-next-icon {
+    width: 25px;
+    height: 25px;
+    background-size: 100% 100%;
+    background-color: black;
+    padding: 20px;
+    border-radius: 100px;
+}
+
+/* Vertically center buttons */
+.center-carousel-btn {
+    top: 50%;
+    /* center vertically */
+    transform: translateY(-50%);
+    /* perfect vertical center */
+}
