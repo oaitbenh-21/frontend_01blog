@@ -31,8 +31,7 @@ interface PostResponseDto {
   imports: [CommonModule, FormsModule, NgStyle, FloatingDialog],
 })
 export class CreatePostComponent
-  implements AfterViewInit, OnDestroy, OnChanges
-{
+  implements AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
   /** MODE */
@@ -66,7 +65,7 @@ export class CreatePostComponent
     private http: HttpClient,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['visible'] && this.visible && this.edit) {
@@ -131,15 +130,15 @@ export class CreatePostComponent
 
     const request$ = this.edit && this.postId
       ? this.http.put<PostResponseDto>(
-          `${this.POSTS_URL}/${this.postId}`,
-          payload,
-          { headers }
-        )
+        `${this.POSTS_URL}/${this.postId}`,
+        payload,
+        { headers }
+      )
       : this.http.post<PostResponseDto>(
-          this.POSTS_URL,
-          payload,
-          { headers }
-        );
+        this.POSTS_URL,
+        payload,
+        { headers }
+      );
 
     request$.subscribe({
       next: () => {
@@ -147,11 +146,12 @@ export class CreatePostComponent
         this.saved.emit();
         this.close();
       },
-      error: () => {
-        this.dialogTitle = 'Failed';
-        this.dialogMessage = 'Failed to save post.';
+      error: (err) => {
+        this.dialogTitle = err.error.error || 'Failed to submit';
+        this.dialogMessage = err.error?.errors?.description || `Failed to ${this.edit ? 'save' : 'create'} post`;
         this.showDialogMessage = true;
         this.saving = false;
+        this.close();
       },
     });
   }
