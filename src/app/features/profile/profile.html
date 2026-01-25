@@ -6,7 +6,8 @@
       <div class="card shadow-sm border-0 profile-card">
         <div *ngIf="user; else noUser" class="card-body text-center">
           <div class="avatar-wrapper mb-3">
-            <img class="avatar-img" [src]="user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png'"
+            <img class="avatar-img"
+              [src]="user.avatar?'http://localhost:8080/'+user.avatar:'https://bootdey.com/img/Content/avatar/avatar5.png'"
               alt="avatar" />
           </div>
 

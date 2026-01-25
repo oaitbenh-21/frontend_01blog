@@ -43,7 +43,7 @@ export class Post {
     private service: PostService,
     private cdr: ChangeDetectorRef,
     private reportService: ReportService
-  ) {}
+  ) { }
 
   goToUser() {
     this.router.navigate(['/profile', this.post.author.id]);
@@ -106,7 +106,8 @@ export class Post {
   }
 
   get avatar() {
-    return this.post.author.avatar || 'https://github.com/mdo.png';
+    console.log(this.post.author.avatar);
+    return this.post.author.avatar ? 'http://localhost:8080/' + this.post.author.avatar : 'https://bootdey.com/img/Content/avatar/avatar5.png';
   }
   get username() {
     return this.post.author.username;

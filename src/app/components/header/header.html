@@ -15,8 +15,9 @@
     <div class="dropdown ms-auto">
       <a class="d-flex align-items-center gap-2 dropdown-toggle user-toggle" data-bs-toggle="dropdown"
         aria-expanded="false">
-        <img src="{{ user.avatar || 'https://bootdey.com/img/Content/avatar/avatar5.png' }}" alt="avatar" width="36"
-          height="36" class="rounded-circle user-avatar" />
+        <img
+          src="{{ user.avatar?'http://localhost:8080/'+user.avatar:'https://bootdey.com/img/Content/avatar/avatar5.png' }}"
+          alt="avatar" width="36" height="36" class="rounded-circle user-avatar" />
       </a>
 
       <ul class="dropdown-menu dropdown-menu-end shadow-sm user-dropdown">
