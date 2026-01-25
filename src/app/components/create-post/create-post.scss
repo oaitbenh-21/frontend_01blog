@@ -2,11 +2,15 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
+
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 60px;
+
+  padding: 60px 16px; /* side padding for mobile */
   z-index: 1000;
+
+  overflow-y: auto; /* allow page-level scroll */
 }
 
 .create-post-card {
@@ -16,10 +20,25 @@
   border-radius: 16px;
   padding: 2rem;
   position: relative;
+
+  max-height: calc(100vh - 120px); /* fit within viewport */
+  overflow-y: auto; /* scroll inside card if content overflows */
+}
+
+/* Improve scrolling experience */
+.create-post-card::-webkit-scrollbar {
+  width: 6px;
+}
+.create-post-card::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 6px;
 }
 
 .editable {
-  min-height: 250px;
+  min-height: 200px;
+  max-height: 40vh; /* prevents editor from growing too tall */
+  overflow-y: auto;
+
   border: 1px solid #ddd;
   padding: 1rem;
   border-radius: 12px;
@@ -64,4 +83,16 @@
   border: none;
   font-size: 1.4rem;
   cursor: pointer;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .create-post-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .preview-item img {
+    height: 100px;
+  }
 }

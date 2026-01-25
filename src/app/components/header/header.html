@@ -52,6 +52,5 @@
 </nav>
 
 
-<app-create-post [visible]="showCreatePost" [edit]="false" [content]="postContent" [description]="postDescription"
-  [files]="postFiles" [post_id]="postId" (closed)="onCreatePostClosed()" (show_error)="onCreatePostError()">
+<app-create-post [visible]="showCreatePost" (closed)="closeCreatePost()">
 </app-create-post>

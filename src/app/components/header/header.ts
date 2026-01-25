@@ -41,21 +41,12 @@ export class Header {
   }
 
   openCreatePost() {
-    console.log("Opening create post modal");
     this.showCreatePost = true;
     this.cdr.detectChanges();
   }
 
   closeCreatePost() {
     this.showCreatePost = false;
-  }
-
-  onCreatePostClosed() {
-    this.showCreatePost = false;
-  }
-
-  onCreatePostError() {
-    console.error('Create post error');
   }
 
   navigateToHome() {

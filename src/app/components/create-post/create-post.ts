@@ -8,6 +8,8 @@ import {
   Input,
   Output,
   EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
@@ -28,22 +30,33 @@ interface PostResponseDto {
   styleUrls: ['./create-post.scss'],
   imports: [CommonModule, FormsModule, NgStyle, FloatingDialog],
 })
-export class CreatePostComponent implements AfterViewInit, OnDestroy {
+export class CreatePostComponent
+  implements AfterViewInit, OnDestroy, OnChanges
+{
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
-  filesBase64: string[] = [];
+  /** MODE */
+  @Input() edit = false;
+  @Input() postId?: number;
 
-  saving = false;
-  error = '';
-
-  @Input() visible = false;
+  /** EXISTING POST DATA (EDIT MODE) */
   @Input() content = '';
   @Input() description = '';
+  @Input() existingFiles: string[] = []; // base64 or URLs
 
+  /** UI */
+  @Input() visible = false;
   @Output() closed = new EventEmitter<void>();
+  @Output() saved = new EventEmitter<void>();
 
-  dialogMessage = '';
+  /** FILES */
+  filesBase64: string[] = [];
+  removedFiles: number[] = []; // optional if backend supports removal
+
+  saving = false;
+
   dialogTitle = '';
+  dialogMessage = '';
   showDialogMessage = false;
 
   private editor!: any;
@@ -54,6 +67,18 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible'] && this.visible && this.edit) {
+      // preload existing images
+      this.filesBase64 = [...this.existingFiles];
+      setTimeout(() => {
+        if (this.editorRef) {
+          this.editorRef.nativeElement.innerHTML = this.content || '';
+        }
+      });
+    }
+  }
 
   ngAfterViewInit(): void {
     this.editor = new MediumEditor(this.editorRef.nativeElement, {
@@ -66,10 +91,6 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     this.editor.subscribe('editableInput', () => {
       this.content = this.editorRef.nativeElement.innerHTML || '';
     });
-  }
-
-  onContentChange(editor: HTMLElement) {
-    this.content = editor.innerHTML || '';
   }
 
   onFileSelected(event: any): void {
@@ -90,14 +111,11 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
     this.filesBase64.splice(index, 1);
   }
 
-  createPost(): void {
+  submit(): void {
     if (this.saving || !this.content.trim()) return;
 
     const token = localStorage.getItem('token');
-    if (!token) {
-      this.error = 'You must be logged in to create a post.';
-      return;
-    }
+    if (!token) return;
 
     this.saving = true;
 
@@ -105,27 +123,37 @@ export class CreatePostComponent implements AfterViewInit, OnDestroy {
       Authorization: `Bearer ${token}`,
     });
 
-    this.http
-      .post<PostResponseDto>(
-        this.POSTS_URL,
-        {
-          content: this.content,
-          description: this.description,
-          files: this.filesBase64,
-        },
-        { headers }
-      )
-      .subscribe({
-        next: (post) => {
-          this.router.navigate(['/posts', post.id]);
-        },
-        error: () => {
-          this.dialogTitle = 'Failed';
-          this.dialogMessage = 'Failed to create post.';
-          this.showDialogMessage = true;
-          this.saving = false;
-        },
-      });
+    const payload = {
+      content: this.content,
+      description: this.description,
+      files: this.filesBase64,
+    };
+
+    const request$ = this.edit && this.postId
+      ? this.http.put<PostResponseDto>(
+          `${this.POSTS_URL}/${this.postId}`,
+          payload,
+          { headers }
+        )
+      : this.http.post<PostResponseDto>(
+          this.POSTS_URL,
+          payload,
+          { headers }
+        );
+
+    request$.subscribe({
+      next: () => {
+        this.saving = false;
+        this.saved.emit();
+        this.close();
+      },
+      error: () => {
+        this.dialogTitle = 'Failed';
+        this.dialogMessage = 'Failed to save post.';
+        this.showDialogMessage = true;
+        this.saving = false;
+      },
+    });
   }
 
   close() {
