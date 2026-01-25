@@ -125,7 +125,7 @@ export class CreatePostComponent
     const payload = {
       content: this.content,
       description: this.description,
-      files: this.filesBase64,
+      file: this.filesBase64,
     };
 
     const request$ = this.edit && this.postId
