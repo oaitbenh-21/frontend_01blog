@@ -7,6 +7,13 @@ export interface AuthorDto {
     role: string;
 }
 
+export interface UpdateUserDto {
+    avatar: string;
+    username: string;
+    email: string;
+    bio: string;
+}
+
 export interface UserDto {
     id: number;
     mine: boolean;

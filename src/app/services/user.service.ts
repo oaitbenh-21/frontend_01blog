@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthorDto, UserDto } from '../dto/user-dto';
+import { AuthorDto, UpdateUserDto, UserDto } from '../dto/user-dto';
 
 
 @Injectable({
@@ -28,5 +28,9 @@ export class UserService {
 
     unsubscribeFromUser(userId: number): Observable<string> {
         return this.http.delete<string>(`${this.baseUrl}/${userId}/unsubscribe`, {});
+    }
+    
+    updateProfile(updatedUser: UpdateUserDto): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/me`, updatedUser);
     }
 }

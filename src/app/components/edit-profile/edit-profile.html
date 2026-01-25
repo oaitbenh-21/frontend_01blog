@@ -1,50 +1,92 @@
-<div class="overlay" [ngStyle]="{ display: visible ? 'block' : 'none' }">
-  <div class="modal">
+<div class="overlay" *ngIf="visible">
+  <div class="modal-box">
     <h5 class="text-center mb-4">Edit Profile</h5>
 
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
 
-      <!-- Avatar Upload -->
+      <!-- Avatar -->
       <div class="mb-3 text-center">
-        <img [src]="avatarPreview || 'https://bootdey.com/img/Content/avatar/avatar5.png'" alt="avatar"
-          class="rounded-circle mb-2" width="100" height="100" />
-        <input type="file" accept="image/*" (change)="onAvatarChange($event)" class="form-control mt-2">
+        <img
+          [src]="avatarPreview || 'https://bootdey.com/img/Content/avatar/avatar5.png'"
+          class="rounded-circle mb-2"
+          width="100"
+          height="100"
+          alt="avatar"
+        />
+
+        <input
+          type="file"
+          class="form-control mt-2"
+          accept="image/*"
+          (change)="onAvatarChange($event)"
+        />
       </div>
 
       <!-- Username -->
       <div class="mb-3">
         <label class="form-label">Username</label>
-        <input type="text" class="form-control" formControlName="username" placeholder="Enter username">
-        <div *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched"
-          class="text-danger small">
-          Username is required.
-        </div>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter username"
+          formControlName="username"
+        />
+        <small class="text-danger" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
+          Username is required
+        </small>
       </div>
 
       <!-- Email -->
       <div class="mb-3">
         <label class="form-label">Email</label>
-        <input type="email" class="form-control" formControlName="email" placeholder="Enter email">
-        <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger small">
-          Enter a valid email.
-        </div>
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Enter email"
+          formControlName="email"
+        />
+        <small class="text-danger" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+          Enter a valid email
+        </small>
       </div>
 
       <!-- Bio -->
       <div class="mb-3">
         <label class="form-label">Bio</label>
-        <textarea class="form-control" formControlName="bio" rows="3"
-          placeholder="Write something about yourself"></textarea>
+        <textarea
+          class="form-control"
+          rows="3"
+          placeholder="Write something about yourself"
+          formControlName="bio"
+        ></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100" [disabled]="profileForm.invalid || submitting">
+      <!-- Messages -->
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Actions -->
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="submitting || profileForm.invalid"
+      >
         {{ submitting ? 'Saving...' : 'Save Changes' }}
       </button>
 
-      <button type="button" class="btn btn-secondary w-100 mt-2" (click)="onCancel()">Cancel</button>
-    </form>
+      <button
+        type="button"
+        class="btn btn-secondary w-100 mt-2"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
 
-    <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+    </form>
   </div>
 </div>

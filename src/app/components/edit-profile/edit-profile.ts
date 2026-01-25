@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, NgModule, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { UserDto } from '../../dto/user-dto';
+import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.html',
   standalone: true,
   styleUrls: ['./edit-profile.scss'],
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class EditProfileComponent implements OnChanges {
   @Input() user!: UserDto;
@@ -24,7 +25,7 @@ export class EditProfileComponent implements OnChanges {
   successMessage = '';
   errorMessage = '';
 
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) { }
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private userService: UserService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['user'] && this.user) {
@@ -67,8 +68,7 @@ export class EditProfileComponent implements OnChanges {
       ...this.profileForm.value,
       avatar: this.avatarPreview as string,
     };
-
-    // Normally call API here
+    
     setTimeout(() => {
       this.saved.emit(updatedUser);
       this.submitting = false;
