@@ -9,6 +9,7 @@ import { Profile } from './features/profile/profile';
 import { Header } from './components/header/header';
 import { FloatingReport } from './components/report/report';
 import { EditProfileComponent } from './components/edit-profile/edit-profile';
+import { Notification } from './components/notification/notification';
 
 export const routes: Routes = [
   { path: 'report', component: FloatingReport },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'posts/:id', component: PostPageComponent },
   { path: 'profile/edit', component: EditProfileComponent },
+  { path: 'notification', component: Notification },
   { path: 'profile/:id', component: Profile },
   { path: 'logout', component: LogoutComponent },
   { path: 'admin/dashboard', component: Dashboard },

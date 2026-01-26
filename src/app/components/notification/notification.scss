@@ -1,0 +1,29 @@
+.notification-item {
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+    background: #f8f9fa;
+}
+
+.notification-item.unread {
+    background: #eef5ff;
+}
+
+.notification-item .actions {
+    display: none;
+}
+
+.notification-item:hover .actions {
+    display: flex;
+    gap: 6px;
+}
+
+.notification-item .btn {
+    padding: 2px 6px;
+}
+
+.dropdown-menu {
+    border-radius: 12px;
+}

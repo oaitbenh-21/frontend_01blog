@@ -1,0 +1,24 @@
+  /* Navbar brand */
+  .navbar-brand img {
+      border-radius: 4px;
+  }
+
+  /* User avatar */
+  .dropdown-toggle img {
+      border-radius: 50%;
+  }
+
+  /* Notification badge (inside app-notification) */
+  app-notification .badge {
+      background-color: #dc3545;
+  }
+
+  /* Dropdown hover effect */
+  .dropdown-menu li a.dropdown-item:hover {
+      background-color: #f8f9fa;
+  }
+
+  /* Optional: subtle shadow for avatar menu */
+  .dropdown-menu {
+      border-radius: 10px;
+  }

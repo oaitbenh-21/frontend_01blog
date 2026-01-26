@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { AuthorDto } from '../../dto/user-dto';
 import { UserService } from '../../services/user.service';
 import { CreatePostComponent } from '../create-post/create-post';
+import { Notification } from "../notification/notification";
 
 @Component({
   selector: 'app-header',
-  imports: [NgIf, CreatePostComponent],
+  imports: [NgIf, CreatePostComponent, Notification],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   standalone: true,
