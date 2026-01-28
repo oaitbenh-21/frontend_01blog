@@ -1,60 +1,86 @@
 <div class="dropdown">
 
-    <!-- Notification Button -->
-    <button class="btn btn-outline-black rounded-circle position-relative border-0" type="button"
-        id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <span class="position-absolute start-100 translate-middle badge rounded-pill bg-danger">
-            {{unreadedCount}}
-        </span>
-        <img src="/media/notification-icon.png" alt="add" width="18" height="18" />
-    </button>
+  <!-- Notification Button -->
+  <button
+    class="btn btn-outline-black rounded-circle position-relative border-0"
+    type="button"
+    id="notificationDropdown"
+    data-bs-toggle="dropdown"
+    aria-expanded="false">
 
-    <!-- Dropdown -->
-    <div class="dropdown-menu dropdown-menu-end p-0 shadow" aria-labelledby="notificationDropdown" style="width:380px;">
+    <span
+      *ngIf="unreadedCount > 0"
+      class="position-absolute start-100 translate-middle badge rounded-pill bg-danger">
+      {{ unreadedCount }}
+    </span>
 
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
-            <span class="fw-semibold">Notifications</span>
-            <button class="btn btn-sm btn-link text-primary text-decoration-none">
-                <i class="fa-solid fa-envelope-open me-1"></i> Read all
+    <img src="/media/notification-icon.png" alt="notifications" width="18" height="18" />
+  </button>
+
+  <!-- Dropdown -->
+  <div
+    class="dropdown-menu dropdown-menu-end p-0 shadow"
+    aria-labelledby="notificationDropdown"
+    style="width:380px;">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
+      <span class="fw-semibold">Notifications</span>
+      <button
+        class="btn btn-sm btn-link text-primary text-decoration-none"
+        (click)="markAllAsRead()">
+        <i class="fa-solid fa-envelope-open me-1"></i> Read all
+      </button>
+    </div>
+
+    <!-- Notifications List -->
+    <div style="max-height:400px; overflow-y:auto;">
+
+      <ng-container *ngIf="notifications.length; else emptyState">
+
+        <div
+          *ngFor="let notification of notifications"
+          class="notification-item d-flex align-items-start gap-3 px-3 py-3 border-bottom"
+          [class.unread]="!notification.read">
+
+          <div class="flex-grow-1">
+            <div class="small">
+              {{ notification.message }}
+            </div>
+            <small class="text-muted">
+              {{ notification.createdAt | timeAgo }}
+            </small>
+          </div>
+
+          <div class="actions d-flex gap-1">
+
+            <button
+              *ngIf="!notification.read"
+              class="btn btn-sm text-success"
+              title="Mark as read"
+              (click)="markAsRead(notification)">
+              <i class="fa-solid fa-check"></i>
             </button>
+
+            <button
+              class="btn btn-sm text-danger"
+              title="Delete"
+              (click)="deleteNotification(notification.id)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+
+          </div>
         </div>
 
-        <!-- Notifications List -->
-        <div style="max-height:400px; overflow-y:auto;">
+      </ng-container>
 
-            <!-- Unread Notification -->
-            <div class="notification-item unread d-flex align-items-start gap-3 px-3 py-3 border-bottom">
-                <div class="flex-grow-1">
-                    <div class="small"><strong>John Doe</strong> reacted to your post</div>
-                    <small class="text-muted">10 mins ago</small>
-                </div>
-
-                <div class="actions">
-                    <button class="btn btn-sm text-success" title="Mark as read">
-                        <i class="fa-solid fa-check"></i>
-                    </button>
-                    <button class="btn btn-sm text-danger" title="Delete">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Read Notification -->
-            <div class="notification-item d-flex align-items-start gap-3 px-3 py-3 border-bottom">
-                <div class="flex-grow-1">
-                    <div class="small"><strong>Richard Miles</strong> reacted to your post</div>
-                    <small class="text-muted">1 day ago</small>
-                </div>
-
-                <div class="actions">
-                    <button class="btn btn-sm text-danger" title="Delete">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-
+      <!-- Empty state -->
+      <ng-template #emptyState>
+        <div class="text-center text-muted py-4">
+          No notifications
         </div>
+      </ng-template>
 
     </div>
+  </div>
 </div>
