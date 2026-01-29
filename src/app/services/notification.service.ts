@@ -14,7 +14,19 @@ export class NotificationService {
         return this.http.get<NotificationDto[]>(this.baseUrl);
     }
 
-    markAsRead(notificationId: number): Observable<{ message: string }> {
-        return this.http.put<{ message: string }>(`${this.baseUrl}/${notificationId}/read`, {});
+    markAsRead(notificationId: number): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/${notificationId}/read`, {});
+    }
+
+    markAsUnread(notificationId: number): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/${notificationId}/unread`, {});
+    }
+
+    deleteNotification(notificationId: number): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/${notificationId}/delete`, {});
+    }
+
+    markAllRead(): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/markAllRead`, {});
     }
 }

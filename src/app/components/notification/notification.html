@@ -63,6 +63,14 @@
             </button>
 
             <button
+              *ngIf="notification.read"
+              class="btn btn-sm text-warning"
+              title="Mark as unread"
+              (click)="markAsUnread(notification)">
+              <i class="fa-solid fa-envelope-open-text"></i>
+            </button>
+
+            <button
               class="btn btn-sm text-danger"
               title="Delete"
               (click)="deleteNotification(notification.id)">

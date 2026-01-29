@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { CommonModule, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import MediumEditor from 'medium-editor';
 import { FormsModule } from '@angular/forms';
 import { FloatingDialog } from '../dialog/dialog';
@@ -47,6 +46,9 @@ export class CreatePostComponent
   @Output() saved = new EventEmitter<void>();
 
   /** FILES */
+  // raw File objects selected by user
+  files: File[] = [];
+  // preview data URLs for UI
   filesBase64: string[] = [];
   removedFiles: number[] = []; // optional if backend supports removal
 
@@ -93,6 +95,7 @@ export class CreatePostComponent
     if (!files?.length) return;
 
     Array.from(files).forEach((file: File) => {
+      this.files.push(file);
       const reader = new FileReader();
       reader.onload = () => {
         this.filesBase64.push(reader.result as string);
@@ -104,41 +107,82 @@ export class CreatePostComponent
 
   removeFile(index: number): void {
     this.filesBase64.splice(index, 1);
+    this.files.splice(index, 1);
   }
 
-  submit(): void {
+  private readFileAsDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async submit(): Promise<void> {
     if (this.saving || !this.content.trim()) return;
 
     this.saving = true;
 
-    this.filesBase64 = this.filesBase64.map(file => file.slice(5));
+    try {
+      const base64Files: string[] = [];
 
-    const payload: PostRequestDto = {
-      content: this.content,
-    };
+      // validate and convert selected files to base64 (images only)
+      for (const f of this.files) {
+        if (!f.type || !f.type.startsWith('image/')) {
+          this.dialogTitle = 'Invalid file';
+          this.dialogMessage = 'Only image files are allowed.';
+          this.showDialogMessage = true;
+          this.saving = false;
+          return;
+        }
+        const dataUrl = await this.readFileAsDataUrl(f);
+        const parts = dataUrl.split(',');
+        base64Files.push(parts.length > 1 ? parts[1] : parts[0]);
+      }
 
-    // include optional fields if present
-    (payload as any).description = this.description;
-    (payload as any).file = this.filesBase64;
+      // include existing base64 entries if any (strip data: prefix if present)
+      for (const e of this.existingFiles || []) {
+        if (e && e.startsWith('data:')) {
+          const parts = e.split(',');
+          base64Files.push(parts.length > 1 ? parts[1] : parts[0]);
+        }
+      }
 
-    const request$ = this.edit && this.postId
-      ? this.postService.updatePost(this.postId, payload)
-      : this.postService.createPost(payload);
+      const payload: PostRequestDto = {
+        content: this.content,
+        description: this.description,
+        files: base64Files,
+      };
 
-    request$.subscribe({
-      next: () => {
-        this.saving = false;
-        this.saved.emit();
-        this.close();
-      },
-      error: (err) => {
-        this.dialogTitle = err.error?.error || 'Failed to submit';
-        this.dialogMessage = err.error?.errors?.description || `Failed to ${this.edit ? 'save' : 'create'} post`;
-        this.showDialogMessage = true;
-        this.saving = false;
-        this.close();
-      },
-    });
+      // include removedFiles as additional field if supported by backend
+      const requestBody: any = { ...payload };
+      if (this.removedFiles?.length) requestBody.removedFiles = this.removedFiles;
+
+      const request$ = this.edit && this.postId
+        ? this.postService.updatePost(this.postId, requestBody)
+        : this.postService.createPost(requestBody);
+
+      request$.subscribe({
+        next: () => {
+          this.saving = false;
+          this.saved.emit();
+          this.close();
+        },
+        error: (err: any) => {
+          this.dialogTitle = err?.error?.error || 'Failed to submit';
+          this.dialogMessage = err?.error?.errors?.description || `Failed to ${this.edit ? 'save' : 'create'} post`;
+          this.showDialogMessage = true;
+          this.saving = false;
+          this.close();
+        },
+      });
+    } catch (err: any) {
+      this.dialogTitle = 'File error';
+      this.dialogMessage = 'Failed to read selected files.';
+      this.showDialogMessage = true;
+      this.saving = false;
+    }
   }
 
   close() {

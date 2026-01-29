@@ -18,16 +18,20 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  createPost(post: PostRequestDto): Observable<PostResponseDto> {
+  createPost(post: any): Observable<PostResponseDto> {
     return this.http.post<PostResponseDto>(this.baseUrl, post);
   }
 
-  updatePost(postId: number, post: PostRequestDto): Observable<PostResponseDto> {
+  updatePost(postId: number, post: any): Observable<PostResponseDto> {
     return this.http.put<PostResponseDto>(`${this.baseUrl}/${postId}`, post);
   }
 
   getAllPosts(): Observable<PostResponseDto[]> {
     return this.http.get<PostResponseDto[]>(this.baseUrl);
+  }
+  
+  getSubscriptions(): Observable<PostResponseDto[]> {
+    return this.http.get<PostResponseDto[]>(`${this.baseUrl}/subscriptions`);
   }
 
   likePost(postId: number): Observable<LikeResponse> {
@@ -46,6 +50,7 @@ export class PostService {
   }
 
   deleteComment(pid: number, commentId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl + "/" + pid}/comment/${commentId}`);
+    // DELETE /posts/{postId}/comment/{commentId}
+    return this.http.delete<void>(`${this.baseUrl}/${pid}/comment/${commentId}`);
   }
 }

@@ -30,18 +30,51 @@ export class Notification implements OnInit {
   }
 
   markAsRead(notification: NotificationDto) {
-    notification.read = true;
-    // TODO: call API to update backend
+    this.notifyService.markAsRead(notification.id).subscribe({
+      next: () => {
+        notification.read = true;
+        this.unreadedCount = this.getUnreadedCount();
+      },
+      error: (err) => {
+        console.error('Failed to mark notification read', err);
+      }
+    });
   }
 
   markAllAsRead() {
-    this.notifications.forEach(n => n.read = true);
-    // TODO: call API
+    this.notifyService.markAllRead().subscribe({
+      next: () => {
+        this.notifications.forEach(n => n.read = true);
+        this.unreadedCount = 0;
+      },
+      error: (err) => {
+        console.error('Failed to mark all read', err);
+      }
+    });
   }
 
   deleteNotification(id: number) {
-    this.notifications = this.notifications.filter(n => n.id !== id);
-    // TODO: call API
+    this.notifyService.deleteNotification(id).subscribe({
+      next: () => {
+        this.notifications = this.notifications.filter(n => n.id !== id);
+        this.unreadedCount = this.getUnreadedCount();
+      },
+      error: (err) => {
+        console.error('Failed to delete notification', err);
+      }
+    });
+  }
+
+  markAsUnread(notification: NotificationDto) {
+    this.notifyService.markAsUnread(notification.id).subscribe({
+      next: () => {
+        notification.read = false;
+        this.unreadedCount = this.getUnreadedCount();
+      },
+      error: (err) => {
+        console.error('Failed to mark unread', err);
+      }
+    });
   }
 
 }

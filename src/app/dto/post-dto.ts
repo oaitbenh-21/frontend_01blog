@@ -22,5 +22,7 @@ export interface PostResponseDto {
 
 export interface PostRequestDto {
   content: string;
+  description: string;
+  files: string[];
 }
 
