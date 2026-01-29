@@ -58,7 +58,7 @@
                         </div>
 
                         <!-- Comment List -->
-                        <div *ngFor="let comment of post?.comments; let last = last">
+                        <div *ngFor="let comment of post?.comments; let i = index; let last = last">
                             <div class="d-flex align-items-start mb-3">
                                 <img
                                     src="{{comment.author.avatar || 'https://www.bootdey.com/img/Content/avatar/avatar5.png'}}"
@@ -67,7 +67,7 @@
                                     height="44"
                                     alt="{{comment.author.username}}">
 
-                                <div class="ms-3 bg-light rounded-4 p-3 flex-grow-1">
+                                <div class="ms-3 bg-light rounded-4 p-3 flex-grow-1 position-relative">
                                     <div
                                         class="fw-semibold mb-1 cursor-pointer"
                                         (click)="goToProfile(comment.author.id)">
@@ -76,6 +76,9 @@
                                     <div class="text-muted small">
                                         {{comment.content}}
                                     </div>
+                                    <button *ngIf="post?.mine" class="btn btn-sm btn-link text-danger position-absolute" style="right:8px; top:8px;" (click)="deleteComment(comment.id, i); $event.stopPropagation()" title="Delete comment" aria-label="Delete comment">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
 

@@ -22,6 +22,10 @@ export class PostService {
     return this.http.post<PostResponseDto>(this.baseUrl, post);
   }
 
+  updatePost(postId: number, post: PostRequestDto): Observable<PostResponseDto> {
+    return this.http.put<PostResponseDto>(`${this.baseUrl}/${postId}`, post);
+  }
+
   getAllPosts(): Observable<PostResponseDto[]> {
     return this.http.get<PostResponseDto[]>(this.baseUrl);
   }
@@ -35,5 +39,13 @@ export class PostService {
   }
   getPostById(id: number): Observable<PostResponseDto> {
     return this.http.get<PostResponseDto>(`${this.baseUrl}/${id}`, {});
+  }
+
+  deletePost(postId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${postId}`);
+  }
+
+  deleteComment(pid: number, commentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl + "/" + pid}/comment/${commentId}`);
   }
 }

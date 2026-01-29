@@ -6,6 +6,14 @@
 
       <small class="text-muted">{{ date | timeAgo }}</small>
     </div>
+    <div class="ms-auto d-flex gap-2">
+      <button *ngIf="post.mine" class="btn btn-sm btn-outline-secondary" (click)="editPost(); $event.stopPropagation()">
+        Edit
+      </button>
+      <button *ngIf="post.mine" class="btn btn-sm btn-outline-danger" (click)="deletePost(); $event.stopPropagation()" title="Delete">
+        Delete
+      </button>
+    </div>
     <!-- <button *ngIf="!followed" class="btn btn-outline-primary btn-sm ms-auto">
             follow
         </button> -->
@@ -60,3 +68,14 @@
 
 <app-dialog [visible]="showDialogMessage" [message]="dialogMessage" [title]="dialogTitle"
   (closed)="onClosedDialog()"></app-dialog>
+
+<app-create-post
+  [visible]="showEditModal"
+  [edit]="true"
+  [postId]="post.id"
+  [content]="editContent"
+  [description]="editDescription"
+  [existingFiles]="editFiles"
+  (closed)="showEditModal = false"
+  (saved)="onSavedEdit()"
+></app-create-post>

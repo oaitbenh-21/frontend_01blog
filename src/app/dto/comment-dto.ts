@@ -5,6 +5,8 @@ export interface CommentRequestDto {
 }
 
 export interface CommentResponseDto {
+    id: number;
     content: string;
     author: AuthorDto;
+    mine?: boolean;
 }

@@ -13,15 +13,13 @@ import {
 } from '@angular/core';
 import { CommonModule, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import MediumEditor from 'medium-editor';
 import { FormsModule } from '@angular/forms';
 import { FloatingDialog } from '../dialog/dialog';
 
-interface PostResponseDto {
-  id: number;
-  content: string;
-}
+import { PostResponseDto, PostRequestDto } from '../../dto/post-dto';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-create-post',
@@ -59,10 +57,8 @@ export class CreatePostComponent
   showDialogMessage = false;
 
   private editor!: any;
-  private readonly POSTS_URL = 'http://localhost:8080/posts';
-
   constructor(
-    private http: HttpClient,
+    private postService: PostService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
@@ -113,36 +109,21 @@ export class CreatePostComponent
   submit(): void {
     if (this.saving || !this.content.trim()) return;
 
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
     this.saving = true;
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+    this.filesBase64 = this.filesBase64.map(file => file.slice(5));
 
-    this.filesBase64 = this.filesBase64.map(file => {
-      return file.slice(5);
-    })
-
-    const payload = {
+    const payload: PostRequestDto = {
       content: this.content,
-      description: this.description,
-      file: this.filesBase64,
     };
 
+    // include optional fields if present
+    (payload as any).description = this.description;
+    (payload as any).file = this.filesBase64;
+
     const request$ = this.edit && this.postId
-      ? this.http.put<PostResponseDto>(
-        `${this.POSTS_URL}/${this.postId}`,
-        payload,
-        { headers }
-      )
-      : this.http.post<PostResponseDto>(
-        this.POSTS_URL,
-        payload,
-        { headers }
-      );
+      ? this.postService.updatePost(this.postId, payload)
+      : this.postService.createPost(payload);
 
     request$.subscribe({
       next: () => {
@@ -151,7 +132,7 @@ export class CreatePostComponent
         this.close();
       },
       error: (err) => {
-        this.dialogTitle = err.error.error || 'Failed to submit';
+        this.dialogTitle = err.error?.error || 'Failed to submit';
         this.dialogMessage = err.error?.errors?.description || `Failed to ${this.edit ? 'save' : 'create'} post`;
         this.showDialogMessage = true;
         this.saving = false;

@@ -64,4 +64,16 @@ export class PostPageComponent implements OnInit {
     });
 
   }
+
+  deleteComment(commentId: number, index: number) {
+    this.postService.deleteComment(this.post?.id || 0, commentId).subscribe({
+      next: () => {
+        this.post?.comments.splice(index, 1);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to delete comment', err);
+      }
+    });
+  }
 }

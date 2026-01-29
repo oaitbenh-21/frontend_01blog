@@ -16,6 +16,7 @@ export interface PostResponseDto {
   likedByCurrentUser: boolean;
   comments: CommentResponseDto[];
   visible: boolean;
+  mine?: boolean;
 }
 
 

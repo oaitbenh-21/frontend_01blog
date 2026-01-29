@@ -54,4 +54,9 @@ export class Home implements OnInit {
       this.loading = true;
     }
   }
+
+  onPostDeleted(id: number) {
+    this.posts = this.posts.filter(p => p.id !== id);
+    this.cdr.detectChanges();
+  }
 }

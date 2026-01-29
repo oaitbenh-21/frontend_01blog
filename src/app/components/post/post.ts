@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule, NgForOf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { PostResponseDto } from '../../dto/post-dto';
+import { CreatePostComponent } from '../create-post/create-post';
 import { Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { TimeAgoPipe } from '../../../pipes/timeAgo';
@@ -15,7 +16,7 @@ import { FloatingDialog } from '../dialog/dialog';
   templateUrl: './post.html',
   styleUrls: ['./post.scss'],
   standalone: true,
-  imports: [CommonModule, MarkdownModule, TimeAgoPipe, NgForOf, FloatingReport, FloatingDialog],
+  imports: [CommonModule, MarkdownModule, TimeAgoPipe, NgForOf, FloatingReport, FloatingDialog, CreatePostComponent],
   providers: [MarkdownModule.forRoot().providers!],
 })
 export class Post {
@@ -37,6 +38,13 @@ export class Post {
   dialogMessage: string = '';
   dialogTitle: string = '';
   showDialogMessage: boolean = false;
+  @Output() deleted = new EventEmitter<number>();
+
+  // edit modal state
+  showEditModal = false;
+  editContent = '';
+  editDescription = '';
+  editFiles: string[] = [];
 
   constructor(
     private router: Router,
@@ -47,6 +55,47 @@ export class Post {
 
   goToUser() {
     this.router.navigate(['/profile', this.post.author.id]);
+  }
+
+  editPost() {
+    if (!this.post.mine) return;
+    this.editContent = this.post.content || '';
+    this.editDescription = this.post.description || '';
+    this.editFiles = [...(this.post.fileUrl || [])];
+    this.showEditModal = true;
+  }
+
+  onSavedEdit() {
+    this.service.getPostById(this.post.id).subscribe({
+      next: (p) => {
+        this.post = p;
+        this.showEditModal = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.showEditModal = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  deletePost() {
+    if (!this.post.mine) return;
+    this.service.deletePost(this.post.id).subscribe({
+      next: () => {
+        this.dialogTitle = 'Deleted';
+        this.dialogMessage = 'Post deleted successfully.';
+        this.showDialogMessage = true;
+        this.deleted.emit(this.post.id);
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.dialogTitle = 'Failed To Delete';
+        this.dialogMessage = err?.error?.message || 'Failed to delete post. Please try again.';
+        this.showDialogMessage = true;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   goToPost() {

@@ -13,7 +13,7 @@ export class Notification implements OnInit {
   unreadedCount = 0;
   constructor(private notifyService: NotificationService) { }
   notifications: NotificationDto[] = [];
-  ngOnInit(): void {
+  ngOnInit() {
     this.notifyService.getNotifications().subscribe({
       next: (value) => {
         this.notifications = value;
