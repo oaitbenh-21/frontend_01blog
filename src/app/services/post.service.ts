@@ -22,7 +22,7 @@ export class PostService {
     return this.http.post<PostResponseDto>(this.baseUrl, post);
   }
 
-  updatePost(postId: number, post: any): Observable<PostResponseDto> {
+  updatePost(postId: number, post: PostRequestDto): Observable<PostResponseDto> {
     return this.http.put<PostResponseDto>(`${this.baseUrl}/${postId}`, post);
   }
 

@@ -53,6 +53,31 @@ export class Post {
     private reportService: ReportService
   ) { }
 
+  VIDEO_EXTENSIONS = [
+    'mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v', '3gp', 'ts'
+  ];
+
+  IMAGE_EXTENSIONS = [
+    'jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'bmp', 'svg', 'ico', 'tiff'
+  ];
+
+  getExtension(url: string): string | null {
+    const cleanUrl = url.split(/[?#]/)[0];
+    const match = cleanUrl.match(/\.([a-z0-9]+)$/i);
+    return match ? match[1].toLowerCase() : null;
+  }
+
+  isVideo(url: string): boolean {
+    const ext = this.getExtension(url);
+    return !!ext && this.VIDEO_EXTENSIONS.includes(ext);
+  }
+
+  isImage(url: string): boolean {
+    const ext = this.getExtension(url);
+    return !!ext && this.IMAGE_EXTENSIONS.includes(ext);
+  }
+
+
   goToUser() {
     this.router.navigate(['/profile', this.post.author.id]);
   }
@@ -153,15 +178,6 @@ export class Post {
       },
     });
   }
-
-  isVideo(url: string): boolean {
-    return /\.(mp4|webm|ogg)$/i.test(url);
-  }
-
-  isImage(url: string): boolean {
-    return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
-  }
-
 
   get avatar() {
     console.log(this.post.author.avatar);

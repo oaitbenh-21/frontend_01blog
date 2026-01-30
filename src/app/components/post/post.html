@@ -7,48 +7,47 @@
       <small class="text-muted">{{ date | timeAgo }}</small>
     </div>
     <div class="ms-auto d-flex gap-2">
-      <button *ngIf="post.mine" class="btn btn-sm btn-outline-secondary" (click)="editPost(); $event.stopPropagation()">
-        Edit
+      <button *ngIf="post.mine" class="btn btn-sm btn-outline-secondary" (click)="editPost(); $event.stopPropagation()"
+        title="Edit">
+        <i class="fa fa-pen"></i>
       </button>
-      <button *ngIf="post.mine" class="btn btn-sm btn-outline-danger" (click)="deletePost(); $event.stopPropagation()" title="Delete">
-        Delete
+
+      <button *ngIf="post.mine" class="btn btn-sm btn-outline-danger" (click)="deletePost(); $event.stopPropagation()"
+        title="Delete">
+        <i class="fa fa-trash"></i>
       </button>
     </div>
-    <!-- <button *ngIf="!followed" class="btn btn-outline-primary btn-sm ms-auto">
-            follow
-        </button> -->
+
   </div>
-  @if (!desc) {
-  <div id="carouselExample" class="carousel slide p-5">
+  <div *ngIf="!desc && post.fileUrl.length > 0" id="carouselExample" class="carousel slide p-5">
     <div class="carousel-inner">
       <div class="carousel-item" *ngFor="let url of post.fileUrl; let i = index" [class.active]="i === 0">
         <!-- video -->
         <video *ngIf="isVideo(url)" class="d-block w-100" controls>
-          <source [src]="'http://localhost:8080/' + url" />
+          <source [src]="url" />
           Your browser does not support video.
         </video>
 
         <!-- image -->
-        <img *ngIf="isImage(url)" [src]="'http://localhost:8080/' + url" class="d-block w-100" alt="Post image" />
+        <img *ngIf="isImage(url)" [src]="url" class="d-block w-100" alt="Post image" />
       </div>
     </div>
 
-    <button class="carousel-control-prev small-carousel-btn center-carousel-btn" type="button"
-      data-bs-target="#carouselExample" data-bs-slide="prev">
+    <button *ngIf="post.fileUrl.length > 1" class="carousel-control-prev small-carousel-btn center-carousel-btn"
+      type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
       <span class="carousel-control-prev-icon"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next small-carousel-btn center-carousel-btn" type="button"
-      data-bs-target="#carouselExample" data-bs-slide="next">
+    <button *ngIf="post.fileUrl.length > 1" class="carousel-control-next small-carousel-btn center-carousel-btn"
+      type="button" data-bs-target="#carouselExample" data-bs-slide="next">
       <span class="carousel-control-next-icon"></span>
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-  } @if(post.content){
+
   <div class="card-body" (click)="goToPost()" style="cursor: pointer">
     <markdown [data]="desc ? post.description : post.content"></markdown>
   </div>
-  }
   <div class="card-body d-flex align-items-center">
     <img width="24" height="24" (click)="likePost()"
       [src]="post.likedByCurrentUser ? '/media/liked-icon.png' : '/media/like-icon.png'" style="cursor: pointer" />
@@ -69,13 +68,6 @@
 <app-dialog [visible]="showDialogMessage" [message]="dialogMessage" [title]="dialogTitle"
   (closed)="onClosedDialog()"></app-dialog>
 
-<app-create-post
-  [visible]="showEditModal"
-  [edit]="true"
-  [postId]="post.id"
-  [content]="editContent"
-  [description]="editDescription"
-  [existingFiles]="editFiles"
-  (closed)="showEditModal = false"
-  (saved)="onSavedEdit()"
-></app-create-post>
+<app-create-post [visible]="showEditModal" [edit]="true" [postId]="post.id" [content]="editContent"
+  [description]="editDescription" [existingFiles]="editFiles" (closed)="showEditModal = false"
+  (saved)="onSavedEdit()"></app-create-post>

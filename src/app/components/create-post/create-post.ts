@@ -15,10 +15,11 @@ import { CommonModule, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
 import MediumEditor from 'medium-editor';
 import { FormsModule } from '@angular/forms';
-import { FloatingDialog } from '../dialog/dialog';
 
-import { PostResponseDto, PostRequestDto } from '../../dto/post-dto';
+import { FloatingDialog } from '../dialog/dialog';
+import { PostRequestDto } from '../../dto/post-dto';
 import { PostService } from '../../services/post.service';
+import { MediaService } from '../../services/media-service';
 
 @Component({
   selector: 'app-create-post',
@@ -29,28 +30,22 @@ import { PostService } from '../../services/post.service';
 })
 export class CreatePostComponent
   implements AfterViewInit, OnDestroy, OnChanges {
+
   @ViewChild('editor') editorRef!: ElementRef<HTMLDivElement>;
 
-  /** MODE */
   @Input() edit = false;
   @Input() postId?: number;
 
-  /** EXISTING POST DATA (EDIT MODE) */
   @Input() content = '';
   @Input() description = '';
-  @Input() existingFiles: string[] = []; // base64 or URLs
+  @Input() existingFiles: string[] = [];
 
-  /** UI */
   @Input() visible = false;
   @Output() closed = new EventEmitter<void>();
   @Output() saved = new EventEmitter<void>();
 
-  /** FILES */
-  // raw File objects selected by user
   files: File[] = [];
-  // preview data URLs for UI
   filesBase64: string[] = [];
-  removedFiles: number[] = []; // optional if backend supports removal
 
   saving = false;
 
@@ -59,20 +54,19 @@ export class CreatePostComponent
   showDialogMessage = false;
 
   private editor!: any;
+
   constructor(
     private postService: PostService,
+    private mediaService: MediaService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['visible'] && this.visible && this.edit) {
-      // preload existing images
+    if (changes['visible']?.currentValue && this.edit) {
       this.filesBase64 = [...this.existingFiles];
       setTimeout(() => {
-        if (this.editorRef) {
-          this.editorRef.nativeElement.innerHTML = this.content || '';
-        }
+        this.editorRef.nativeElement.innerHTML = this.content || '';
       });
     }
   }
@@ -90,33 +84,25 @@ export class CreatePostComponent
     });
   }
 
-  onFileSelected(event: any): void {
-    const files: FileList = event.target.files;
-    if (!files?.length) return;
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-    Array.from(files).forEach((file: File) => {
+    for (const file of Array.from(input.files)) {
       this.files.push(file);
+
       const reader = new FileReader();
       reader.onload = () => {
         this.filesBase64.push(reader.result as string);
         this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
-    });
+    }
   }
 
   removeFile(index: number): void {
-    this.filesBase64.splice(index, 1);
     this.files.splice(index, 1);
-  }
-
-  private readFileAsDataUrl(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
+    this.filesBase64.splice(index, 1);
   }
 
   async submit(): Promise<void> {
@@ -125,67 +111,59 @@ export class CreatePostComponent
     this.saving = true;
 
     try {
-      const base64Files: string[] = [];
 
-      // validate and convert selected files to base64 (images only)
-      for (const f of this.files) {
-        if (!f.type || !f.type.startsWith('image/')) {
-          this.dialogTitle = 'Invalid file';
-          this.dialogMessage = 'Only image files are allowed.';
-          this.showDialogMessage = true;
-          this.saving = false;
-          return;
-        }
-        const dataUrl = await this.readFileAsDataUrl(f);
-        const parts = dataUrl.split(',');
-        base64Files.push(parts.length > 1 ? parts[1] : parts[0]);
-      }
 
-      // include existing base64 entries if any (strip data: prefix if present)
-      for (const e of this.existingFiles || []) {
-        if (e && e.startsWith('data:')) {
-          const parts = e.split(',');
-          base64Files.push(parts.length > 1 ? parts[1] : parts[0]);
-        }
-      }
+      const files = await this.mediaService.normalizeMedia(
+        this.files,
+        this.existingFiles
+      );
 
       const payload: PostRequestDto = {
         content: this.content,
         description: this.description,
-        files: base64Files,
+        files,
       };
 
-      // include removedFiles as additional field if supported by backend
-      const requestBody: any = { ...payload };
-      if (this.removedFiles?.length) requestBody.removedFiles = this.removedFiles;
+      console.log(this.files);
+      console.log(this.filesBase64);
+
 
       const request$ = this.edit && this.postId
-        ? this.postService.updatePost(this.postId, requestBody)
-        : this.postService.createPost(requestBody);
+        ? this.postService.updatePost(this.postId, payload)
+        : this.postService.createPost(payload);
 
       request$.subscribe({
-        next: () => {
+        next: res => {
           this.saving = false;
           this.saved.emit();
+          this.router.navigate(['/posts', res.id]);
           this.close();
         },
-        error: (err: any) => {
-          this.dialogTitle = err?.error?.error || 'Failed to submit';
-          this.dialogMessage = err?.error?.errors?.description || `Failed to ${this.edit ? 'save' : 'create'} post`;
-          this.showDialogMessage = true;
-          this.saving = false;
-          this.close();
+        error: err => {
+          this.handleError(err);
         },
       });
+
     } catch (err: any) {
-      this.dialogTitle = 'File error';
-      this.dialogMessage = 'Failed to read selected files.';
+      this.dialogTitle = 'Media error';
+      this.dialogMessage =
+        err.message === 'INVALID_FILE_TYPE'
+          ? 'Only image and MP4 video files are allowed.'
+          : 'Failed to process media files.';
       this.showDialogMessage = true;
       this.saving = false;
     }
   }
 
-  close() {
+  private handleError(err: any): void {
+    this.dialogTitle = 'Failed';
+    this.dialogMessage =
+      err?.error?.message || 'Failed to submit post';
+    this.showDialogMessage = true;
+    this.saving = false;
+  }
+
+  close(): void {
     this.visible = false;
     this.closed.emit();
   }
@@ -194,7 +172,7 @@ export class CreatePostComponent
     this.editor?.destroy();
   }
 
-  onClosedDialog() {
+  onClosedDialog(): void {
     this.showDialogMessage = false;
   }
 }
