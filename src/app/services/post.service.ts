@@ -30,7 +30,7 @@ export class PostService {
     return this.http.get<PostResponseDto[]>(this.baseUrl);
   }
   
-  getSubscriptions(): Observable<PostResponseDto[]> {
+  getSubscribedPosts(): Observable<PostResponseDto[]> {
     return this.http.get<PostResponseDto[]>(`${this.baseUrl}/subscriptions`);
   }
 

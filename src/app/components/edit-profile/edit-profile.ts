@@ -27,6 +27,16 @@ export class EditProfileComponent implements OnChanges {
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private userService: UserService) { }
 
+  getAvatarUrl(): string {
+    if (this.avatarPreview && typeof this.avatarPreview != 'string') {
+      return this.avatarPreview as unknown as string;
+    } else if (this.user.avatar) {
+      return "http://localhost:8080/" + this.user.avatar;
+    } else {
+      return 'https://bootdey.com/img/Content/avatar/avatar5.png';
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['user'] && this.user) {
       this.initForm();
@@ -51,8 +61,12 @@ export class EditProfileComponent implements OnChanges {
       this.avatarFile = input.files[0];
 
       const reader = new FileReader();
-      reader.onload = () => (this.avatarPreview = reader.result);
+      reader.onload = () => {
+        this.avatarPreview = reader.result
+        this.cdr.detectChanges();
+      };
       reader.readAsDataURL(this.avatarFile);
+      this.cdr.detectChanges();
     }
   }
 

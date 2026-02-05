@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../../dto/auth-dto';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -22,12 +23,15 @@ export class Login {
     password: '',
   }))
 
-  constructor(private router: Router, private service: AuthService, private cdr: ChangeDetectorRef) { }
+  constructor(private router: Router, private service: AuthService, private cdr: ChangeDetectorRef, private userService: UserService) { }
   login() {
     this.service.login(this.loginForm().value()).subscribe({
       next: (data: any) => {
         if (data?.accessToken) {
           localStorage.setItem("token", data.accessToken);
+          this.userService.getCurrentUser().subscribe(user => {
+            this.userService.setUser(user);
+          });
           this.router.navigate(['/']);
         }
         this.router.navigate(['/']);
@@ -37,7 +41,7 @@ export class Login {
         setTimeout(() => {
           this.error = '';
           this.cdr.detectChanges();
-        }, 3000);
+        }, 5000);
         this.cdr.detectChanges();
       }
     });

@@ -2,7 +2,7 @@
   <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
 
     <!-- Brand -->
-    <a class="navbar-brand d-flex align-items-center gap-2" (click)="navigateToHome()">
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
       <img src="https://images.seeklogo.com/logo-png/2/2/blogger-b-logo-png_seeklogo-20342.png" alt="logo" width="28"
         height="28" />
       <span class="brand-text d-none d-md-inline fw-bold text-dark">Blogium</span>
@@ -24,16 +24,16 @@
         <a class="d-flex align-items-center gap-2 dropdown-toggle text-dark text-decoration-none"
           data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
           <img
-            src="{{ user.avatar ? 'http://localhost:8080/' + user.avatar : 'https://bootdey.com/img/Content/avatar/avatar5.png' }}"
+            src="{{ userService.getUser().avatar ? 'http://localhost:8080/' + userService.getUser().avatar : 'https://bootdey.com/img/Content/avatar/avatar5.png' }}"
             alt="avatar" width="36" height="36" class="rounded-circle border border-2 border-light" />
-          <span class="d-none d-lg-inline fw-medium">{{ user.username }}</span>
+          <span class="d-none d-lg-inline fw-medium">{{ userService.getUser().username }}</span>
         </a>
 
         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
           <!-- User Info -->
           <li class="px-3 py-2 text-center">
-            <strong>{{ user.username }}</strong>
-            <div class="text-muted small">{{ user.role }}</div>
+            <strong>{{ userService.getUser().username }}</strong>
+            <div class="text-muted small">{{ userService.getUser().role }}</div>
           </li>
 
           <li>
@@ -42,12 +42,12 @@
 
           <!-- Profile -->
           <li>
-            <a class="dropdown-item text-center" (click)="navigateToProfile()">My Profile</a>
+            <a class="dropdown-item text-center" [routerLink]="['/profile', userService.getUser().id]">My Profile</a>
           </li>
 
           <!-- Admin Dashboard -->
-          <li *ngIf="user.role === 'ADMIN'">
-            <a class="dropdown-item text-center" (click)="navigateToAdminDashboard()">Admin Dashboard</a>
+          <li *ngIf="userService.getUser().role === 'ADMIN'">
+            <a class="dropdown-item text-center" routerLink="/admin/dashboard">Admin Dashboard</a>
           </li>
 
           <li>
@@ -56,7 +56,7 @@
 
           <!-- Sign out -->
           <li>
-            <a class="dropdown-item text-center text-danger" (click)="logout()">Sign out</a>
+            <a class="dropdown-item text-center text-danger" routerLink="/logout">Sign out</a>
           </li>
         </ul>
       </div>

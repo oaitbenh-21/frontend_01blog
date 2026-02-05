@@ -1,41 +1,60 @@
 <app-header></app-header>
 
-
 <div class="home-feed-wrapper mt-10">
   <div class="home-layout">
     <div class="feed-container">
       <div class="feed-filters mb-4">
-        <button class="btn btn-primary active">All Posts</button>
-        <button class="btn btn-outline-primary">My Subscriptions</button>
+        <button class="btn" [ngClass]="activeFilter === 'all' ? 'btn-primary active' : 'btn-outline-primary'"
+          (click)="activeFilter = 'all'; fetchPosts()">
+          All Posts
+        </button>
+
+        <button class="btn" [ngClass]="activeFilter === 'subs' ? 'btn-primary active' : 'btn-outline-primary'"
+          (click)="activeFilter = 'subs'; fetchPosts()">
+          My Subscriptions
+        </button>
       </div>
 
-      <div *ngIf="loading" class="feed-loading">
+
+      @if (loading) {
+      <div class="feed-loading">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
+      }
 
-      <ng-container *ngIf="!loading && posts.length > 0">
-        <ng-container *ngFor="let post of posts">
-          <div class="post-wrapper">
-            <app-post [post]="post" [desc]="true" style="width: 100%" (deleted)="onPostDeleted($event)"></app-post>
-          </div>
-        </ng-container>
-      </ng-container>
+      @if (!loading && posts.length > 0) {
+      @for (post of posts; track $index) {
+      <div class="post-wrapper">
+        <app-post [post]="post" [desc]="true" style="width: 100%" (deleted)="onPostDeleted($event)">
+        </app-post>
+      </div>
+      }
+      }
 
-      <p *ngIf="!loading && posts.length === 0" class="text-muted text-center mt-5">
+      @if (!loading && posts.length === 0) {
+      <p class="text-muted text-center mt-5">
         No posts available.
       </p>
+      }
     </div>
 
     <aside class="profile-side d-none d-lg-block">
       <div class="profile-card">
-        <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="profile-avatar" alt="profile" />
+        <img class="profile-avatar" alt="profile" [src]="userService.getUser().avatar
+            ? 'http://localhost:8080/' + userService.getUser().avatar
+            : 'https://bootdey.com/img/Content/avatar/avatar5.png'" />
 
-        <h5 class="fw-bold mb-1">oaitbenh</h5>
-        <p class="text-muted small text-center mb-3">the bio should to be Here</p>
+        <h5 class="fw-bold mb-1">
+          {{ userService.getUser().username }}
+        </h5>
 
-        <a class="btn btn-outline-primary btn-sm w-100"> My Profile </a>
+        <p class="text-muted small text-center mb-3"></p>
+
+        <a class="btn btn-outline-primary btn-sm w-100" [routerLink]="['/profile', userService.getUser().id]">
+          My Profile
+        </a>
       </div>
     </aside>
   </div>

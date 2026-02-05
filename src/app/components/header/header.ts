@@ -1,21 +1,18 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthorDto } from '../../dto/user-dto';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CreatePostComponent } from '../create-post/create-post';
 import { Notification } from "../notification/notification";
 
 @Component({
   selector: 'app-header',
-  imports: [NgIf, CreatePostComponent, Notification],
+  imports: [NgIf, CreatePostComponent, Notification, RouterModule],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
   standalone: true,
 })
-export class Header {
-  user: AuthorDto = { id: 0, username: '', avatar: '', role: '' };
-
+export class Header implements OnInit {
   postContent = '';
   postDescription = '';
   postFiles: string[] = [];
@@ -23,21 +20,14 @@ export class Header {
   showCreatePost = false;
 
   constructor(
-    private router: Router,
-    private userService: UserService,
+    public userService: UserService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe({
-      next: (data: AuthorDto) => {
-        this.user = data;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
+    this.userService.getCurrentUser().subscribe(user => {
+      this.userService.setUser(user);
+      this.cdr.detectChanges();
     });
   }
 
@@ -50,19 +40,4 @@ export class Header {
     this.showCreatePost = false;
   }
 
-  navigateToHome() {
-    this.router.navigate(['/']);
-  }
-
-  navigateToProfile() {
-    this.router.navigate(['/profile', this.user.id]);
-  }
-
-  navigateToAdminDashboard() {
-    this.router.navigate(['/admin/dashboard']);
-  }
-
-  logout() {
-    this.router.navigate(['/logout']);
-  }
 }

@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component, Injectable, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Post } from '../../components/post/post';
 import { Header } from '../../components/header/header';
-import { NgFor, NgIf } from '@angular/common';
 import { PostService } from '../../services/post.service';
 import { PostResponseDto } from '../../dto/post-dto';
+import { UserService } from '../../services/user.service';
+import { NgClass } from '@angular/common';
 
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
-  imports: [NgFor, NgIf, Post, Header],
+  imports: [Post, Header, RouterModule, NgClass],
   standalone: true
 })
 export class Home implements OnInit {
@@ -19,11 +20,13 @@ export class Home implements OnInit {
   loading: boolean = true;
 
   posts: PostResponseDto[] = [];
+  activeFilter: 'all' | 'subs' = 'all';
 
 
   constructor(
     private service: PostService,
     private router: Router,
+    public userService: UserService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -33,13 +36,11 @@ export class Home implements OnInit {
       this.loading = false;
       return;
     }
-
-    this.service.getAllPosts().subscribe(posts => {
+    let request = this.activeFilter == 'all' ? this.service.getAllPosts() : this.service.getSubscribedPosts();
+    request.subscribe(posts => {
       this.posts = posts;
       this.loading = false;
       this.cdr.detectChanges();
-      console.log('Posts received:', posts);
-      console.log('Loading status:', this.loading);
     });
   }
 
@@ -52,6 +53,10 @@ export class Home implements OnInit {
     } else {
       this.fetchPosts();
       this.loading = true;
+      this.userService.getCurrentUser().subscribe(user => {
+        this.userService.setUser(user);
+        this.cdr.detectChanges();
+      });
     }
   }
 

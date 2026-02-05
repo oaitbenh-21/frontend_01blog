@@ -12,14 +12,9 @@ interface JwtPayload {
     providedIn: 'root'
 })
 export class AuthHelperService {
-    getToken(): string | null {
-        return localStorage.getItem('accessToken');
-    }
-
     isLoggedIn(): boolean {
-        const token = this.getToken();
+        const token = localStorage.getItem('token');
         if (!token) return false;
-
         try {
             const decoded: JwtPayload = jwtDecode(token);
             return decoded.exp * 1000 > Date.now();
@@ -29,9 +24,8 @@ export class AuthHelperService {
     }
 
     getUserRole(): string | null {
-        const token = this.getToken();
+        const token = localStorage.getItem('token');
         if (!token) return null;
-
         try {
             const decoded: JwtPayload = jwtDecode(token);
             return decoded.role;
