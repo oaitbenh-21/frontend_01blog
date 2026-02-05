@@ -10,18 +10,19 @@ import { Header } from './components/header/header';
 import { FloatingReport } from './components/report/report';
 import { EditProfileComponent } from './components/edit-profile/edit-profile';
 import { Notification } from './components/notification/notification';
+import { AuthGuard } from './guards/auth-guard';
+import { AdminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
-  { path: 'report', component: FloatingReport },
-  { path: '', component: Home },
+  { path: 'report', component: FloatingReport, canActivate: [AuthGuard] },
+  { path: '', component: Home, canActivate: [AuthGuard] },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
-  { path: 'posts/:id', component: PostPageComponent },
-  { path: 'profile/edit', component: EditProfileComponent },
-  { path: 'notification', component: Notification },
-  { path: 'profile/:id', component: Profile },
-  { path: 'logout', component: LogoutComponent },
-  { path: 'admin/dashboard', component: Dashboard },
-  { path: 'header', component: Header },
-  // { path: 'notification', component: Home },
+  { path: 'posts/:id', component: PostPageComponent, canActivate: [AuthGuard] },
+  { path: 'profile/edit', component: EditProfileComponent, canActivate: [AuthGuard] },
+  { path: 'notification', component: Notification, canActivate: [AuthGuard] },
+  { path: 'profile/:id', component: Profile, canActivate: [AuthGuard] },
+  { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
+  { path: 'admin/dashboard', component: Dashboard, canActivate: [AdminGuard] },
+  { path: 'header', component: Header, canActivate: [AuthGuard] },
 ];

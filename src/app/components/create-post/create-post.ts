@@ -115,7 +115,7 @@ export class CreatePostComponent
 
       const files = await this.mediaService.normalizeMedia(
         this.files,
-        this.existingFiles
+        this.filesBase64
       );
 
       const payload: PostRequestDto = {
@@ -123,7 +123,7 @@ export class CreatePostComponent
         description: this.description,
         files,
       };
-
+      console.log("___________________________________________________________");
       console.log(this.files);
       console.log(this.filesBase64);
 

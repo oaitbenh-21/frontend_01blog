@@ -70,6 +70,7 @@ export class PostPageComponent implements OnInit {
       next: () => {
         this.post?.comments.splice(index, 1);
         this.cdr.detectChanges();
+        console.error('delete comment', index);
       },
       error: (err) => {
         console.error('Failed to delete comment', err);

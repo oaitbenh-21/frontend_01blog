@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 export class MediaService {
   private readonly allowedTypes = ['image/', 'video/mp4'];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   isValidFile(file: File): boolean {
     return (
@@ -19,17 +19,15 @@ export class MediaService {
     );
   }
 
-  /** ✅ RETURNS FULL DATA URL */
   async fileToDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string); // FULL data URL
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
 
-  /** ✅ FETCH URL AND RETURN DATA URL */
   async urlToDataUrl(url: string): Promise<string> {
     const blob = await firstValueFrom(
       this.http.get(url, { responseType: 'blob' })
@@ -40,13 +38,12 @@ export class MediaService {
   private async blobToDataUrl(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string); // FULL data URL
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
   }
 
-  /** ✅ BACKEND-COMPATIBLE NORMALIZER */
   async normalizeMedia(
     files: File[],
     existing: string[]
@@ -63,13 +60,10 @@ export class MediaService {
     for (const item of existing) {
       if (!item) continue;
 
-      if (item.startsWith('data:')) {
-        result.push(item); // already correct
-      } else if (this.isUrl(item)) {
+      if (!item.startsWith('data:') && this.isUrl(item)) {
         result.push(await this.urlToDataUrl(item));
       }
     }
-
     return result;
   }
 
