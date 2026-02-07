@@ -10,6 +10,7 @@ import { ReportService } from '../../services/report.service';
 import { ReportRequestDto } from '../../dto/report-dto';
 import { FloatingReport } from '../report/report';
 import { FloatingDialog } from '../dialog/dialog';
+import { Security } from '../../services/security';
 
 @Component({
   selector: 'app-post',
@@ -50,7 +51,9 @@ export class Post {
     private router: Router,
     private service: PostService,
     private cdr: ChangeDetectorRef,
-    private reportService: ReportService
+    private reportService: ReportService,
+    public security: Security,
+
   ) { }
 
   VIDEO_EXTENSIONS = [
@@ -180,7 +183,6 @@ export class Post {
   }
 
   get avatar() {
-    console.log(this.post.author.avatar);
     return this.post.author.avatar ? 'http://localhost:8080/' + this.post.author.avatar : 'https://bootdey.com/img/Content/avatar/avatar5.png';
   }
   get username() {

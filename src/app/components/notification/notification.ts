@@ -19,9 +19,6 @@ export class Notification implements OnInit {
         this.notifications = value;
         this.unreadedCount = this.getUnreadedCount();
       },
-      error(err) {
-        console.log(err);
-      },
     })
   }
 

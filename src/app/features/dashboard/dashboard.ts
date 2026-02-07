@@ -76,8 +76,6 @@ export class Dashboard implements OnInit {
   }
 
   private showErrorDialog(title: string, err: any) {
-    console.log(err);
-
     this.dialogTitle = title;
     this.dialogMessage = err?.error?.message || 'An unexpected error occurred';
     this.showDialog = true;

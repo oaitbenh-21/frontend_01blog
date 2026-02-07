@@ -1,22 +1,28 @@
 <app-header></app-header>
 
 <div class="container-fluid mt-5 pt-5 bg-light min-vh-100">
-    <div *ngIf="loading" class="d-flex justify-content-center py-5">
+    @if (loading) {
+    <div class="d-flex justify-content-center py-5">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
+    }
 
     <div class="container mb-4">
-        <app-post *ngIf="post" [post]="post"></app-post>
-
-        <p *ngIf="!loading && !post" class="text-muted text-center py-5">
+        @if (post) {
+        <app-post [post]="post"></app-post>
+        }
+        @if (!loading && !post) {
+        <p class="text-muted text-center pt-5 mt-5">
             No post available.
         </p>
+        }
     </div>
 
     <div class="container pb-5" ng-controller="CommentsController">
         <div class="row justify-content-center">
+            @if (post) {
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-header bg-white border-bottom rounded-top-4">
@@ -24,26 +30,18 @@
                             <i class="fas fa-comments text-primary me-2"></i>
                             Comments
                             <span class="badge bg-primary ms-2">
-                                {{post?.comments?.length}}
+                                {{post.comments.length}}
                             </span>
                         </h5>
                     </div>
-
                     <div class="card-body">
                         <div class="mb-4">
-                            <textarea
-                                class="form-control rounded-3"
-                                [(ngModel)]="content"
-                                #contentRef="ngModel"
-                                rows="3"
-                                placeholder="Write something thoughtful..."
-                                required>
+                            <textarea class="form-control rounded-3" [(ngModel)]="content" #contentRef="ngModel"
+                                rows="3" placeholder="Write something thoughtful..." required>
                             </textarea>
 
                             <div class="text-end mt-2">
-                                <button
-                                    (click)="addComment()"
-                                    class="btn btn-primary px-4"
+                                <button (click)="addComment()" class="btn btn-primary px-4"
                                     [disabled]="!contentRef.valid || !content">
                                     <i class="fas fa-paper-plane me-1"></i>
                                     Post
@@ -51,42 +49,45 @@
                             </div>
                         </div>
 
-                        <div *ngIf="post?.comments?.length === 0" class="text-center text-muted py-5">
+                        @if (post.comments.length === 0) {
+                        <div class="text-center text-muted py-5">
                             <i class="fas fa-comment-slash fa-3x mb-3 opacity-50"></i>
                             <p class="mb-0">No comments yet</p>
-                            <small>Be the first to start the conversation 👀</small>
+                            <small>Be the first to start the conversation</small>
                         </div>
+                        }
 
-                        <!-- Comment List -->
-                        <div *ngFor="let comment of post?.comments; let i = index; let last = last">
+                        @for (comment of post.comments; track $index) {
+                        <div>
                             <div class="d-flex align-items-start mb-3">
-                                <img
-                                    src="{{comment.author.avatar || 'https://www.bootdey.com/img/Content/avatar/avatar5.png'}}"
-                                    class="rounded-circle border"
-                                    width="44"
-                                    height="44"
+                                <img src="{{comment.author.avatar || 'https://www.bootdey.com/img/Content/avatar/avatar5.png'}}"
+                                    class="rounded-circle border" width="44" height="44"
                                     alt="{{comment.author.username}}">
 
                                 <div class="ms-3 bg-light rounded-4 p-3 flex-grow-1 position-relative">
-                                    <div
-                                        class="fw-semibold mb-1 cursor-pointer"
+                                    <div class="fw-semibold mb-1 cursor-pointer"
                                         (click)="goToProfile(comment.author.id)">
                                         {{comment.author.username}}
                                     </div>
                                     <div class="text-muted small">
-                                        {{comment.content}}
+                                        {{security.escapeHtml(comment.content)}}
                                     </div>
-                                    <button *ngIf="post?.mine" class="btn btn-sm btn-link text-danger position-absolute" style="right:8px; top:8px;" (click)="deleteComment(comment.id, i); $event.stopPropagation()" title="Delete comment" aria-label="Delete comment">
+                                    @if (comment.mine) {
+                                    <button class="btn btn-sm btn-link text-danger position-absolute"
+                                        style="right:8px; top:8px;"
+                                        (click)="deleteComment(comment.id, $index); $event.stopPropagation()"
+                                        title="Delete comment" aria-label="Delete comment">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
+                                    }
                                 </div>
                             </div>
-
-                            <hr *ngIf="!last" class="my-3 opacity-25">
                         </div>
+                        }
                     </div>
                 </div>
             </div>
+            }
         </div>
     </div>
 </div>

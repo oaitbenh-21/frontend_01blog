@@ -123,10 +123,6 @@ export class CreatePostComponent
         description: this.description,
         files,
       };
-      console.log("___________________________________________________________");
-      console.log(this.files);
-      console.log(this.filesBase64);
-
 
       const request$ = this.edit && this.postId
         ? this.postService.updatePost(this.postId, payload)

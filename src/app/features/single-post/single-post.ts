@@ -1,17 +1,16 @@
-import { ChangeDetectorRef, Component, NgModule, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
-import { NgIf, NgForOf, NgFor } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Header } from '../../components/header/header';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../components/post/post';
 import { PostResponseDto } from '../../dto/post-dto';
 import { FormsModule } from '@angular/forms';
-import { CommentRequestDto } from '../../dto/comment-dto';
+import { Security } from '../../services/security';
 
 @Component({
   selector: 'app-post-page',
   standalone: true,
-  imports: [Post, NgIf, Header, NgFor, FormsModule],
+  imports: [Post, Header, FormsModule],
   templateUrl: './single-post.html'
 })
 export class PostPageComponent implements OnInit {
@@ -24,19 +23,18 @@ export class PostPageComponent implements OnInit {
     private postService: PostService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    public security: Security,
   ) { }
 
   ngOnInit() {
     const postId = Number(this.route.snapshot.paramMap.get('id'));
     this.postService.getPostById(postId).subscribe({
       next: post => {
-        console.log(post);
         this.post = post;
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log(err);
         this.loading = false;
         this.cdr.detectChanges();
       }
@@ -59,7 +57,6 @@ export class PostPageComponent implements OnInit {
           this.content = "";
           this.cdr.detectChanges();
         }
-        console.log(err);
       },
     });
 

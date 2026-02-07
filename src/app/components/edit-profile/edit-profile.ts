@@ -86,13 +86,7 @@ export class EditProfileComponent implements OnChanges {
       next: () => {
         this.onCancel();
       },
-      error: (err) => {
-        console.log(JSON.stringify(err));
-      }
     });
-
-
-    console.log(updatedUser);
 
     setTimeout(() => {
       this.saved.emit({

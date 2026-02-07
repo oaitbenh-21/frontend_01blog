@@ -14,7 +14,7 @@ import { EditProfileComponent } from '../../components/edit-profile/edit-profile
 
 @Component({
   selector: 'app-profile',
-  imports: [Post, NgIf, NgFor, Header, FloatingDialog, FloatingReport, TimeAgoPipe, EditProfileComponent],
+  imports: [Post, Header, FloatingDialog, FloatingReport, TimeAgoPipe, EditProfileComponent],
   templateUrl: './profile.html',
   standalone: true,
   styleUrl: './profile.scss',
@@ -87,8 +87,6 @@ export class Profile implements OnInit {
           if (err.status === 200) {
             this.user!.follow = false;
             this.user.followersCount--;
-          } else {
-            console.log('Error following user:', err);
           }
           this.cdr.detectChanges();
         },
@@ -105,8 +103,6 @@ export class Profile implements OnInit {
           if (err.status === 200) {
             this.user!.follow = true;
             this.user.followersCount++;
-          } else {
-            console.log('Error following user:', err);
           }
           this.cdr.detectChanges();
         },
@@ -150,14 +146,12 @@ export class Profile implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log('Error getting user:', err);
         this.loading = false;
         this.cdr.detectChanges();
       },
     });
   }
   showEditProfileComponent() {
-    console.log("Modal opening...");
     this.showEditProfile = true;
     this.cdr.markForCheck();
   }

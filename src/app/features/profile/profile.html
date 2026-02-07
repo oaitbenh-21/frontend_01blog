@@ -4,7 +4,8 @@
   <div class="row g-4">
     <div class="col-md-3">
       <div class="card shadow-sm border-0 profile-card">
-        <div *ngIf="user; else noUser" class="card-body text-center">
+        @if (user.id != 0) {
+        <div class="card-body text-center">
           <div class="avatar-wrapper mb-3">
             <img class="avatar-img"
               [src]="user.avatar?'http://localhost:8080/'+user.avatar:'https://bootdey.com/img/Content/avatar/avatar5.png'"
@@ -28,35 +29,31 @@
             </div>
           </div>
 
-          <div *ngIf="!user.mine; else editTpl" class="d-grid gap-2">
-            <button *ngIf="user.follow; else followTpl" class="btn btn-outline-secondary btn-sm"
-              (click)="toggleFollow()">
+          @if (user.id != 0 && !user.mine) {
+          <div class="d-grid gap-2">
+            @if (user.follow) {
+            <button class="btn btn-outline-secondary btn-sm" (click)="toggleFollow()">
               Unfollow
             </button>
-
-            <ng-template #followTpl>
-              <button class="btn btn-primary btn-sm" (click)="toggleFollow()">Follow</button>
-
-              <button class="btn btn-light btn-sm text-danger" (click)="showReportSection()">
-                Report
-              </button>
-            </ng-template>
-          </div>
-
-          <ng-template #editTpl>
-            <button class="btn btn-outline-primary btn-sm w-100" (click)="showEditProfileComponent()">
-              Edit Profile
+            } @else {
+            <button class="btn btn-primary btn-sm" (click)="toggleFollow()">Follow</button>
+            }
+            <button class="btn btn-light btn-sm text-danger" (click)="showReportSection()">
+              Report
             </button>
-          </ng-template>
+          </div>
+          } @else {
+          <button class="btn btn-outline-primary btn-sm w-100" (click)="showEditProfileComponent()">
+            Edit Profile
+          </button>
+          }
         </div>
-
-        <ng-template #noUser>
-          <div class="card-body text-center text-muted">No user yet</div>
-        </ng-template>
+        }
       </div>
     </div>
 
     <div class="col-md-9">
+      @if (user.id != 0){
       <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
           <h6 class="text-uppercase text-muted mb-2">Bio</h6>
@@ -65,18 +62,30 @@
           </p>
         </div>
       </div>
+      }
 
-      <div *ngIf="!loading && user.posts != null">
-        <div *ngFor="let post of user.posts" class="mb-4">
+      @if (user.id != 0 && !loading && user.posts != null) {
+      <div>
+        @for (post of user.posts; track $index) {
+        <div class="mb-4">
           <app-post [post]="post" [desc]="true" style="width: 100%"></app-post>
         </div>
+        }
       </div>
+      }
 
-      <p *ngIf="!loading && user.posts.length === 0" class="text-muted text-center mt-5">
+      @if (user.id != 0 && !loading && user.posts.length === 0) {
+      <p class="text-muted text-center mt-5">
         No posts available.
       </p>
+      }
     </div>
   </div>
+  @if (user.id == 0 && !loading) {
+  <p class="text-muted text-center mt-5 pt-5">
+    User not found.
+  </p>
+  }
 </div>
 
 <app-report [visible]="showReport" [id]="user.id" [user]="true" (closed)="showReport = false"
