@@ -62,11 +62,31 @@ export class CreatePostComponent
     private cdr: ChangeDetectorRef
   ) { }
 
+  get contentText(): string {
+    return this.editorRef?.nativeElement?.innerText?.trim() || '';
+  }
+
+  get isDescriptionValid(): boolean {
+    const desc = this.description?.trim() || '';
+    return desc.length >= 10 && desc.length <= 400;
+  }
+
+  get isContentValid(): boolean {
+    return this.contentText.length >= 10;
+  }
+
+  get isFormValid(): boolean {
+    return this.isDescriptionValid && this.isContentValid && !this.saving;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['visible']?.currentValue && this.edit) {
       this.filesBase64 = [...this.existingFiles];
+
       setTimeout(() => {
-        this.editorRef.nativeElement.innerHTML = this.content || '';
+        if (this.editorRef) {
+          this.editorRef.nativeElement.innerHTML = this.content || '';
+        }
       });
     }
   }
@@ -81,7 +101,12 @@ export class CreatePostComponent
 
     this.editor.subscribe('editableInput', () => {
       this.content = this.editorRef.nativeElement.innerHTML || '';
+      this.cdr.detectChanges();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.editor?.destroy();
   }
 
   onFileSelected(event: Event): void {
@@ -96,6 +121,7 @@ export class CreatePostComponent
         this.filesBase64.push(reader.result as string);
         this.cdr.detectChanges();
       };
+
       reader.readAsDataURL(file);
     }
   }
@@ -106,13 +132,11 @@ export class CreatePostComponent
   }
 
   async submit(): Promise<void> {
-    if (this.saving || !this.content.trim()) return;
+    if (!this.isFormValid) return;
 
     this.saving = true;
 
     try {
-
-
       const files = await this.mediaService.normalizeMedia(
         this.files,
         this.filesBase64
@@ -120,13 +144,14 @@ export class CreatePostComponent
 
       const payload: PostRequestDto = {
         content: this.content,
-        description: this.description,
+        description: this.description.trim(),
         files,
       };
 
-      const request$ = this.edit && this.postId
-        ? this.postService.updatePost(this.postId, payload)
-        : this.postService.createPost(payload);
+      const request$ =
+        this.edit && this.postId
+          ? this.postService.updatePost(this.postId, payload)
+          : this.postService.createPost(payload);
 
       request$.subscribe({
         next: res => {
@@ -135,9 +160,7 @@ export class CreatePostComponent
           this.router.navigate(['/posts', res.id]);
           this.close();
         },
-        error: err => {
-          this.handleError(err);
-        },
+        error: err => this.handleError(err),
       });
 
     } catch (err: any) {
@@ -162,10 +185,6 @@ export class CreatePostComponent
   close(): void {
     this.visible = false;
     this.closed.emit();
-  }
-
-  ngOnDestroy(): void {
-    this.editor?.destroy();
   }
 
   onClosedDialog(): void {

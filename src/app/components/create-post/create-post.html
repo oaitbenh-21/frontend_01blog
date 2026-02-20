@@ -29,8 +29,8 @@
       </div>
     </div>
 
-    <button class="btn btn-primary w-100 mt-4" [disabled]="saving || !content.trim()" (click)="submit()">
-      {{ saving ? 'Saving...' : edit ? 'Save Changes' : 'Create Post' }}
+    <button type="button" class="btn btn-primary w-100 mt-4" [disabled]="!isFormValid" (click)="submit()">
+      Submit
     </button>
   </div>
 </div>
